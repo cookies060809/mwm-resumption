@@ -7,7 +7,7 @@
 - [ ] `schema/` 或 `data/`（需 B 评审）
 - [ ] `models/` 或算法配置（需 A 评审）
 - [ ] `baselines/` / `evaluation/` / `integration/`（需 C 评审）
-- [ ] `docs/` / `paper/`
+- [ ] `docs/` / `competition/`
 - [ ] CI / 工程脚本
 
 ## 验证
@@ -32,6 +32,7 @@ python -m pytest
 - [ ] 未添加未经真实实验支持的准确率、优势或新颖性表述
 - [ ] 新增数字均可由仓库内脚本复现，或已标注为外部引用
 - [ ] 涉及对外材料的结论已由 A/B/C 共同确认
+- [ ] 竞赛材料未出现学校名称、Logo、指导教师信息
 
 ## 其他
 

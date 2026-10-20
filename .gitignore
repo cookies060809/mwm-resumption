@@ -40,6 +40,9 @@ data/**/raw/
 data/**/private/
 data/**/restricted/
 
+# Competition binaries and large deliverables; keep Markdown sources in Git
+competition/artifacts/
+
 # Model artifacts and checkpoints
 *.pt
 *.pth
