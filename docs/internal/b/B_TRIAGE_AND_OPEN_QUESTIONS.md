@@ -68,6 +68,19 @@
 
 ## 3. 只能你本人做的事（手把手）
 
+> **2026-10-21 现状：** 下面 3.1/3.3 是 v0.1 种子与扩量阶段写的，那两件事已经做完（v0.2 已入库、v0.1 保持 `draft` 作为 A 的冻结基线）。现在真正卡住交付的是两张**空白签核表**，都必须由你本人打勾——智能体不会替签：
+>
+> ```bash
+> # ① v0.3 全批 7 对（交 A/C 的前置）
+> #    docs/annotation/p0_spot_audit_v0.3_all7.md —— 28 个复选框
+> # ② v0.2 抽查 10 对（验证 240/240 reviewed 名副其实）
+> #    docs/annotation/p0_spot_audit_v0.2_seed20261021.md —— 38 个复选框
+> git pull                              # 拉到最新 qiqi/main 再签，别签旧哈希
+> python -B scripts/validate_data.py    # 先确认数据与表头哈希对得上
+> ```
+>
+> 每对四个框依次是：单变量性、§1.4 能否指名缺失证据、Gate 5 期望动作可否推出、结论。要换样本用 `python -B scripts/audit_packet.py --seed <新值>` 重新生成，旧签核不复用。
+
 ### 3.1 16 条人工审计（约 1 小时）
 
 ```bash

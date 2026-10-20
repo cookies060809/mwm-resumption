@@ -4,7 +4,7 @@
 **文档版本：** v1.0.1｜2026-10-20（升版依据：P0 v0.2 全量 240 条、B 人工复核完成；v1.0.1 补 §1.4 未知档位判据，2026-10-21 追加 v0.3 不确定性候选批次记录）
 **Owner：** B（数据与认知机制）
 **状态：** 已冻结事件契约与六因子定义；P0 标注状态 `reviewed`，A/C 盲审与仲裁未完成
-**配套文件：** `schema/p0_record_v0.2.schema.json`、`data/p0/p0_samples_v0.2.json`、`data/p0/p0_samples_v0.3.json`（候选，`draft`）、`scripts/validate_data.py`、`scripts/pair_diff_report.py`、`scripts/build_p0_v02.py`、`scripts/build_p0_uncertainty.py`
+**配套文件：** `schema/p0_record_v0.2.schema.json`、`data/p0/p0_samples_v0.2.json`、`data/p0/p0_samples_v0.3.json`（候选，`draft`）、`scripts/validate_data.py`、`scripts/pair_diff_report.py`、`scripts/audit_packet.py`、`scripts/build_p0_v02.py`、`scripts/build_p0_uncertainty.py`、抽查签核表 [`p0_spot_audit_v0.2_seed20261021.md`](p0_spot_audit_v0.2_seed20261021.md) / [`p0_spot_audit_v0.3_all7.md`](p0_spot_audit_v0.3_all7.md)
 
 > **先读这一句：** P0 是脚本化的受控诊断数据，标签是“按脚本规则应出现的状态”，不是真实人类心理测量。P1 才是真实行为数据；P1 中没有证据的 `B/C/Q` 必须标 `UNKNOWN` 或遮蔽，不得用猜测补齐。
 
@@ -413,6 +413,7 @@ v0.2 把八组对照升级为八个 `mechanism`，每个家族都要声明自己
 - [ ] JSON 通过 Schema 和跨字段校验（`python scripts/validate_data.py`）。
 - [ ] v0.2 专属：`split` 为家族级、每机制 9/3/3；`person_comprehension` 与 `person_access` 一致；P07 家族 `undefined_target=true` 且 `action=indeterminate`。
 - [ ] `annotation.status` 从 `draft` 改为 `reviewed`（B 复核完成）；盲审与仲裁后才可 `adjudicated`。
+- [ ] 抽查包已逐对人工打勾（`python scripts/audit_packet.py --seed <固定值>` 生成）。签核表入库时必须全空，勾由人打；没打勾就写 `reviewed` 等于伪造复核。
 
 > 具体的质量门、P1 双人标注一致性指标、噪声上限和给 A 的质量报告模板见 [`label_quality_plan_v0.1.md`](label_quality_plan_v0.1.md)。
 

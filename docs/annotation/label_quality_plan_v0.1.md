@@ -290,8 +290,8 @@ known_issues: ...
 
 ### 待完成
 
-- [ ] **抽查 B 的自审结论。** v0.2 的 240/240 `reviewed` 是 B 自己写入的，尚无第二双眼睛验证；随机抽 20 条用 `pair_diff_report.py --pair` 逐对复核，确认"reviewed"名副其实。
-- [ ] **复核 v0.3 的 7 对不确定性候选并升到 `reviewed`。** 11 个"声明过但从未出现"的档位（`A.UNCERTAIN`、`person_access.UNCERTAIN`、`person_comprehension.{NOT_UNDERSTOOD,UNCERTAIN}`、`certainty.{PROBABLE,UNCERTAIN}`、`V/F.UNKNOWN`、`B.UNRESOLVED`、`C.{ACTIVE,UNKNOWN}`）已由 `scripts/build_p0_uncertainty.py` 覆盖，但批次仍是 `draft`/`agent-draft`；B 未签字前不得交 A/C，也不得勾选本项。这是 A 点名的缺口，比再加家族数优先。
+- [ ] **抽查 B 的自审结论。** v0.2 的 240/240 `reviewed` 是 B 自己写入的，尚无第二双眼睛验证。抽查包已生成：[`p0_spot_audit_v0.2_seed20261021.md`](p0_spot_audit_v0.2_seed20261021.md)（10 对 / 20 条，机制各 1 对 + `random.Random(20261021)` 补齐，38 个复选框全空）；逐条手工打勾，确认"reviewed"名副其实。要换样本就 `python scripts/audit_packet.py --seed <新值>` 重生成，别复用旧签核。
+- [ ] **复核 v0.3 的 7 对不确定性候选并升到 `reviewed`。** 11 个"声明过但从未出现"的档位（`A.UNCERTAIN`、`person_access.UNCERTAIN`、`person_comprehension.{NOT_UNDERSTOOD,UNCERTAIN}`、`certainty.{PROBABLE,UNCERTAIN}`、`V/F.UNKNOWN`、`B.UNRESOLVED`、`C.{ACTIVE,UNKNOWN}`）已由 `scripts/build_p0_uncertainty.py` 覆盖，但批次仍是 `draft`/`agent-draft`。全批 7 对的签核表在 [`p0_spot_audit_v0.3_all7.md`](p0_spot_audit_v0.3_all7.md)（28 个复选框全空），另需当场拍板本节"口径与 A 对齐"上面那三点。B 未签字前不得交 A/C，也不得勾选本项。这是 A 点名的缺口，比再加家族数优先。
 - [ ] **和 C 定 `split.calibration`。** C 的交接协议要四档，v0.2 只给了 train/dev/test；要么按家族重划出一档 calibration，要么由 C 改协议。锁版本前必须三方确认，B 不单方面改字段。
 - [ ] A/C 盲审 8 条（A、C 各 4 条，每机制抽 1 条），只给事件与任务图，记录分歧。
 - [ ] 根据分歧改手册/事件，不强行说服。

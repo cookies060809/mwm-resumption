@@ -18,12 +18,15 @@
 | [`../../scripts/build_p0_uncertainty.py`](../../scripts/build_p0_uncertainty.py) | 可复现构建 v0.3 不确定性候选批次（7 家族） |
 | [`../../scripts/build_p0_seed.py`](../../scripts/build_p0_seed.py) | 可复现构建 16 条 v0.1 种子 |
 | [`../../scripts/validate_data.py`](../../scripts/validate_data.py) | 三个批次的 Schema + 跨字段一致性校验 |
-| [`../../scripts/pair_diff_report.py`](../../scripts/pair_diff_report.py) | 逐字段 A/B 差异报告（`--full --pair P01-W2` 看单对） |
+| [`../../scripts/pair_diff_report.py`](../../scripts/pair_diff_report.py) | 逐字段 A/B 差异报告（`--pair P01-W2` 看单对，`--full` 看全部对） |
+| [`../../scripts/audit_packet.py`](../../scripts/audit_packet.py) | 生成可复现的人工抽查包（固定 seed，机制各 1 对再随机补齐，签核框留空） |
 | [`../../scripts/export_eval_format.py`](../../scripts/export_eval_format.py) | 转成 C 的 `inputs.jsonl` / `labels.jsonl`（协议 `c-evaluation-draft-1`） |
 | [`eval_v0.2/`](eval_v0.2/) | 已导出的评测格式：`inputs.jsonl`、`labels.jsonl`、`MAPPING.md` |
 | [`../../docs/annotation/annotation_handbook_v1.0.md`](../../docs/annotation/annotation_handbook_v1.0.md) | 标注手册 v1.0 |
 | [`../../docs/annotation/label_quality_plan_v0.1.md`](../../docs/annotation/label_quality_plan_v0.1.md) | 标注质量方案 |
 | [`../../docs/annotation/p0_pair_review_table.md`](../../docs/annotation/p0_pair_review_table.md) | 复核表与机器预检结果 |
+| [`../../docs/annotation/p0_spot_audit_v0.2_seed20261021.md`](../../docs/annotation/p0_spot_audit_v0.2_seed20261021.md) | v0.2 抽查包（10 对 / 20 条，38 个复选框全空，待 B 本人打勾） |
+| [`../../docs/annotation/p0_spot_audit_v0.3_all7.md`](../../docs/annotation/p0_spot_audit_v0.3_all7.md) | v0.3 全批抽查包（7 对 / 14 条，28 个复选框全空） |
 
 ## 2. 加载示例与输入/标签硬边界
 
@@ -77,8 +80,10 @@ v0.3 候选批次引入 7 个新骨架（`W6/S6/D6/W7/S7/D7/W8`），与 v0.2 �
 ```bash
 python scripts/validate_data.py
 python scripts/pair_diff_report.py
-python scripts/pair_diff_report.py --full --pair P04
+python scripts/pair_diff_report.py --full            # 全部家族的逐字段详情
+python scripts/pair_diff_report.py --pair P04        # 单对逐字段详情
 python scripts/export_eval_format.py          # 生成 data/p0/eval_v0.2/*.jsonl
+python scripts/audit_packet.py --records 20 --seed 20261021   # 人工抽查包（签核框留空）
 ```
 
 当前结果：
@@ -183,6 +188,7 @@ policy_by_mechanism: 1:1 as v0.2; unclear-comprehension arms = suspend_or_wait; 
 splits: train 3 / dev 2 / test 2 families (blueprints W6 S6 D6 W7 S7 D7 W8, disjoint from v0.2)
 enum_gap_remaining: record.split.calibration (needs C's calibration protocol)
 human_audit: 0/14 (annotator_id=agent-draft, status=draft)
+self_audit_packet: docs/annotation/p0_spot_audit_v0.3_all7.md (28 boxes, 0 ticked)
 ```
 
 ## 10. 后续
@@ -190,7 +196,7 @@ human_audit: 0/14 (annotator_id=agent-draft, status=draft)
 | 阶段 | 交付 |
 |---|---|
 | 当前 | 240 条 v0.2（B 复核完成）+ 14 条 v0.3 不确定性候选（`draft`，待 B 复核） |
-| 下一步（B） | v0.3 的 7 对逐字段自审 → `status=reviewed` 后才交 A/C |
+| 下一步（B） | 手工填 [`p0_spot_audit_v0.3_all7.md`](../../docs/annotation/p0_spot_audit_v0.3_all7.md)（7 对，v0.3 升 `reviewed` 的前置）与 [`p0_spot_audit_v0.2_seed20261021.md`](../../docs/annotation/p0_spot_audit_v0.2_seed20261021.md)（10 对，验证 240/240 `reviewed` 名副其实）；签核后才交 A/C |
 | 下一步（A/C） | 每机制抽 1 条盲审（8 条）→ 仲裁 → `adjudicated`；A 加 v0.2 适配器分支；C 确认字段映射与 `split.calibration` 协议 |
 | P1 | 另立 schema 与标注流程；当前不纳入竞赛证据 |
 

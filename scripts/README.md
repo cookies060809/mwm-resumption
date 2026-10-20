@@ -66,6 +66,17 @@ python scripts/pair_diff_report.py --file data/p0/p0_samples_v0.3.json --full
 
 **批次状态是 `draft`、`annotator_id=agent-draft`**：B 本人尚未复核，因此它不是已验收数据，不得导出给 C，也不得作为 A 的训练输入。`split.calibration` 仍为空——那要 C 先定校准协议。
 
+## `audit_packet.py`
+
+从任一批次里抽一批**可复现**的人工抽查样本，打印成带空白签核框的工作表：`docs/annotation/p0_spot_audit_v0.2_seed20261021.md`（10 对 / 20 条，8 个机制各 1 对 + 随机补齐）与 `docs/annotation/p0_spot_audit_v0.3_all7.md`（v0.3 全批 7 对）。每对给出事件条数、逐字段差异数、变化因子、差异字段、期望动作与政策，并把不确定档位和零证据因子挑出来——这三样正是审计人要判的三件事（单变量性、手册 §1.4、Gate 5）。
+
+```bash
+python scripts/audit_packet.py --records 20 --seed 20261021
+python scripts/audit_packet.py --file data/p0/p0_samples_v0.3.json --records 14 --seed 20261021
+```
+
+**脚本不写任何结论**：复选框全空，勾由人打。签核后的文件与重新生成的文本不再逐字节相同，所以它不进 CI 的 `git diff --exit-code`；改 seed 或改抽样规则由 `tests/test_data_validation.py::test_audit_packet_sample_is_pinned` 拦住，"已入库的签核表必须是空白"由 `::test_spot_audit_packets_are_unsigned` 拦住（顺手钉住 README 里引用的复选框数）。`--seed` 换一批样本，旧的签核不能复用。
+
 ## `p0_quality_report.py`
 
 从数据实算交接给 A / C 的一页质量报告，对应 `docs/annotation/label_quality_plan_v0.1.md` §4。对 `validate_data.DATA_FILES` 里的每个批次输出规模、校验结果、证据覆盖、悬空引用、cutoff 完整性、P07 输入一致性、域/划分分布和文件 SHA256，并列出 **schema 声明过但数据里一次没用到的枚举取值**；最后把同一 `schema_version` 的批次合并统计，避免“缺口只存在于单个文件”这种误读。

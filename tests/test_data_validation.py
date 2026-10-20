@@ -138,8 +138,8 @@ def test_v02_other_completion_repeat_is_not_resume() -> None:
     assert p04["B"]["state_at_cutoff"]["Q"] != "NOT_APPLICABLE"
 
 
-def test_v02_completed_steps_replay() -> None:
-    for record in load_v02():
+def test_completed_steps_replay_over_every_batch() -> None:
+    for record in load_v02() + load_v03():
         steps = set(record["task_steps"])
         completed = {
             event["step_id"]
@@ -254,3 +254,35 @@ def test_export_matches_evaluation_protocol() -> None:
             b, sort_keys=True, ensure_ascii=False
         )
         assert item["observation"]["cutoff"] > 0
+
+
+def test_audit_packet_sample_is_pinned() -> None:
+    """docs/annotation/p0_spot_audit_*.md are signed by hand, so CI cannot diff them
+    against a fresh run. Pinning the seed and the mechanism coverage is the part a
+    refactor could silently break."""
+    from scripts.audit_packet import clean_pairs, select
+
+    pairs = clean_pairs(load_v02())
+    assert len(pairs) == 120
+    sample = select(pairs, 10, 20261021)
+    assert sample == select(clean_pairs(load_v02()), 10, 20261021)
+    assert len(set(sample)) == 10
+    assert {pairs[family][0]["mechanism"] for family in sample} == {
+        pair["mechanism"] for pair in load_v02()
+    }
+    assert all(len(pairs[family]) == 2 for family in sample)
+
+
+def test_spot_audit_packets_are_unsigned() -> None:
+    """A committed packet that already carries ticks would fake a review nobody did.
+    The box counts are also quoted in data/p0/README.md, so a sampler change must
+    fail here rather than leave a stale number in the handoff page."""
+    packets = {
+        "p0_spot_audit_v0.2_seed20261021.md": (38, 10),
+        "p0_spot_audit_v0.3_all7.md": (28, 7),
+    }
+    for name, (boxes, families) in packets.items():
+        text = (ROOT / "docs" / "annotation" / name).read_text(encoding="utf-8")
+        assert text.count("- [ ]") == boxes, name
+        assert "- [x]" not in text, name
+        assert text.count("### ") == families, name
