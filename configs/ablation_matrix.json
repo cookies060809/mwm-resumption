@@ -1,0 +1,41 @@
+{
+  "version": "ec-jmf-ablation-handoff-1",
+  "owner": "member_A",
+  "source_plan": "MWM_Research_Plan_V1_1_EC-JMF.md sections 5.12 and 9.3",
+  "status": "required_not_supplied",
+  "execution_policy": "References only. Do not substitute local rule baselines for trained EC-JMF ablations.",
+  "primary_method": {
+    "id": "B10",
+    "equivalent_variant": "A0",
+    "description": "Complete ECR-MWM with EC-JMF joint state update, epistemic gating and resumption prediction",
+    "model_config_path": null,
+    "checkpoint_path": null,
+    "command_config": null,
+    "status": "required_not_supplied"
+  },
+  "variants": [
+    {"id": "A0", "description": "Complete ECR-MWM", "requires_checkpoint": true, "model_config_path": null, "checkpoint_path": null, "command_config": null, "status": "awaiting_member_A"},
+    {"id": "A1", "description": "Remove information-access gating; permit objective events to update person belief directly", "requires_checkpoint": true, "model_config_path": null, "checkpoint_path": null, "command_config": null, "status": "awaiting_member_A"},
+    {"id": "A2", "description": "Remove joint commitment-progress update; estimate state factors independently", "requires_checkpoint": true, "model_config_path": null, "checkpoint_path": null, "command_config": null, "status": "awaiting_member_A"},
+    {"id": "A3", "description": "Remove persistent goal memory and retain only the declared recent window", "requires_checkpoint": true, "model_config_path": null, "checkpoint_path": null, "command_config": null, "status": "awaiting_member_A"},
+    {"id": "A4", "description": "Remove event consistency loss; member A must identify the exact removed loss terms", "requires_checkpoint": true, "model_config_path": null, "checkpoint_path": null, "command_config": null, "status": "awaiting_member_A"},
+    {"id": "A5", "description": "Remove resumption-step auxiliary training task", "requires_checkpoint": true, "model_config_path": null, "checkpoint_path": null, "command_config": null, "status": "awaiting_member_A"},
+    {"id": "A6", "description": "Replace learned information-access gate with declared evidence rules", "requires_checkpoint": true, "model_config_path": null, "checkpoint_path": null, "command_config": null, "status": "awaiting_member_A"},
+    {"id": "A7", "description": "Add matched history-summary or prompt tokens without the proposed transition mechanism", "requires_checkpoint": false, "model_config_path": null, "checkpoint_path": null, "command_config": null, "status": "awaiting_member_A"}
+  ],
+  "additional_controls": [
+    {"id": "same_size_hmm", "description": "Ordinary HMM or SMC with the same declared state count; match data, state capacity and inference budget", "requires_checkpoint": true, "model_config_path": null, "checkpoint_path": null, "command_config": null, "status": "required_not_supplied", "local_B7_is_replacement": false},
+    {"id": "no_cf_loss", "description": "Keep information-access fields and remove information-equivalence counterfactual/pair constraint losses; distinguish from A4 event consistency if the implementation uses separate terms", "requires_checkpoint": true, "model_config_path": null, "checkpoint_path": null, "command_config": null, "status": "required_not_supplied"},
+    {"id": "independent_BCQ", "description": "Estimate B/C/Q independently without joint message passing; document overlap or distinction with A2", "requires_checkpoint": true, "model_config_path": null, "checkpoint_path": null, "command_config": null, "status": "required_not_supplied"},
+    {"id": "equal_data_no_pair", "description": "Use identical added training examples while removing their pair-relation losses", "requires_checkpoint": true, "model_config_path": null, "checkpoint_path": null, "command_config": null, "status": "required_not_supplied"}
+  ],
+  "required_comparison_controls": {
+    "same_train_dev_calibration_test_splits": true,
+    "same_observation_cutoff_and_horizon": true,
+    "same_base_model_and_declared_parameter_budget": true,
+    "report_actual_training_and_inference_cost": true,
+    "independent_seeds_and_family_aware_statistics": true,
+    "separate_P0_and_P1": true,
+    "never_label_fixture_results_as_research_results": true
+  }
+}

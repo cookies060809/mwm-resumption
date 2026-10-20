@@ -1,0 +1,56 @@
+{
+  "run_seed": null,
+  "llm": {
+    "enabled": false,
+    "base_url_env": "MWM_LLM_BASE_URL",
+    "api_key_env": "MWM_LLM_API_KEY",
+    "model_env": "MWM_LLM_MODEL",
+    "require_api_key": true,
+    "supports_seed": false,
+    "temperature": 0,
+    "max_output_tokens": 1024,
+    "token_parameter": "max_completion_tokens",
+    "max_retries": 2,
+    "retry_delay_seconds": 1,
+    "timeout_seconds": 120
+  },
+  "commands": {
+    "B8": {
+      "enabled": false,
+      "supports_seed": false,
+      "argv": ["py", "integration/mentis_adapter.py"],
+      "mode": "original",
+      "required_env": ["MWM_MENTIS_ROOT", "MWM_LLM_API_KEY", "MWM_LLM_MODEL"],
+      "required_root_files": {"MWM_MENTIS_ROOT": "mentis/engine.py"},
+      "timeout_seconds": 600,
+      "provenance": {
+        "repository": "https://github.com/mental-world/Mentis",
+        "commit": "7c6ea55e007a64233c3a0f987b6d229476f3fdf6",
+        "audit_date": "2026-10-19",
+        "runtime_checkout_installed": false,
+        "adapter": "integration/mentis_adapter.py",
+        "task": "project resumption MCQ adaptation, not the original paper benchmark"
+      }
+    },
+    "B9": {"enabled": false},
+    "MENTIS_STRUCTURED": {"enabled": false},
+    "B10": {
+      "enabled": false,
+      "supports_seed": false,
+      "argv": [],
+      "mode": "full",
+      "timeout_seconds": 300,
+      "provenance": {"owner": "member_A", "model_config_path": null, "checkpoint_path": null}
+    }
+  },
+  "ablations": {
+    "A0": null,
+    "A1": null,
+    "A2": null,
+    "A3": null,
+    "A4": null,
+    "A5": null,
+    "A6": null,
+    "A7": null
+  }
+}

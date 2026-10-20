@@ -51,8 +51,16 @@ models/**/checkpoints/
 
 # Generated experiment outputs
 results/runs/
+results/full_run/
+results/verification/
 results/**/predictions.jsonl
 results/**/metrics.json
+
+# Local engineering environment and generated bundles
+.dev-deps/
+delivery/
+configs/*.local.json
+docs/personal/
 
 # Large archives and media
 *.zip

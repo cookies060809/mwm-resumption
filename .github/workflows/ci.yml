@@ -2,7 +2,7 @@ name: ci
 
 on:
   push:
-    branches: [main]
+    branches: [main, Bill]
   pull_request:
 
 permissions:
@@ -26,3 +26,6 @@ jobs:
 
       - name: Run tests
         run: python -m pytest
+
+      - name: Verify offline baseline pipeline and reproducibility
+        run: python run_full_check.py

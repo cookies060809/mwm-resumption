@@ -6,8 +6,8 @@
 
 > **参赛信息**：第八届全球校园人工智能算法精英大赛 · 算法创新赛 · 赛题 1「算法模型创新」
 > **官方页面**：[aicomp.cn/tracks/tracks-2/3788.html](https://www.aicomp.cn/tracks/tracks-2/3788.html)
-> **仓库状态：V0.3 迁移 P0 种子（2026-10-20）**
-> 当前已有研究方案、P0 schema、标注手册与 P01–P08 共 16 条种子数据；算法、基线、实验结果、技术方案 PDF、演示视频与答辩 PPT 均未完成。`results/` 中不得出现未经真实实验产生的数字。
+> **仓库状态：P0 种子 + 本地基线与评测工程（2026-10-20）**
+> 当前已有研究方案、P0 schema、标注手册与 P01–P08 共 16 条种子数据，以及六种本地基线、统一评测与离线复现工具。核心算法、真实外部模型实验和正式主结果仍未完成。`results/` 中不得出现未经真实实验产生的数字。
 
 ## 一句话定义
 
@@ -38,7 +38,8 @@
 - [x] 竞赛材料骨架、评分映射与提交清单
 - [ ] P0 扩展至 120 家族 / 240+ 条，并完成人工复核与盲审
 - [ ] 核心算法 EC-JMF 最小实现
-- [ ] B0–B9 基线与评测框架
+- [x] B0/B1/B4/B5/B6/B7 本地基线、指标与独立工程复现流程
+- [ ] B2/B3/B8/B9 真实模型运行、正式 P0 数据适配与公平比较
 - [ ] 真实实验数据与主结果、消融、校准
 - [ ] 技术方案 PDF、答辩 PPT、演示视频
 - [ ] 提交前合规与复现审查
@@ -82,6 +83,18 @@ python scripts/validate_data.py
 python scripts/pair_diff_report.py
 python -m pytest
 ```
+
+### 本地基线与评测工程
+
+```bash
+python run_full_check.py
+```
+
+该离线入口运行工程测试、六种本地基线、独立校准、三种子预测复现检查、演示生成和工程打包；默认不调用外部服务。Windows 也可双击 `开始完整自检.cmd`。生成结果在 `results/full_run/`、检查日志在 `results/verification/`，均不提交 Git。
+
+单独运行实验：`python run_evaluation.py`；生成离线结果页：`python tools/build_dashboard.py`。实现与边界见 [evaluation/engineering.md](evaluation/engineering.md)。
+
+`data/integration/` 的 72 条记录是独立工程样例，与 `data/p0/p0_samples.json` 的 16 条 P0 草案格式不同。尚未将 P0 草案转换进本评测器，不能把工程样例成绩当作正式 P0/P1 或核心算法结果。预测协议见 [schema/模型交接协议.md](schema/模型交接协议.md)。
 
 ## 数据与证据边界
 
