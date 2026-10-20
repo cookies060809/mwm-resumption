@@ -1641,10 +1641,10 @@ def main():
     for builder in (p01, p02, p03, p04, p05, p06, p07, p08):
         records.extend(builder())
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(
-        json.dumps(records, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
+    # .gitattributes pins *.json to LF; without newline="\n" Windows writes CRLF
+    # and the "reproducible build" check shows a spurious whole-file diff.
+    with OUT.open("w", encoding="utf-8", newline="\n") as handle:
+        handle.write(json.dumps(records, ensure_ascii=False, indent=2) + "\n")
     print(f"wrote {len(records)} records to {OUT}")
 
 

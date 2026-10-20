@@ -1,10 +1,13 @@
-"""Validate the ECR-MWM P0 seed dataset.
+"""Validate the ECR-MWM P0 datasets (v0.1 seed and v0.2 full batch).
 
-Checks JSON Schema structure plus cross-field invariants that the schema cannot
+Checks JSON Schema structure plus cross-field invariants the schema cannot
 express: cutoff ordering, evidence chains, per-factor evidence, action/step
-alignment, resource/task implications, and P07 input identity.
+alignment, resource/task implications, comprehension vs access, family-level
+split integrity, and future-leakage controls.
 
-Usage: python scripts/validate_data.py
+Usage:
+    python scripts/validate_data.py
+    python scripts/validate_data.py --file data/p0/p0_samples_v0.2.json
 """
 
 from __future__ import annotations
@@ -18,8 +21,17 @@ from typing import Any
 from jsonschema import Draft7Validator
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA_PATH = ROOT / "schema" / "p0_record.schema.json"
-DATA_PATH = ROOT / "data" / "p0" / "p0_samples.json"
+SCHEMAS = {
+    "p0-record/v0.1.0": ROOT / "schema" / "p0_record.schema.json",
+    "p0-record/v0.2.0": ROOT / "schema" / "p0_record_v0.2.schema.json",
+}
+DATA_FILES = (
+    ROOT / "data" / "p0" / "p0_samples.json",
+    ROOT / "data" / "p0" / "p0_samples_v0.2.json",
+)
+DATA_PATH = DATA_FILES[0]
+
+PAIR_IDENTITY_IGNORED = {"sample_id", "variant", "notes"}
 
 
 def load_json(path: Path) -> Any:
@@ -27,8 +39,10 @@ def load_json(path: Path) -> Any:
         return json.load(handle)
 
 
-def load_records() -> list[dict[str, Any]]:
-    return load_json(DATA_PATH)
+def load_records(path: Path = DATA_PATH) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    return load_json(path)
 
 
 def equal_json(left: Any, right: Any) -> bool:
@@ -90,6 +104,27 @@ def check_record(record: dict[str, Any], errors: list[str]) -> None:
         if event.get("actor") == "person" and event.get("person_access") != "ACCESSED":
             err(f"person event {event.get('event_id')} must be ACCESSED")
 
+        # v0.2: comprehension (U) may only be a positive label when the person
+        # actually received the event, and must be NOT_APPLICABLE otherwise.
+        comprehension = event.get("person_comprehension")
+        if comprehension is not None:
+            access = event.get("person_access")
+            if access != "ACCESSED" and comprehension != "NOT_APPLICABLE":
+                err(
+                    f"event {event.get('event_id')}: comprehension={comprehension} "
+                    f"requires person_access=ACCESSED (got {access})"
+                )
+            semantics = event.get("person_available_semantics") or {}
+            if comprehension == "MISUNDERSTOOD" and semantics.get("interpretation") not in (
+                "defer",
+                "complete",
+                "unresolved",
+            ):
+                err(
+                    f"event {event.get('event_id')}: MISUNDERSTOOD requires a "
+                    "non-accurate interpretation"
+                )
+
     steps = set(record.get("task_steps", []))
     completed = set(record.get("completed_steps_at_cutoff", []))
     if not completed.issubset(steps):
@@ -139,6 +174,18 @@ def check_record(record: dict[str, Any], errors: list[str]) -> None:
     first_step = expected.get("first_step")
     action = record.get("p0_expected_action", "")
     resume = expected.get("resume_within_horizon")
+    design = record.get("p0_design") or {}
+
+    if action == "indeterminate":
+        if resume is not None or first_step is not None:
+            err("indeterminate action requires resume_within_horizon=null and first_step=null")
+        if not design.get("undefined_target"):
+            err("indeterminate action requires p0_design.undefined_target=true")
+        if expected.get("undefined_reason") != "indistinguishable_inputs":
+            err("indeterminate action requires undefined_reason=indistinguishable_inputs")
+    elif resume is None:
+        err(f"action {action!r} must not leave resume_within_horizon=null")
+
     if first_step is not None and first_step not in all_steps:
         err(f"p0_expected.first_step={first_step!r} is not a known step")
     if action.startswith("resume_"):
@@ -153,7 +200,7 @@ def check_record(record: dict[str, Any], errors: list[str]) -> None:
                 err("nested-task resume must set resume_within_horizon explicitly")
         else:
             err("resume action references a step outside both task graphs")
-    else:
+    elif action != "indeterminate":
         if first_step is not None:
             err("non-resume action must have first_step=null")
         if resume is not False:
@@ -199,57 +246,96 @@ def check_pairs(records: list[dict[str, Any]], errors: list[str]) -> None:
     for record in records:
         by_story[record.get("base_story_id")].append(record)
 
+    seen_samples: set[str] = set()
+    for record in records:
+        sample_id = record.get("sample_id")
+        if sample_id in seen_samples:
+            errors.append(f"duplicate sample_id: {sample_id}")
+        seen_samples.add(sample_id)
+
     for story_id, pair in sorted(by_story.items()):
-        variants = {record.get("variant") for record in pair}
-        if variants != {"A", "B"} or len(pair) != 2:
+        variants = [record.get("variant") for record in pair]
+        if sorted(variants) != ["A", "B"] or len(pair) != 2:
             errors.append(f"{story_id}: expected exactly one A and one B record")
             continue
-        if story_id == "P07":
+
+        splits = {record.get("split") for record in pair}
+        if len(splits) > 1:
+            errors.append(f"{story_id}: A/B variants must share one split")
+        if splits and splits != {None} and None in splits:
+            errors.append(f"{story_id}: split must be set on every record")
+
+        if story_id.startswith("P07"):
             a, b = sorted(pair, key=lambda record: record["variant"])
-            ignore = {"sample_id", "variant", "notes"}
-            a_core = {key: value for key, value in a.items() if key not in ignore}
-            b_core = {key: value for key, value in b.items() if key not in ignore}
+            a_core = {key: value for key, value in a.items() if key not in PAIR_IDENTITY_IGNORED}
+            b_core = {key: value for key, value in b.items() if key not in PAIR_IDENTITY_IGNORED}
             if not equal_json(a_core, b_core):
-                errors.append("P07-A/B: pre-cutoff inputs are not identical")
-            if "未来泄漏" not in a.get("notes", "") or "未来泄漏" not in b.get(
-                "notes", ""
-            ):
-                errors.append("P07-A/B: notes must document the future-leakage design")
+                errors.append(f"{story_id}-A/B: pre-cutoff inputs are not identical")
+            for record in pair:
+                if "未来泄漏" not in record.get("notes", ""):
+                    errors.append(
+                        f"{story_id}-{record['variant']}: notes must document the future-leakage design"
+                    )
+                design = record.get("p0_design") or {}
+                if record.get("p0_design") is not None and not design.get("undefined_target"):
+                    errors.append(
+                        f"{story_id}-{record['variant']}: future-leak pair needs undefined_target=true"
+                    )
 
 
-def print_summary(records: list[dict[str, Any]]) -> None:
-    print(
-        f"{'sample':7} {'V':10} {'F':8} {'A':13} {'B':18} "
-        f"{'C':11} {'Q':16} expected"
-    )
-    for record in records:
-        state = record.get("state_at_cutoff", {})
+def print_summary(records: list[dict[str, Any]], label: str) -> None:
+    print(f"--- {label}: {len(records)} records ---")
+    if len(records) <= 40:
         print(
-            f"{record.get('sample_id', '?'):7} "
-            f"{state.get('V', '?'):10} {state.get('F', '?'):8} "
-            f"{state.get('A', '?'):13} {state.get('B', '?'):18} "
-            f"{state.get('C', '?'):11} {state.get('Q', '?'):16} "
-            f"{record.get('p0_expected_action', '?')}"
+            f"{'sample':13} {'V':10} {'F':8} {'A':13} {'B':18} "
+            f"{'C':11} {'Q':16} expected"
         )
+        for record in records:
+            state = record.get("state_at_cutoff", {})
+            print(
+                f"{record.get('sample_id', '?'):13} "
+                f"{state.get('V', '?'):10} {state.get('F', '?'):8} "
+                f"{state.get('A', '?'):13} {state.get('B', '?'):18} "
+                f"{state.get('C', '?'):11} {state.get('Q', '?'):16} "
+                f"{record.get('p0_expected_action', '?')}"
+            )
     domains = Counter(record.get("domain", "?") for record in records)
     statuses = Counter(
         record.get("annotation", {}).get("status", "?") for record in records
     )
-    print()
     print("domains:", dict(domains))
     print("annotation status:", dict(statuses))
+    if records and "mechanism" in records[0]:
+        print("mechanisms:", dict(Counter(record.get("mechanism") for record in records)))
+        families = {record["base_story_id"] for record in records}
+        split_by_family = {
+            record["base_story_id"]: record.get("split") for record in records
+        }
+        print(
+            "splits(families):",
+            dict(Counter(split_by_family[family] for family in families)),
+        )
+        print("events:", sum(len(record.get("observed_events", [])) for record in records))
 
 
-def validate_records(records: list[dict[str, Any]]) -> list[str]:
+def validate_records(
+    records: list[dict[str, Any]], schema_path: Path | None = None
+) -> list[str]:
     errors: list[str] = []
-    schema = load_json(SCHEMA_PATH)
+    schema = load_json(schema_path or SCHEMAS["p0-record/v0.1.0"])
     Draft7Validator.check_schema(schema)
-    validator = Draft7Validator(schema)
+    validators: dict[str, Draft7Validator] = {}
+    default_validator = Draft7Validator(schema)
+    for version, path in SCHEMAS.items():
+        if path.exists():
+            validators[version] = Draft7Validator(load_json(path))
 
     for index, record in enumerate(records):
         if not isinstance(record, dict):
             errors.append(f"$[{index}]: record is not an object")
             continue
+        version = record.get("schema_version")
+        validator = validators.get(version, default_validator)
         for error in sorted(
             validator.iter_errors(record), key=lambda item: list(item.absolute_path)
         ):
@@ -260,17 +346,18 @@ def validate_records(records: list[dict[str, Any]]) -> list[str]:
     return errors
 
 
-def validate_all(verbose: bool = True) -> list[str]:
-    records = load_records()
+def validate_file(path: Path, verbose: bool = True) -> list[str]:
+    records = load_json(path)
     if not isinstance(records, list):
-        return ["data file must contain a JSON array"]
-
+        return [f"{path.name}: data file must contain a JSON array"]
     errors = validate_records(records)
     if verbose:
-        print_summary(records)
+        print_summary(records, path.name)
         if errors:
-            for message in errors:
+            for message in errors[:40]:
                 print(f"  - {message}", file=sys.stderr)
+            if len(errors) > 40:
+                print(f"  ... {len(errors) - 40} more", file=sys.stderr)
             print(f"FAILED with {len(errors)} error(s).", file=sys.stderr)
         else:
             pair_count = len({record.get("base_story_id") for record in records})
@@ -281,7 +368,21 @@ def validate_all(verbose: bool = True) -> list[str]:
     return errors
 
 
+def validate_all(verbose: bool = True) -> list[str]:
+    errors: list[str] = []
+    for path in DATA_FILES:
+        if path.exists():
+            errors.extend(validate_file(path, verbose=verbose))
+    return errors
+
+
 def main() -> int:
+    # Windows consoles default to a legacy code page; domains and notes are Chinese.
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+    if "--file" in sys.argv:
+        path = Path(sys.argv[sys.argv.index("--file") + 1])
+        return 1 if validate_file(path) else 0
     return 1 if validate_all(verbose=True) else 0
 
 

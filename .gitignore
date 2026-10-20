@@ -21,6 +21,9 @@ secrets/
 *.pem
 *.key
 
+# Local agent workspace (not part of the shared repo)
+.workbuddy/
+
 # IDE / OS
 .vscode/
 .idea/

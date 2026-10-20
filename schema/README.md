@@ -1,14 +1,16 @@
 # Schema 说明
 
-> **当前规范：** `p0_record.schema.json`（Draft-07，`p0-record/v0.1.0`），对应当前 16 条 P0 种子记录。
-> **Owner：** B。**状态：** 工程草案，待 A 确认接口、B 完成人工复核。
+> **当前规范：** `p0_record_v0.2.schema.json`（Draft-07，`p0-record/v0.2.0`），对应当前 240 条 P0 批次（120 家族）。
+> **冻结版本：** `p0_record.schema.json`（`p0-record/v0.1.0`，16 条种子）——A 的现有适配器仍读它，不要修改。
+> **Owner：** B。**状态：** v0.2 已冻结并由 B 复核（`reviewed`）；A 需加版本分支，C 需确认字段映射。
 > P1 尚未采集，未来需要独立的 P1 schema；不要直接把 P0 schema 当作真实行为数据 schema。
 
 ## 1. 文件
 
 | 文件 | 作用 |
 |---|---|
-| [`p0_record.schema.json`](p0_record.schema.json) | P0 记录结构：样本元数据、任务图、事件流、状态标签、证据、P0 脚本目标、P1 占位、标注信息 |
+| [`p0_record_v0.2.schema.json`](p0_record_v0.2.schema.json) | **当前规范**：在 v0.1 基础上新增 `split`、`mechanism`、事件级 `person_comprehension` / `person_available_semantics`、`p0_design`、`indeterminate` 动作 |
+| [`p0_record.schema.json`](p0_record.schema.json) | 冻结的 v0.1 结构（16 条种子，A 适配器当前版本） |
 
 此前仓库中的 `events.schema.json`、`task_graph.schema.json`、`state.schema.json`、`annotation.schema.json` 是更早的草案，已由本文件取代；历史版本可在 Git 历史中查看。
 
@@ -63,7 +65,7 @@ resource_available, resource_missing
 - `C`：`ACTIVE / SUSPENDED / ABANDONED / COMPLETED / UNKNOWN`
 - `Q`：任务步骤 ID / `UNKNOWN` / `NOT_APPLICABLE`
 
-语义与证据规则见 [标注手册](../docs/annotation/annotation_handbook_v0.1.md)。`V/F` 是客观侧，`A` 是接触证据，`B/C/Q` 是人物主观侧；禁止把客观事实直接复制为人物信念。
+语义与证据规则见 [标注手册](../docs/annotation/annotation_handbook_v1.0.md)。`V/F` 是客观侧，`A` 是接触证据，`B/C/Q` 是人物主观侧；禁止把客观事实直接复制为人物信念。
 
 ## 5. Schema 之外的跨字段校验
 
@@ -102,3 +104,18 @@ P1 至少还需要：
 - 不包含可识别个人信息的元数据规范。
 
 P1 schema 将在数据许可与采集流程确定后单独设计，并与 P0 schema 明确区分。
+
+## 8. v0.2 变更（2026-10-20）
+
+`p0_record_v0.2.schema.json` 在 v0.1 基础上新增以下字段，`p0-record/v0.1.0` 与 16 条种子保持冻结不动。
+
+| 变更 | 字段 | 作用 | 对下家的影响 |
+|---|---|---|---|
+| 划分 | `split`（train/dev/calibration/test） | 家族级 60/20/20，同族 A/B 不跨集 | C 的评测协议需要；A 不应把它当输入 |
+| 机制 | `mechanism`（8 个枚举） | 让家族可按受控机制分层统计与消融 | 报告按机制拆分指标 |
+| 理解 | 事件级 `person_comprehension` | 承载 `U`：接触 ≠ 理解 | A 的 `delivery.comprehension` 可接入；C 的 `understood` 可映射 |
+| 可用语义 | 事件级 `person_available_semantics` | 人物可能获得的消息内容，与世界真值分离 | 解决“人物侧只有一个 ACCESSED”的信息缺口 |
+| 设计簿记 | `p0_design`（含 `future_outcome`） | 记录对照变量与截断后设计结果，**永不进入输入** | A/C 均不得读该字段 |
+| 不确定目标 | `p0_expected_action=indeterminate` + `undefined_reason` | P07 这类不可判别输入不强行给点标签 | A 的 `scripted_targets` 需识别该值 |
+
+**版本策略：** 任何字段变化都新增 schema 文件与数据文件、升 `schema_version`，不原地改 240 条；A 的适配器遇未知版本必须显式失败（当前行为正确）。

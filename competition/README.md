@@ -106,5 +106,5 @@
 - [提交检查清单](submission_checklist.md)
 - [内部研究方案](../docs/internal/research_plan/MWM_Research_Plan_V1_1_EC-JMF.md)（不作为提交材料）
 - [内部路线图](../docs/internal/ROADMAP.md)（不作为提交材料）
-- [标注手册](../docs/annotation/annotation_handbook_v0.1.md)
+- [标注手册](../docs/annotation/annotation_handbook_v1.0.md)
 - [数据卡](../docs/data/data_card.md)

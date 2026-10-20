@@ -36,4 +36,4 @@
 - [ ] `B/C/Q` 的无证据标签为 `UNKNOWN`
 - [ ] 派生结果不可反推个人身份
 
-详细规则见 [标注手册](../../docs/annotation/annotation_handbook_v0.1.md) 与 [数据卡](../../docs/data/data_card.md)。
+详细规则见 [标注手册](../../docs/annotation/annotation_handbook_v1.0.md) 与 [数据卡](../../docs/data/data_card.md)。

@@ -16,15 +16,16 @@
 |---|---|---|---|
 | [internal/research_plan/MWM_Research_Plan_V1_1_EC-JMF.md](internal/research_plan/MWM_Research_Plan_V1_1_EC-JMF.md) | 项目执行基线：任务、算法、协议、分工 | 团队 | V1.1（2026-10-18） |
 | [internal/ROADMAP.md](internal/ROADMAP.md) | 十周并行计划、里程碑与竞赛倒排 | 团队 | 草案 |
+| [internal/HANDOFF_2026-10-20_P0_v0.2.md](internal/HANDOFF_2026-10-20_P0_v0.2.md) | P0 v0.2 交付说明：给 A/C 的动作、命令、硬约定与已知限制 | B | 已发布 |
 
 ## 数据、标注与文献
 
 | 文档 | 用途 | Owner | 状态 |
 |---|---|---|---|
-| [annotation/annotation_handbook_v0.1.md](annotation/annotation_handbook_v0.1.md) | 事件、状态标签、证据链、P0/P1 边界与标注 SOP | B | v0.1 草案 |
+| [annotation/annotation_handbook_v1.0.md](annotation/annotation_handbook_v1.0.md) | 事件、状态标签、证据链、事件级理解（U）、八机制、P0/P1 边界与标注 SOP | B | v1.0 已冻结 |
 | [annotation/label_quality_plan_v0.1.md](annotation/label_quality_plan_v0.1.md) | P0 质量门、P1 一致性指标、噪声上限与交接模板 | B | v0.1 |
-| [annotation/p0_pair_review_table.md](annotation/p0_pair_review_table.md) | P01–P08 八组 A/B 对照的人工复核表 | B | v0.1 |
-| [data/data_card.md](data/data_card.md) | 数据集说明、当前 16 条种子、规模目标与限制 | B | 已更新 |
+| [annotation/p0_pair_review_table.md](annotation/p0_pair_review_table.md) | P01–P08 复核表与机器预检结果（v0.2 的 120 对按同一方法审计） | B | v1.0 |
+| [data/data_card.md](data/data_card.md) | 数据集说明、P0 v0.2（120 家族/240 条）、划分与限制 | B | v0.3 |
 | [literature/competitor_matrix.md](literature/competitor_matrix.md) | 直接竞争工作与创新边界索引 | B | 初始索引 |
 
 ## 写作与核查原则
