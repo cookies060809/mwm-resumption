@@ -4,7 +4,7 @@
 **日期：** 2026-10-20
 **Owner：** B
 **适用对象：** P0 脚本诊断集、后续 P1 真实行为数据
-**配套：** `schema/p0_record.schema.json`、`docs/annotation/annotation_handbook_v0.1.md`、`scripts/validate_data.py`、`scripts/pair_diff_report.py`
+**配套：** `schema/p0_record.schema.json`、`docs/annotation/annotation_handbook_v1.0.md`、`scripts/validate_data.py`、`scripts/pair_diff_report.py`
 
 ---
 
@@ -176,24 +176,41 @@ A 说得对：**标签噪声会直接变成指标上限**。但“标签噪声�
 
 ---
 
-## 4. 给 A 的质量报告模板
+## 4. 给 A / C 的质量报告
 
-每批数据交接时附一页：
+这一页由脚本从数据实算，不要手填数字：
 
-```text
-dataset: p0-seed-v0.1
-n: 16 (8 A/B pairs)
-schema_pass: 16/16
-evidence_coverage: 16/16 (100%)
-cutoff_no_future: 16/16
-pair_isolation: 8/8
-p07_input_identity: PASS
-human_audit: __/16 (B, pending)
-second_reviewer: __/8 (A/C, pending)
-known_ambiguities: ...
-p1_status: not_collected
-noise_ceiling: N/A (P0 scripted); P1 TBD
+```bash
+python scripts/p0_quality_report.py
 ```
+
+它对 `validate_data.DATA_FILES` 里的每个文件（v0.1 的 16 条与 v0.2 的 240 条）输出规模、校验结果、证据覆盖、悬空引用、cutoff 完整性、P07 输入一致性、域/划分分布、SHA256，以及**逐枚举的"schema 声明过 vs 数据用过"对照**。
+
+两条口径要记住：
+
+- `human_audit` 直接读 `annotation.status`，没人签就永远不会变成 240/240；`B` 自审完成的 `reviewed` 不等于 `adjudicated`。
+- `second_reviewer`（A/C 盲审）没有数据字段可依据，脚本恒为 `not recorded`，只能由 A/C 本人声明后另行记录。**任何人不得替他人勾选。**
+
+### v0.2 的覆盖度短板（2026-10-20 实测）
+
+240 条 / 120 家族 / 1831 事件全部通过校验，但 schema 声明的取值里有 **12 个一次都没出现过**。其中 11 个几乎全是承载不确定性的取值，另外 1 个是 C 的交接协议要求的 `calibration` 划分：
+
+| 字段 | 声明的取值 | 数据里为 0 的 |
+|---|---|---|
+| `state.A` | ACCESSED / NOT_ACCESSED / UNCERTAIN | **UNCERTAIN** |
+| `event.person_access` | 同上 | **UNCERTAIN**（1797 / 34 / 0） |
+| `event.person_comprehension` | UNDERSTOOD / MISUNDERSTOOD / NOT_UNDERSTOOD / UNCERTAIN / NOT_APPLICABLE | **NOT_UNDERSTOOD、UNCERTAIN** |
+| `event.certainty` | CERTAIN / PROBABLE / UNCERTAIN | **PROBABLE、UNCERTAIN**（1831 条全是 CERTAIN） |
+| `state.V`、`state.F` | 各含 UNKNOWN | **UNKNOWN** |
+| `state.B` | 含 UNRESOLVED | **UNRESOLVED** |
+| `state.C` | 含 ACTIVE、UNKNOWN | **ACTIVE、UNKNOWN** |
+| `split` | train / dev / calibration / test | **calibration**（144 / 48 / 0 / 48） |
+
+`split.calibration` 为空不只是覆盖率问题：C 的 `schema/模型交接协议.md` 要求每条记录带 train/dev/calibration/test 四档，当前 240 条只给出三档，锁版本前必须和 C 确认是补划档还是改协议。
+
+这正是 A 在 `A_P0_CHECK_REPORT.md` 里点名的"缺少 UNCERTAIN 接触和完整状态覆盖"。**规模目标达成 ≠ 机制覆盖达成**：滤波器在这份数据上学不到"接触不确定""理解不可判定""证据只是大概"这几档，而它们恰好是本项目要建模的东西。下一批的靶子按这张表补，不要再按家族数凑量。
+
+v0.1 的 16 条是冻结基线，短板相同（`A.UNCERTAIN`、`person_access.UNCERTAIN`、`F.UNKNOWN` 为 0），保留不动。
 
 P1 阶段再加：
 
@@ -237,17 +254,20 @@ known_issues: ...
 ### 已完成
 
 - 16 条 P0 记录通过 Schema + 跨字段校验。
+- v0.2 批次 240 条 / 120 家族 / 1831 事件通过 Schema + 跨字段校验，`mechanism` 八档全覆盖，`split` 只落了三档（`calibration` 为空）。
 - 逐字段 A/B diff 报告已生成；P07 输入一致性 PASS。
 - 六因子定义、证据规则、易错点已写入标注手册。
 
 ### 待完成
 
-- [ ] B 100% 人工审计 16 条（按 `pair_diff_report.py` 输出逐对看）。
-- [ ] A/C 盲审 8 条（每对 1 条），记录分歧。
+- [ ] **抽查 B 的自审结论。** v0.2 的 240/240 `reviewed` 是 B 自己写入的，尚无第二双眼睛验证；随机抽 20 条用 `pair_diff_report.py --pair` 逐对复核，确认"reviewed"名副其实。
+- [ ] **补 §4 表里 11 个"声明过但从未出现"的不确定性档位。**（`A.UNCERTAIN`、`person_access.UNCERTAIN`、`person_comprehension.{NOT_UNDERSTOOD,UNCERTAIN}`、`certainty.{PROBABLE,UNCERTAIN}`、`V/F.UNKNOWN`、`B.UNRESOLVED`、`C.{ACTIVE,UNKNOWN}`）这是 A 点名的缺口，比再加家族数优先。
+- [ ] **和 C 定 `split.calibration`。** C 的交接协议要四档，v0.2 只给了 train/dev/test；要么按家族重划出一档 calibration，要么由 C 改协议。锁版本前必须三方确认，B 不单方面改字段。
+- [ ] A/C 盲审 8 条（A、C 各 4 条，每机制抽 1 条），只给事件与任务图，记录分歧。
 - [ ] 根据分歧改手册/事件，不强行说服。
-- [ ] 把 `annotation.status` 从 `draft` 改为 `reviewed`。
-- [ ] 随数据给 A 一页质量报告。
-- [ ] 等 A 确认 Schema 后再批量扩到 30 条 / 240 条。
+- [x] `annotation.status` 从 `draft` 改为 `reviewed`（v0.2 已改，B 自审；v0.1 的 16 条保持 `draft`，作为 A 适配器的冻结基线）。
+- [x] 随数据给 A / C 一页质量报告（`python scripts/p0_quality_report.py`，实算，不手填）。
+- [x] 批量扩到 120 家族 / 240 条（v0.2 已交付；A 的 v0.2 适配器与 schema 确认仍待完成）。
 
 ### P1 启动前
 

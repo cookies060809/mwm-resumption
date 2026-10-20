@@ -1,6 +1,6 @@
 # 数据目录
 
-> **当前：** P0 种子 16 条（P01–P08 × A/B）已入库并通过校验；P1 真实行为数据尚未采集，默认不入库。
+> **当前：** P0 v0.2 共 120 家族 / 240 条已入库并通过校验（另有 16 条 v0.1 冻结种子供 A 的现有适配器使用）；P1 真实行为数据尚未采集，默认不入库。
 
 ## 目录
 
@@ -8,7 +8,8 @@
 data/
 ├── p0/
 │   ├── README.md
-│   └── p0_samples.json        # 16 条 P0 记录
+│   ├── p0_samples.json        # 16 条 v0.1 冻结种子
+│   └── p0_samples_v0.2.json   # 240 条 v0.2 正式批次
 └── p1/
     └── README.md              # P1 访问、伦理与未来 schema 说明
 ```
@@ -25,12 +26,12 @@ data/
 
 ## P0 种子批次
 
-- 规模：8 个基础故事家族 × A/B = 16 条。
+- 规模：120 个家族 × A/B = 240 条（15 个任务骨架 × 8 个受控机制），1831 个事件。
 - Schema：`schema/p0_record.schema.json`（`p0-record/v0.1.0`）。
 - 标注状态：`draft`；尚未完成 B 人工复核与 A/C 盲审。
 - 领域：`work` 6 条、`collaboration_service` 8 条、`daily_life` 2 条。
-- 当前 split：`unassigned`；正式划分按 `base_story_id` 做 60/20/20，同族 A/B 不跨集合。
-- 输入/标签边界、16 条一览、已知问题见 [data/p0/README.md](p0/README.md)。
+- 当前 split：已完成，按任务骨架做 60/20/20（72/24/24 家族），同一骨架与同一家族都不跨集合。
+- 输入/标签边界、机制表、划分与已知问题见 [data/p0/README.md](p0/README.md)。
 
 ## 校验与对照审计
 
@@ -53,4 +54,4 @@ python -m pytest
 5. P1 原始数据、可识别个人信息、未脱敏日志和受限材料**不得提交**。
 6. P0 脚本标签与 P1 真实标签必须分开统计与表述。
 
-详见 [标注手册](../docs/annotation/annotation_handbook_v0.1.md)、[质量方案](../docs/annotation/label_quality_plan_v0.1.md) 与 [数据卡](../docs/data/data_card.md)。
+详见 [标注手册](../docs/annotation/annotation_handbook_v1.0.md)、[质量方案](../docs/annotation/label_quality_plan_v0.1.md) 与 [数据卡](../docs/data/data_card.md)。

@@ -2,7 +2,7 @@
 
 **Epistemically Constrained Joint Mental-State Filter**（拟议算法名，非已发表方法）。
 
-> Owner：A。状态：接口草案，尚未实现。M1 冻结后开始编码。
+> Owner：A。状态：已接入通用精确/SMC数值内核，具体心智状态转移及公共包装未实现，M1尚待三方评审。低层数值接口与下列公共草案的层次区别见 [A接口](../../docs/internal/a/A_INTERFACES.md)。
 
 ## 核心命题
 

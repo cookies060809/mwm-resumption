@@ -24,6 +24,12 @@ jobs:
       - name: Validate schemas and data
         run: python scripts/validate_data.py
 
+      - name: Check the P0 seeds rebuild byte-identically
+        run: |
+          python scripts/build_p0_seed.py
+          python scripts/build_p0_v02.py
+          git diff --exit-code -- data/p0/p0_samples.json data/p0/p0_samples_v0.2.json
+
       - name: Run tests
         run: python -m pytest
 
