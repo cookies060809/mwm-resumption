@@ -19,16 +19,23 @@ def main():
     verified = json.loads((ROOT / "results/verification/verification.json").read_text(encoding="utf-8"))
     if summary["dataset_layer"] != "integration_fixture" or verified["overall"] != "passed":
         raise ValueError("This engineering bundle requires verified integration fixtures")
-    files = [path for path in ROOT.iterdir() if path.is_file() and path.suffix in {".py", ".md", ".cmd"}]
-    for folder in ("mwm_eval", "integration", "tools", "tests", "schema", "docs",
-                   "data/integration", "results/full_run", "results/verification"):
+    # Explicit engineering allowlist. Personal/internal docs and third-party
+    # source data never enter this bundle through a recursive docs/data glob.
+    files = [ROOT / name for name in ("README.md", "CONTRIBUTING.md", "pyproject.toml",
+             "requirements-dev.txt", "run_evaluation.py", "run_full_check.py", "开始完整自检.cmd")]
+    for folder in ("mwm_eval", "integration", "tools", "tests", "schema", "scripts", "models",
+                   "baselines", "evaluation", "data/p0", "data/integration",
+                   "results/full_run", "results/verification"):
         files.extend(path for path in (ROOT / folder).rglob("*") if path.is_file()
                      and "__pycache__" not in path.parts and path.suffix not in {".pyc", ".pyo"})
-    files += [ROOT / "configs/external.example.json", ROOT / "configs/ablation_matrix.json", ROOT / ".gitignore"]
+    files += [ROOT / "configs" / name for name in
+              ("external.example.json", "ablation_matrix.json", "a_ec_jmf_reference.json", "base.yaml")]
+    files.append(ROOT / ".gitignore")
     # package.log is still being written by the parent wrapper; verification.json
     # records all pre-package checks and the outer checksum file proves packaging.
     files = sorted({path for path in files if path.exists() and path.name != "package.log"})
     manifest = {"purpose": "internal C engineering delivery; not final competition submission",
+                "excluded": ["docs/internal", "docs/personal", "third-party raw data", "local configs", "credentials"],
                 "dataset_layer": summary["dataset_layer"], "files_sha256": {
                     path.relative_to(ROOT).as_posix(): file_hash(path) for path in files}}
     delivery = ROOT / "delivery"

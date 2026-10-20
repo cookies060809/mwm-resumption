@@ -129,7 +129,18 @@ def _subgroup_scores(rows, golds, records):
             for gold in selected_golds:
                 gold.pop("pair_id", None)
                 gold.pop("pair_relation", None)
+                gold.pop("pair_checks", None)
+                gold.pop("pair_mechanism", None)
             results[key][value] = evaluate([row for row in rows if row["sample_id"] in ids], selected_golds, subset)
+    mechanisms = sorted({gold["pair_mechanism"] for gold in golds if gold.get("pair_mechanism")})
+    if mechanisms:
+        results["mechanism"] = {}
+        for mechanism in mechanisms:
+            selected_golds = [gold for gold in golds if gold.get("pair_mechanism") == mechanism]
+            ids = {gold["sample_id"] for gold in selected_golds}
+            results["mechanism"][mechanism] = evaluate(
+                [row for row in rows if row["sample_id"] in ids], selected_golds,
+                [record for record in records if record["sample_id"] in ids])
     return results
 
 
@@ -147,8 +158,8 @@ def run_experiment(inputs_path, labels_path, output_dir, config, methods, seeds,
     for key in config.get("evaluation", {}).get("required_group_isolation", []):
         if key not in group_audit:
             raise ValueError("unknown required_group_isolation key")
-        if group_audit[key]["n_overlap"]:
-            raise ValueError(f"required held-out group overlaps train/test: {key}")
+        if any(group_audit[key]["pairwise_overlap"].values()):
+            raise ValueError(f"required held-out group overlaps data splits: {key}")
     train = [record for record in records if record["split"] == "train"]
     calibration_records = [record for record in records if record["split"] == "calibration"]
     test = [record for record in records if record["split"] == "test"]
@@ -229,11 +240,13 @@ def run_experiment(inputs_path, labels_path, output_dir, config, methods, seeds,
     for method_id in methods:
         if method_id != "B0" and method_id in first_seed_models and "B0" in first_seed_models:
             comparison = paired_cluster_bootstrap(first_seed_rows[method_id], first_seed_rows["B0"],
-                                                  test_golds, test, metric="accuracy", seed=seeds[0], n_bootstrap=500)
+                                                  test_golds, test, metric="accuracy", seed=seeds[0], n_bootstrap=500,
+                                                  cluster_key=config.get("evaluation", {}).get("bootstrap_cluster_key", "base_story_id"))
             comparisons.append({"method_a": method_id, "method_b": "B0", "seed": seeds[0], **comparison})
     if suite == "all":
         stress = _stress_runs(first_seed_models, test, test_golds, seeds[0])
-    code_paths = [ROOT / "run_evaluation.py"]
+    code_paths = [ROOT / "run_evaluation.py", ROOT / "scripts/run_p0_evaluation.py",
+                  ROOT / "scripts/export_eval_format.py"]
     for folder in ("mwm_eval", "integration", "tools"):
         code_paths.extend(path for path in (ROOT/folder).rglob("*.py") if "__pycache__" not in str(path))
     manifest = {"protocol": "c-engineering-draft-0.2", "created_utc": datetime.now(timezone.utc).isoformat(),
@@ -245,8 +258,12 @@ def run_experiment(inputs_path, labels_path, output_dir, config, methods, seeds,
                 "methods": methods, "seeds": seeds, "suite": suite, "external_enabled": enable_external,
                 "train_n": len(train), "calibration_n": len(calibration_records), "test_n": len(test),
                 "development_usage": "dev split retained; no test-based hyperparameter tuning",
-                "group_audit": group_audit, "bootstrap": "paired by base_story_id, first seed only, 500 samples",
-                "calibration": "temperature selected on calibration split only, separately for each method/seed"}
+                "group_audit": group_audit,
+                "bootstrap": {"cluster_key": config.get("evaluation", {}).get("bootstrap_cluster_key", "base_story_id"),
+                              "seed": seeds[0], "n_bootstrap": 500, "repeated_seeds_are_not_independent_samples": True},
+                "calibration": ("temperature selected on calibration split only, separately for each method/seed"
+                                if calibration_records else "no calibration split; probabilities remain uncalibrated"),
+                "dataset_provenance": config.get("evaluation", {}).get("dataset_provenance")}
     overall = ("completed_with_errors" if any(run["status"] == "error" for run in runs)
                else "no_methods_executed" if not any(run["status"] == "completed" for run in runs)
                else "independent_C_pipeline_completed")
@@ -337,7 +354,7 @@ def write_report(path, summary, manifest, comparisons, stress, status):
               f"本次完成方法：{', '.join(completed) or '无'}；执行错误方法：{', '.join(errors) or '无'}。", "",
               "## 概率、校准与成本", "",
               "以下按首个种子列出；概率指标只覆盖实际提供概率的样本，完整分母见 summary.json。硬标签方法不补造概率。", "",
-              "| 方法 | T1有效n | 概率覆盖 | Brier原始→校准 | ECE校准 | 温度T | 测试累计ms |", "| --- | --- | --- | --- | --- | --- | --- |"]
+              "| 方法 | T1有效n | 概率覆盖 | Brier原始→输出 | ECE输出 | 温度T | 测试累计ms |", "| --- | --- | --- | --- | --- | --- | --- |"]
     for run in summary["runs"]:
         if run["seed"] != manifest["seeds"][0] or run["metrics"] is None:
             continue
@@ -349,7 +366,9 @@ def write_report(path, summary, manifest, comparisons, stress, status):
         lines.append(f"| {run['method_id']} | {metrics['t1']['n_eligible']} | {percent(prob['coverage'])} | "
                      f"{decimal(raw['brier'])} → {decimal(prob['brier'])} | {decimal(prob['ece'])} | "
                      f"{run['calibration']['temperature'] if run['calibration']['applicable'] else '—'} | {run['cost']['total_measured_ms']:.2f} |")
-    lines += ["", "温度只在 calibration 划分选择，不改变硬标签。耗时为本机测量，GPU/费用/未知tokens记 null；不能据此推断部署成本。", "",
+    lines += ["", ("温度只在 calibration 划分选择，不改变硬标签。" if manifest["calibration_n"] else
+                    "本批次没有独立 calibration 划分；未拟合温度，所有概率指标均为未校准结果。"),
+              "耗时为本机测量，GPU/费用/未知tokens记 null；不能据此推断部署成本。", "",
               "## 实现范围", "",
               "- B0 最近活动、B1 最近五事件、B4 无认知门控的持久记忆、B5 证据规则 BDI；B1 不声称严格复现 SET-PR。",
               "- B6 使用时长/负荷/线索的训练型逻辑回归；B7 为训练型 HMM，非 SIPS。HMM 潜态只有全部获得证据锚定才发布语义 C 分布。",
@@ -373,4 +392,17 @@ def write_report(path, summary, manifest, comparisons, stress, status):
               ("规则生成模板在各集合共享，虽然故事ID/人物/任务族隔离，这仍是生成器内自检，不能据此声称跨域泛化。" if fixture else
                "分组重叠见 manifest.json；是否存在共享模板/受试者关联还需按数据卡复核。"),
               "小样本校准及Bootstrap区间的统计能力有限；工程验收通过不等于方法有效性已获证明。", ""]
+    first_runs = [run for run in summary["runs"] if run["seed"] == manifest["seeds"][0] and run.get("metrics")]
+    if any(run["metrics"].get("mechanism_pairs") for run in first_runs):
+        lines += ["## 成对机制检查（首种子）", "",
+                  "match_gold 要求一对中的两个输出都与各自已知标签一致；equal 比较输出一致性，概率容差为 1e-9。缺失概率/状态分布不补造，覆盖率另列。", "",
+                  "| 方法 | 机制 | 检查目标:关系 | 通过/可评/定义 | 通过率 | 覆盖率 |",
+                  "| --- | --- | --- | --- | --- | --- |"]
+        for run in first_runs:
+            for mechanism, checks in run["metrics"].get("mechanism_pairs", {}).items():
+                for name, counts in checks.items():
+                    lines.append(f"| {run['method_id']} | {mechanism} | {name} | "
+                                 f"{counts['n_pass']}/{counts['n_evaluable']}/{counts['n_defined']} | "
+                                 f"{percent(counts['rate'])} | {percent(counts['coverage'])} |")
+        lines += ["", "状态正确率与成对变化不等同于真实心理状态测量；P0 仅支持脚本协议诊断。", ""]
     path.write_text("\n".join(lines), encoding="utf-8")

@@ -11,6 +11,8 @@ their own available-probability subset; hard rules never receive fake scores.
 import math
 from collections import defaultdict
 
+from mwm_eval.pair_checks import evaluate_checks
+
 
 FACTORS = ("V", "F", "A", "B", "C", "Q")
 LAYERS = {"P0", "P1", "integration_fixture"}
@@ -324,7 +326,7 @@ def _pair_value(prediction, relation, factor):
 def _pairs(by_row, golds):
     groups = defaultdict(list)
     for gold in golds:
-        if gold.get("pair_id") is not None:
+        if gold.get("pair_id") is not None and not gold.get("pair_checks"):
             groups[gold["pair_id"]].append(gold)
     results = {}
     for relation in ("same_prediction", "different_belief", "same_mental"):
@@ -450,6 +452,7 @@ def evaluate(rows, golds, records=None, ece_bins=10):
         "schema_version": "c-evaluation-draft-1", "dataset_layer": layer,
         "counts": counts, "t1": t1, "t2": steps,
         "states": _state_metrics(by_row, golds), "pairs": _pairs(by_row, golds),
+        "mechanism_pairs": evaluate_checks(by_row, golds),
         "constraints": _constraints(by_row, golds),
         "n_eligible_t1": len(truths), "accuracy_all_eligible": t1["accuracy"],
         "resume_f1": t1["resume_f1"], "step_accuracy": steps["top1_accuracy"],

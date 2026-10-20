@@ -35,3 +35,8 @@ jobs:
 
       - name: Verify offline baseline pipeline and reproducibility
         run: python run_full_check.py
+
+      - name: Evaluate formal P0 and verify repeated predictions
+        run: |
+          python scripts/run_p0_evaluation.py
+          python scripts/check_p0_reproducibility.py

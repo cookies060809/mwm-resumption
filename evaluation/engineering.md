@@ -1,6 +1,6 @@
 # 本地基线与评测工程
 
-本模块提供六种本地方法、统一指标、外部适配和离线复现工具。当前仅以 `integration_fixture` 工程样例验证流程，不提供正式 P0/P1 主结果，也不代表 EC-JMF 已实现或已验证。
+本模块提供六种本地方法、统一指标、外部适配和离线复现工具。工程样例与正式 P0 v0.2 分开运行；P0 结果见 `p0_baselines.md` 与 `p0_v02_results.json`。尚无完整 EC-JMF 或正式 P1 预测结果。
 
 ## 运行
 
@@ -42,7 +42,9 @@ B1 是五事件窗参考实现；B6 采用激活/线索等特征；B7 是普通 
 
 `data/integration/` 有72条脚本工程样例，train/dev/calibration/test 各18条，生成规则见 `tools/build_integration_fixtures.py`。故事/人物/任务族 ID 按划分隔离，但各划分共享生成模板，不能据此声称跨域泛化。未知与删失从对应任务评分中明确排除；P1不完整窗口的未恢复记录不作为已证实负例。
 
-仓库已有16条 `p0-record/v0.1.0` P0草案。它们尚未映射进本引擎，保持原数据、schema与标注不变。对齐需确认事件词表、时间/窗口、逐因子证据、成对关系和独立划分，不自动把已有 P0 `notes` 或未来脚本结果注入模型输入。工程 schema 不能代替该语义审核。
+16 条 `p0-record/v0.1.0` 种子保留给 A 的旧版回归；C 使用 `mwm_eval/p0.py` 接入 240 条 `p0-record/v0.2.0`。原始数据、schema、划分和 B 的导出文件均不改动。C 显式修正人物角色、消息内容类型与中断目标的映射；监督和机制检查只进入评测侧。该映射仍需 A/B 评审。
+
+运行 `python scripts/run_p0_evaluation.py`，再运行 `python scripts/check_p0_reproducibility.py`。没有独立校准集时保留原始概率。按任务骨架进行配对 Bootstrap；本测试集只有三个骨架，区间仅作探索性诊断。
 
 ## 输出与复现
 
@@ -58,4 +60,4 @@ manifest 保存代码、输入、标签及配置 SHA256 与环境；逐样例日
 
 复制 `configs/external.example.json` 到被忽略的个人配置，配置环境变量并显式加 `--enable-external` 才启用真实调用。密钥不写入仓库。B8/B9使用另行安装的官方 checkout；真实端点、官方运行与 A 模型均不能由本机协议测试替代。B9字符摘要尚未完成严格 token 等量控制。
 
-`configs/ablation_matrix.json` 仅登记 A0–A7 等待交付项；null不是模型实现。完整核心算法、训练检查点、正式数据、预算公平性及主实验仍需实际交付和运行。外部接口说明见 `schema/模型交接协议.md`，官方版本与差异见 `integration/mentis_public_audit.md`。
+`configs/ablation_matrix.json` 仅登记 A0–A7 等待交付项；null 不是模型实现。P0 v0.2 已交付并完成本地基线诊断；完整核心算法、训练检查点、审核后的 P1、预算公平性及主实验仍需实际交付和运行。外部接口说明见 `schema/模型交接协议.md`，官方版本与差异见 `integration/mentis_public_audit.md`。

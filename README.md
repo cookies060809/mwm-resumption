@@ -6,8 +6,8 @@
 
 > **参赛信息**：第八届全球校园人工智能算法精英大赛 · 算法创新赛 · 赛题 1「算法模型创新」
 > **官方页面**：[aicomp.cn/tracks/tracks-2/3788.html](https://www.aicomp.cn/tracks/tracks-2/3788.html)
-> **仓库状态：V0.4 P0 v0.2 全量批次（2026-10-20）**　〔本次变更说明见 [docs/internal/HANDOFF_2026-10-20_P0_v0.2.md](docs/internal/HANDOFF_2026-10-20_P0_v0.2.md)〕
-> 当前已有研究方案、P0 v0.2 schema、标注手册 v1.0、120 家族 / 240 条 P0 数据（B 复核完成），以及六种本地基线、统一评测与离线复现工具。核心算法、真实外部模型实验和正式主结果仍未完成。`results/` 中不得出现未经真实实验产生的数字。
+> **仓库状态：P0 v0.2 正式批次与六基线评测（2026-10-21）**
+> 已接入 120 家族 / 240 条 P0，并运行六种本地基线、八类机制检查与三种子复现。结果是脚本诊断，详见 [P0 实验说明](evaluation/p0_baselines.md)。核心算法完整预测、真实外部模型对比和正式 P1 评测尚未完成。
 
 ## 一句话定义
 
@@ -41,12 +41,13 @@
 - [x] 竞赛材料骨架、评分映射与提交清单
 - [ ] 核心算法 EC-JMF 最小实现
 - [x] B0/B1/B4/B5/B6/B7 本地基线、指标与独立工程复现流程
-- [ ] B2/B3/B8/B9 真实模型运行、正式 P0 数据适配与公平比较
+- [x] 正式 P0 v0.2 接入、六本地基线与成对机制评测
+- [ ] B2/B3/B8/B9/B10 真实模型运行与公平比较
 - [ ] 真实实验数据与主结果、消融、校准
 - [ ] 技术方案 PDF、答辩 PPT、演示视频
 - [ ] 提交前合规与复现审查
 
-当前 P0 批次：120 个家族 × A/B = 240 条、1831 条事件；`work` 80 条、`collaboration_service` 84 条、`daily_life` 76 条；`split` 为 72/24/24；`annotation.status=reviewed`。另有 16 条 v0.1 冻结种子供 A 的现有适配器使用。
+当前 P0 批次：120 个家族 × A/B = 240 条、1831 条事件；`work` 80 条、`collaboration_service` 84 条、`daily_life` 76 条；家族划分 72/24/24，对应记录 144/48/48；`annotation.status=reviewed`。另有 16 条 v0.1 冻结种子供 A 的现有适配器使用。
 
 ## 仓库结构
 
@@ -60,7 +61,7 @@
 │   └── literature/         # 竞品矩阵与原文索引
 ├── schema/                 # P0 记录 JSON Schema（p0-record/v0.1.0）
 ├── data/
-│   ├── p0/                 # 16 条 P0 种子与说明
+│   ├── p0/                 # 16 条冻结种子、240 条 v0.2 正式批次
 │   └── p1/                 # P1 合规说明（尚未采集，默认不入库）
 ├── models/
 │   ├── ec_jmf/             # 联合后验更新核心算法契约
@@ -96,11 +97,20 @@ python run_full_check.py
 
 单独运行实验：`python run_evaluation.py`；生成离线结果页：`python tools/build_dashboard.py`。实现与边界见 [evaluation/engineering.md](evaluation/engineering.md)。
 
-`data/integration/` 的 72 条记录是独立工程样例，与 `data/p0/p0_samples.json` 的 16 条 P0 草案格式不同。尚未将 P0 草案转换进本评测器，不能把工程样例成绩当作正式 P0/P1 或核心算法结果。预测协议见 [schema/模型交接协议.md](schema/模型交接协议.md)。
+正式 P0 运行：
+
+```bash
+python scripts/run_p0_evaluation.py
+python scripts/check_p0_reproducibility.py
+```
+
+结果与离线页面位于 `results/p0_v02/`。C 的版本化适配层保留 B 的原始数据与划分；72 条 `data/integration/` 仍单独用于工程自检。已保存的匿名结果摘要见 [evaluation/p0_v02_results.json](evaluation/p0_v02_results.json)。预测协议见 [schema/模型交接协议.md](schema/模型交接协议.md)。
+
+真实数据的字段审查、候选提取与边界见 [evaluation/p1_source_audit.md](evaluation/p1_source_audit.md)。原始标注、转录和问卷回答只保存在被忽略的本地目录。
 
 ## 数据与证据边界
 
-1. **P0 与 P1 严格分离。** 当前 P0 为 16 条脚本诊断种子，不能用于声称预测真实人类心理；P1 才对应经许可的真实连续行为证据，目前尚未采集。
+1. **P0 与 P1 严格分离。** 当前正式 P0 为 240 条脚本诊断记录，不能用于声称预测真实人类心理；已开始公开真实数据的字段审查，但尚无经过验证的 P1 恢复评测集。
 2. **P1 原始数据默认不入库。** 只允许提交经批准的元数据或脱敏派生结果；禁止提交可识别个人的视频、音频、屏幕录制或原始日志。
 3. **人物能否获知事件必须有独立证据字段。** 不允许把客观世界事实直接复制为人物信念。
 4. **禁止未来泄漏。** 预测时刻 `t` 之后的标签、事件或测试集信息不得进入 `observed_events`。

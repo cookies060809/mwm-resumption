@@ -36,6 +36,8 @@
     "MENTIS_STRUCTURED": {"enabled": false},
     "B10": {
       "enabled": false,
+      "output_format": "a-t123-draft-1",
+      "decision_threshold": 0.5,
       "supports_seed": false,
       "argv": [],
       "mode": "full",

@@ -5,6 +5,8 @@ import json
 import math
 from pathlib import Path
 
+from mwm_eval.pair_checks import validate_checks
+
 
 FACTORS = {
     "V": {"VALID", "CANCELLED", "FULFILLED", "UNKNOWN"},
@@ -199,7 +201,8 @@ def validate_dataset(records, golds):
         by_id[record["sample_id"]] = record
     seen, layers = set(), set()
     allowed_gold = {"sample_id", "dataset_layer", "resume_label", "resume_step", "state_labels", "state_evidence",
-                    "window_complete", "pair_id", "pair_relation", "pair_factor", "constraint_checks", "annotation_source"}
+                    "window_complete", "pair_id", "pair_relation", "pair_factor", "constraint_checks", "annotation_source",
+                    "pair_mechanism", "pair_checks"}
     for gold in golds:
         needed = {"sample_id", "dataset_layer", "resume_label", "resume_step", "state_labels", "state_evidence", "window_complete"}
         if not needed <= set(gold) or set(gold) - allowed_gold:
@@ -240,6 +243,10 @@ def validate_dataset(records, golds):
                 raise ValueError("non-unknown state gold requires evidence")
         if gold.get("pair_relation") not in {None, "same_prediction", "different_belief", "same_mental"}:
             raise ValueError("unknown pair relation")
+        if "pair_checks" in gold:
+            if not text(gold.get("pair_id")) or not text(gold.get("pair_mechanism")):
+                raise ValueError("mechanism checks require pair_id and pair_mechanism")
+            validate_checks(gold["pair_checks"])
     if len(layers) != 1:
         raise ValueError("P0/P1/fixtures must be evaluated separately")
     return {"n": len(records), "dataset_layer": next(iter(layers)),

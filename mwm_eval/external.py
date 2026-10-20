@@ -522,6 +522,16 @@ class CommandBaseline:
         metadata.update(_redact(_usage_accounting([_reported_usage(prediction)]), secrets))
         if completed.returncode:
             raise ExternalPredictionError("external adapter exited unsuccessfully", metadata)
+        output_format = cfg.get("output_format", "canonical")
+        if output_format == "a-t123-draft-1" and self.method_id == "B10":
+            from integration.a_output_adapter import normalize_a_output
+            try:
+                prediction = normalize_a_output(prediction, obs, cfg.get("decision_threshold", 0.5))
+            except (TypeError, ValueError) as exc:
+                metadata["error_type"] = type(exc).__name__
+                raise ExternalPredictionError("A output does not satisfy the T1/T2/T3 contract", metadata) from None
+        elif output_format != "canonical":
+            raise ExternalPredictionError("unsupported external output_format", metadata)
         return _validated_prediction(prediction, obs, metadata, secrets)
 
 
