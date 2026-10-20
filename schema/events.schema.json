@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/ecr-mwm/schema/events.schema.json",
+  "title": "ECR-MWM event record",
+  "description": "One atomic event in a partially observable task history. Version 0.1.0.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "time",
+    "actor",
+    "event_type",
+    "goal_id",
+    "step_id",
+    "world_effect",
+    "observer_evidence",
+    "person_access",
+    "person_access_evidence",
+    "source",
+    "certainty"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+      "description": "Unique within one sample."
+    },
+    "time": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Scenario-local ISO 8601 timestamp, or HH:MM / HH:MM:SS for single-day P0 scripts."
+    },
+    "actor": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Person ID, system ID, or 'background'."
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "goal_started",
+        "goal_resumed",
+        "goal_completed",
+        "goal_cancelled",
+        "goal_suspended",
+        "goal_abandoned",
+        "step_started",
+        "step_completed",
+        "step_failed",
+        "interruption_started",
+        "interruption_ended",
+        "notification_queued",
+        "notification_delivered",
+        "notification_accessed",
+        "notification_acknowledged",
+        "person_action",
+        "person_statement",
+        "environment_change",
+        "other"
+      ],
+      "description": "Controlled vocabulary v0.1. Additions require a schema PR and migration note."
+    },
+    "goal_id": {
+      "type": ["string", "null"],
+      "description": "Related goal. Must be null when not applicable."
+    },
+    "step_id": {
+      "type": ["string", "null"],
+      "description": "Related task step. Must exist in the task graph when non-null."
+    },
+    "world_effect": {
+      "type": ["object", "null"],
+      "description": "Structured change to objective world/task state. Do not rely on narrative prose alone.",
+      "additionalProperties": true
+    },
+    "observer_evidence": {
+      "type": ["string", "null"],
+      "description": "How the external observer can know this event happened."
+    },
+    "person_access": {
+      "type": "string",
+      "enum": ["ACCESSED", "NOT_ACCESSED", "UNCERTAIN", "NOT_APPLICABLE"],
+      "description": "Evidence label for whether the person could access this event; not a measure of understanding."
+    },
+    "person_access_evidence": {
+      "type": ["string", "null"],
+      "description": "Evidence supporting the person_access label."
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "BACKGROUND_SYSTEM",
+        "SENSOR",
+        "PERSON_STATEMENT",
+        "OBSERVER_NOTE",
+        "SCRIPT",
+        "OTHER"
+      ]
+    },
+    "certainty": {
+      "type": "string",
+      "enum": ["HIGH", "MEDIUM", "LOW", "UNKNOWN"],
+      "description": "Annotator certainty that this event record is correct."
+    },
+    "note": {
+      "type": "string"
+    }
+  }
+}

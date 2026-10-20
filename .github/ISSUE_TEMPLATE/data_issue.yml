@@ -1,0 +1,43 @@
+name: 数据 / 标注问题
+description: 报告 schema、标注歧义、成对样例或泄漏问题
+title: "[Data] "
+body:
+  - type: input
+    id: sample_id
+    attributes:
+      label: 样例 ID
+      description: 例如 P01-A；若为通用 schema 问题可写 N/A。
+    validations:
+      required: true
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: 问题类型
+      options:
+        - 标签歧义
+        - 证据链缺失
+        - 成对样例不一致
+        - schema 校验失败
+        - 未来信息泄漏
+        - 划分 / 分组问题
+        - 隐私 / 许可问题
+        - 其他
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述
+      description: 具体是哪条记录、哪个字段、为什么有问题？
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 证据与复现
+      description: 附事件 ID、标注手册条款、校验命令输出或最小复现。
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 建议处理
+      description: 建议如何修订？是否需要更新手册版本或 schema？

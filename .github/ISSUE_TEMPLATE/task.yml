@@ -1,0 +1,81 @@
+name: 任务 / Task
+description: 记录一个可验收的研发、数据或实验任务
+title: "[Task] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        请把任务拆成可验收的交付物。涉及研究结论的任务，必须写明证据来源与禁止夸大的边界。
+  - type: dropdown
+    id: role
+    attributes:
+      label: 主责角色
+      options:
+        - A - 算法与理论
+        - B - 数据与认知机制
+        - C - 系统、基线与实验
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: 工作范围
+      options:
+        - docs / 文献
+        - schema / 标注规范
+        - P0 数据
+        - P1 数据
+        - EC-JMF 算法
+        - ECR-MWM 集成
+        - 基线
+        - 评测 / 校准
+        - 论文 / 竞赛材料
+        - 工程 / CI
+    validations:
+      required: true
+  - type: dropdown
+    id: milestone
+    attributes:
+      label: 对应里程碑
+      options:
+        - M1 任务与接口冻结
+        - M2 P0 首批数据与可跑基线
+        - M3 算法与强规则/概率基线对接
+        - M4 独立模型 + 数据 v1 + 官方基线
+        - M5 第一版主实验结果
+        - M6 系统集成与端到端结果
+        - M7 核心证据表与失败案例
+        - M8 论文/技术报告初稿
+        - M9 完整技术报告与可复现实验
+        - M10 最终提交包
+        - 无 / 维护性任务
+    validations:
+      required: true
+  - type: textarea
+    id: goal
+    attributes:
+      label: 目标
+      description: 完成后应得到什么可检查的结果？
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 验收标准
+      description: 用可运行的命令、文件或指标说明如何验收。
+      placeholder: |
+        - [ ] 新增文件 ...
+        - [ ] python scripts/validate_data.py 通过
+        - [ ] 结果可由 commit + config + seed 复现
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: 依赖与风险
+      description: 需要谁提供什么？是否存在数据许可、算力或接口未冻结的问题？
+  - type: textarea
+    id: boundaries
+    attributes:
+      label: 结论边界
+      description: 本任务不允许声称什么？例如 P0 结果不能写成真实人类预测。

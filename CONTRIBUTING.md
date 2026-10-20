@@ -1,0 +1,76 @@
+# 协作规范
+
+## 1. 角色与评审
+
+| 变更范围 | 主责 | 必须评审 |
+|---|---|---|
+| `models/`, 算法配置 | A | B 或 C 至少一人 |
+| `schema/`, `data/`, 标注手册 | B | A（可训练性）或 C（评测可用性） |
+| `baselines/`, `evaluation/`, `integration/` | C | A 或 B 至少一人 |
+| `docs/`, `paper/` 中他人主责章节 | 对应章节 owner | 至少一名其他成员 |
+| 研究结论、性能数字、对外材料 | 三人共同签字 | A + B + C |
+
+- `main` 分支保持可运行；禁止直接推送未评审的算法、数据或结果变更。
+- 每个 PR 至少一名非作者评审。数据与 schema 变更必须由 B 评审；涉及训练接口的变更必须由 A 评审。
+- 评审时优先检查：未来泄漏、P0/P1 混用、证据链缺失、预算不公平、结论超出数据支持范围。
+
+## 2. 分支与提交
+
+分支命名：
+
+```text
+feat/<area>-<short-desc>      # 新功能，如 feat/ec-jmf-access-gate
+data/<pair-or-family-id>      # 数据建设，如 data/p01-p08
+exp/<experiment-id>           # 实验，如 exp/e1-p0-consistency
+docs/<topic>                  # 文档，如 docs/annotation-handbook-v0.1
+fix/<short-desc>              # 修复
+```
+
+提交信息采用 Conventional Commits：
+
+```text
+feat(ec-jmf): add access-belief gating prototype
+data(p0): add P02 minimal pair
+schema: clarify Q label evidence rule
+docs: update annotation handbook to v0.1.1
+exp(e2): record calibration baseline run
+```
+
+## 3. 数据变更规则
+
+1. 同一 `base_story_id` 的 A/B 变体必须放在同一 PR、同一 split，禁止跨训练/测试集合。
+2. 新增或修改样例必须通过 `python scripts/validate_data.py`。
+3. 每个非 `UNKNOWN` 状态标签必须提供 `evidence_event_ids`、脚本策略或标注证据。
+4. P1 原始数据、可识别个人内容、未脱敏日志和受限材料**不得提交**。只提交元数据、模板或经批准派生结果。
+5. Schema 变更遵循语义化版本：破坏性变更提升主版本，并在 PR 中附迁移说明；不得静默改变既有标签含义。
+6. P0 的脚本标签与 P1 的真实行为标签必须在记录中明确区分，不得合并统计后宣称真实预测能力。
+
+## 4. 结果与实验规则
+
+- 每个结果目录至少包含：`config.yaml` 快照、代码 commit、随机种子、输入数据版本/哈希、逐样例预测、聚合指标、运行时间与成本。
+- 禁止手工修改结果文件或把未运行的数字写入 `results/`。
+- 报告主结果时必须同时报告 `n`、分层条件、置信区间与失败类型；校准结果需报告 Brier/ECE 及样本量。
+- P1 右删失样本不得直接记为 `not_resume`；按方案第 5.9 节剔除或使用生存/hazard 模型，并报告删失比例。
+- 任何“优于基线”的结论必须来自相同输入、相同基座、可比推理预算和同一评价切片。
+
+## 5. 接口冻结（M1）
+
+W1 结束前冻结以下契约，之后变更需 A/B/C 三方确认：
+
+- 事件字段与合法事件类型；
+- 状态因子 `V/F/A/B/C/Q` 的标签与证据规则；
+- `EC-JMF.update(...)` 的输入输出；
+- T1/T2/T3 预测格式；
+- 训练/开发/测试划分字段与泄漏检查口径。
+
+## 6. 安全与隐私
+
+- 不提交密钥、token、`.env`、个人账号凭据。
+- 不提交第三方论文 PDF 或受限数据，除非许可明确允许；优先记录 DOI/URL 与核查笔记。
+- 发现敏感信息误提交时，立即通知全员并轮换凭据；不要仅用后续提交删除。
+
+## 7. Issue 与 PR
+
+- 任务使用 `.github/ISSUE_TEMPLATE/task.yml`，数据问题使用 `data_issue.yml`。
+- PR 必须说明：变更目的、影响范围、验证方式、是否涉及数据/接口变更、是否产生新结论。
+- PR 模板中的检查项必须逐项确认。

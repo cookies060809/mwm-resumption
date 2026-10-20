@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/ecr-mwm/schema/state.schema.json",
+  "title": "ECR-MWM state factor vocabulary",
+  "description": "Joint state factors Z=(V,F,A,B,C,Q). Version 0.1.0. Labels are evidence annotations, not direct measurements of hidden mental states.",
+  "$defs": {
+    "V": {
+      "type": "string",
+      "enum": ["VALID", "CANCELLED", "FULFILLED", "UNKNOWN"],
+      "description": "Objective goal validity, independent of what the person knows."
+    },
+    "F": {
+      "type": "string",
+      "enum": ["READY", "BLOCKED", "UNKNOWN"],
+      "description": "Objective feasibility: tools, resources, permissions, and dependencies."
+    },
+    "A": {
+      "type": "string",
+      "enum": ["ACCESSED", "NOT_ACCESSED", "UNCERTAIN"],
+      "description": "Evidence label for person access to the key event. Access does not imply understanding."
+    },
+    "B": {
+      "type": "string",
+      "enum": ["BELIEVES_VALID", "BELIEVES_INVALID", "UNRESOLVED", "UNKNOWN"],
+      "description": "The person's subjective belief about goal validity. Never copy directly from V."
+    },
+    "C": {
+      "type": "string",
+      "enum": ["ACTIVE", "SUSPENDED", "ABANDONED", "COMPLETED", "UNKNOWN"],
+      "description": "The person's commitment to the original goal."
+    },
+    "Q": {
+      "description": "The step the person believes is the next incomplete step, or UNKNOWN / NOT_APPLICABLE.",
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": ["UNKNOWN", "NOT_APPLICABLE"]
+        },
+        {
+          "type": "string",
+          "pattern": "^(?!UNKNOWN$|NOT_APPLICABLE$)[A-Za-z][A-Za-z0-9_]*$"
+        }
+      ]
+    }
+  }
+}

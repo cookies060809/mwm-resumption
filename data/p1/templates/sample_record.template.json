@@ -1,0 +1,75 @@
+{
+  "schema_version": "0.1.0",
+  "sample_id": "P1-TEMPLATE-000",
+  "base_story_id": "P1-TEMPLATE",
+  "variant_id": "A",
+  "pair_id": "P00",
+  "domain": "other",
+  "split": "unassigned",
+  "goal_id": "goal_template",
+  "cutoff_event_id": "e01",
+  "horizon": {
+    "type": "decision_opportunities",
+    "value": 3
+  },
+  "task_graph": {
+    "goal_id": "goal_template",
+    "steps": [
+      {
+        "step_id": "step_one",
+        "label": "模板步骤一",
+        "depends_on": []
+      },
+      {
+        "step_id": "step_two",
+        "label": "模板步骤二",
+        "depends_on": ["step_one"]
+      }
+    ]
+  },
+  "observed_events": [
+    {
+      "event_id": "e01",
+      "time": "2026-01-01T10:00:00+08:00",
+      "actor": "person_template",
+      "event_type": "goal_started",
+      "goal_id": "goal_template",
+      "step_id": "step_one",
+      "world_effect": {
+        "goal_activity": "started"
+      },
+      "observer_evidence": "template only; replace with a verifiable source",
+      "person_access": "UNCERTAIN",
+      "person_access_evidence": null,
+      "source": "OTHER",
+      "certainty": "UNKNOWN"
+    }
+  ],
+  "state_at_cutoff": {
+    "V": "UNKNOWN",
+    "F": "UNKNOWN",
+    "A": "UNCERTAIN",
+    "B": "UNKNOWN",
+    "C": "UNKNOWN",
+    "Q": "UNKNOWN"
+  },
+  "state_evidence_event_ids": [],
+  "p1_observation": {
+    "observed_resume": null,
+    "resume_step": null,
+    "censoring_status": "not_collected",
+    "window_end_event_id": null,
+    "window_decision_opportunities": null,
+    "evidence_event_ids": []
+  },
+  "provenance": {
+    "handbook_version": "0.1.0",
+    "created_by": "repo-scaffold",
+    "created_at": "2026-10-20",
+    "reviewed_by": null,
+    "reviewed_at": null,
+    "status": "draft"
+  },
+  "access_level": "restricted",
+  "notes": "Template only. It is not real P1 data. Replace placeholders in an approved restricted store; never commit raw P1 material to Git."
+}

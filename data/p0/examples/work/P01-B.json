@@ -1,0 +1,154 @@
+{
+  "schema_version": "0.1.0",
+  "sample_id": "P01-B",
+  "base_story_id": "P01",
+  "variant_id": "B",
+  "pair_id": "P01",
+  "domain": "work",
+  "split": "unassigned",
+  "goal_id": "order_O17",
+  "cutoff_event_id": "e05",
+  "horizon": {
+    "type": "decision_opportunities",
+    "value": 3
+  },
+  "task_graph": {
+    "goal_id": "order_O17",
+    "steps": [
+      {
+        "step_id": "verify_address",
+        "label": "核对收货地址",
+        "depends_on": []
+      },
+      {
+        "step_id": "pack_item",
+        "label": "包装物品",
+        "depends_on": ["verify_address"]
+      },
+      {
+        "step_id": "print_label",
+        "label": "打印运单",
+        "depends_on": ["pack_item"]
+      },
+      {
+        "step_id": "handoff",
+        "label": "交接快递",
+        "depends_on": ["print_label"]
+      }
+    ]
+  },
+  "observed_events": [
+    {
+      "event_id": "e01",
+      "time": "10:00",
+      "actor": "P01",
+      "event_type": "step_completed",
+      "goal_id": "order_O17",
+      "step_id": "verify_address",
+      "world_effect": {
+        "step_id": "verify_address",
+        "status": "completed"
+      },
+      "observer_evidence": "工作台动作日志记录地址核对完成",
+      "person_access": "ACCESSED",
+      "person_access_evidence": "人物本人在工作台执行了该步骤",
+      "source": "SENSOR",
+      "certainty": "HIGH"
+    },
+    {
+      "event_id": "e02",
+      "time": "10:01",
+      "actor": "P01",
+      "event_type": "interruption_started",
+      "goal_id": "order_O17",
+      "step_id": null,
+      "world_effect": {
+        "goal_activity": "suspended"
+      },
+      "observer_evidence": "人物接听电话并离开包装台",
+      "person_access": "ACCESSED",
+      "person_access_evidence": "人物直接接听电话",
+      "source": "SENSOR",
+      "certainty": "HIGH"
+    },
+    {
+      "event_id": "e03",
+      "time": "10:03",
+      "actor": "background_order_system",
+      "event_type": "goal_cancelled",
+      "goal_id": "order_O17",
+      "step_id": null,
+      "world_effect": {
+        "goal_status": "CANCELLED"
+      },
+      "observer_evidence": "订单后台状态变为 CANCELLED",
+      "person_access": "NOT_ACCESSED",
+      "person_access_evidence": "取消通知停留在后台队列，人物不可见",
+      "source": "BACKGROUND_SYSTEM",
+      "certainty": "HIGH"
+    },
+    {
+      "event_id": "e04",
+      "time": "10:04",
+      "actor": "background_order_system",
+      "event_type": "notification_queued",
+      "goal_id": "order_O17",
+      "step_id": null,
+      "world_effect": {
+        "notification_status": "QUEUED",
+        "visibility": "OFFSCREEN"
+      },
+      "observer_evidence": "后台队列日志显示取消通知已排队",
+      "person_access": "NOT_ACCESSED",
+      "person_access_evidence": "通知在屏幕外队列，没有任何可见线索到达人物",
+      "source": "BACKGROUND_SYSTEM",
+      "certainty": "HIGH"
+    },
+    {
+      "event_id": "e05",
+      "time": "10:05",
+      "actor": "P01",
+      "event_type": "interruption_ended",
+      "goal_id": "order_O17",
+      "step_id": null,
+      "world_effect": {
+        "activity": "returned_to_workbench"
+      },
+      "observer_evidence": "电话结束，人物回到同一工作台",
+      "person_access": "ACCESSED",
+      "person_access_evidence": "人物返回工作台",
+      "source": "SENSOR",
+      "certainty": "HIGH"
+    }
+  ],
+  "state_at_cutoff": {
+    "V": "CANCELLED",
+    "F": "UNKNOWN",
+    "A": "NOT_ACCESSED",
+    "B": "UNKNOWN",
+    "C": "SUSPENDED",
+    "Q": "pack_item"
+  },
+  "state_evidence_event_ids": ["e01", "e02", "e03", "e04", "e05"],
+  "p0_expectation": {
+    "scripted_policy": "continue_if_no_known_cancellation",
+    "expected_resume": true,
+    "expected_resume_step": "pack_item",
+    "rationale": "B 版本中取消通知只在后台队列；人物没有获知取消，按旧信息返回工作台。P0 脚本策略恢复包装步骤。"
+  },
+  "counterfactual_pair": {
+    "paired_sample_id": "P01-A",
+    "controlled_change": "A 版本：取消通知可被人物接触并明确确认；B 版本：通知仅在后台排队，无可见线索。",
+    "information_equivalence": false
+  },
+  "provenance": {
+    "handbook_version": "0.1.0",
+    "created_by": "repo-scaffold",
+    "created_at": "2026-10-20",
+    "reviewed_by": null,
+    "reviewed_at": null,
+    "status": "draft"
+  },
+  "access_level": "public",
+  "notes": "P0 脚本示例，不是真实人物数据。B=UNKNOWN 表示没有人物获知取消的证据，不得从客观 V=CANCELLED 复制为人物信念。"
+}
