@@ -1,9 +1,11 @@
-# Development starting point only. Every value is to be tuned on the dev split.
+# Development starting point only. Tune model/training hyperparameters on the dev split.
+# Evaluation seeds are fixed by convention, not tuned.
 # This file is not an experimental result and does not imply a trained model.
 
 project: ecr-mwm
 schema_version: "0.1.0"
-seed: 0
+seed: 0  # Single-run seed.
+evaluation_seeds: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]  # Fixed repeated-evaluation seeds.
 
 data:
   p0_root: data/p0
