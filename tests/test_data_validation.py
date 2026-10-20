@@ -9,10 +9,15 @@ sys.path.insert(0, str(ROOT))
 from scripts.validate_data import check_record, load_records, validate_all  # noqa: E402
 
 V02_PATH = ROOT / "data" / "p0" / "p0_samples_v0.2.json"
+V03_PATH = ROOT / "data" / "p0" / "p0_samples_v0.3.json"
 
 
 def load_v02():
     return json.loads(V02_PATH.read_text(encoding="utf-8"))
+
+
+def load_v03():
+    return json.loads(V03_PATH.read_text(encoding="utf-8"))
 
 
 def test_repository_data_valid() -> None:
@@ -160,8 +165,9 @@ def test_v02_unknown_labels_carry_no_evidence() -> None:
 
 def test_v02_split_is_blueprint_disjoint() -> None:
     """A task blueprint must not appear in two splits, otherwise the model can
-    memorise the task rather than the mechanism."""
-    records = load_v02()
+    memorise the task rather than the mechanism. Checked over every v0.2-line
+    batch, because a follow-up batch is where a reused blueprint would slip in."""
+    records = load_v02() + load_v03()
     blueprint_splits: dict[str, set[str]] = {}
     for record in records:
         family = record["base_story_id"]
@@ -169,6 +175,35 @@ def test_v02_split_is_blueprint_disjoint() -> None:
         blueprint_splits.setdefault(blueprint, set()).add(record["split"])
     crossed = {key: value for key, value in blueprint_splits.items() if len(value) > 1}
     assert crossed == {}, f"blueprints crossing splits: {crossed}"
+
+
+def test_v03_batch_is_draft_candidate_work() -> None:
+    records = load_v03()
+    assert len(records) == 14
+    assert len({record["base_story_id"] for record in records}) == 7
+    assert all(record["schema_version"] == "p0-record/v0.2.0" for record in records)
+    # B has not signed this batch yet, so it must not look like accepted data.
+    assert all(record["annotation"]["status"] == "draft" for record in records)
+    assert all(record["annotation"]["annotator_id"] == "agent-draft" for record in records)
+
+
+def test_v03_closes_the_uncertainty_enum_gaps() -> None:
+    """v0.2 hits its 240-record target while 11 uncertainty values stay unused, so
+    volume alone cannot show the mechanism cells are covered. Pooling v0.2 with the
+    v0.3 uncertainty batch must leave only the split C has not decided on."""
+    from scripts.p0_quality_report import enum_counts
+    from scripts.validate_data import SCHEMAS, load_json
+
+    schema = load_json(SCHEMAS["p0-record/v0.2.0"])
+    records = load_v02() + load_v03()
+    events = [event for record in records for event in record["observed_events"]]
+    unused = [
+        f"{label}.{value}"
+        for label, (allowed, counts) in enum_counts(records, events, schema).items()
+        for value in allowed
+        if not counts.get(value)
+    ]
+    assert unused == ["record.split.calibration"]
 
 
 def test_export_matches_evaluation_protocol() -> None:

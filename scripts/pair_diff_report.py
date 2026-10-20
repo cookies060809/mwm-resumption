@@ -5,7 +5,7 @@ intended variable. It is a human-audit aid, not a replacement for judgment.
 
 Usage:
     python scripts/pair_diff_report.py                 # compact table, newest batch
-    python scripts/pair_diff_report.py --full          # detailed view for one family
+    python scripts/pair_diff_report.py --full          # detailed view for every family
     python scripts/pair_diff_report.py --pair P01-W2   # pick a family
     python scripts/pair_diff_report.py --file data/p0/p0_samples.json
 """
@@ -164,7 +164,8 @@ def main():
     parser.add_argument("--full", action="store_true")
     args = parser.parse_args()
 
-    path = args.file or (DATA_V02 if DATA_V02.exists() else DATA_V01)
+    # A relative --file would otherwise break the relative_to() below.
+    path = (args.file or (DATA_V02 if DATA_V02.exists() else DATA_V01)).resolve()
     records = json.loads(path.read_text(encoding="utf-8"))
     by_story = defaultdict(list)
     for record in records:
@@ -173,7 +174,7 @@ def main():
     print(f"data: {path.relative_to(ROOT)}  families={len(by_story)}  records={len(records)}")
 
     if args.full or args.pair:
-        targets = [args.pair] if args.pair else ([next(iter(sorted(by_story)))] if args.full else [])
+        targets = [args.pair] if args.pair else sorted(by_story)
         for story_id in targets:
             if len(by_story.get(story_id, [])) == 2:
                 report_pair(story_id, by_story[story_id])

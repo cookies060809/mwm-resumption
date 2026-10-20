@@ -237,10 +237,12 @@ $$
 
 | 数据 | 设计 | 当前状态 | 竞赛用途 |
 |---|---|---|---|
-| P0 受控诊断集 | 120 个基础故事家族、≥240 条最小对照；三领域 | 已完成：120 家族 / 240 条、1831 个事件；`p0-record/v0.2.0`；8 个受控机制各 15 家族；`split` 72/24/24；`annotation.status=reviewed`；结构与跨字段校验通过 | 协议诊断、泄漏测试、消融 |
+| P0 受控诊断集 | 120 个基础故事家族、≥240 条最小对照；三领域 | 已完成：120 家族 / 240 条、1831 个事件；`p0-record/v0.2.0`；8 个受控机制各 15 家族；`split` 72/24/24；`annotation.status=reviewed`；结构与跨字段校验通过。另有 7 家族 / 14 条不确定性候选批次（`draft`，待复核） | 协议诊断、泄漏测试、消融 |
 | P1 真实行为数据 | 经许可的连续行为/任务日志；双人标注；删失处理 | 未采集 | 真实恢复预测；当前只能作为未来工作 |
 
 当前 P0 数据位于 `data/p0/p0_samples_v0.2.json`，覆盖 `work` 80 条、`collaboration_service` 84 条、`daily_life` 76 条。`python scripts/validate_data.py` 输出 240/240 通过，15 个未来泄漏家族截断前输入一致；B 已完成人工复核（`reviewed`），A/C 盲审尚未完成，也尚未运行任何模型。
+
+覆盖度审计（`python scripts/p0_quality_report.py`，数字全部由数据实算）发现：240 条虽然达到规模目标，但 schema 声明的取值里有 12 个一次都没出现，其中 11 个是承载不确定性的档位（`A=UNCERTAIN`、事件级 `person_access=UNCERTAIN`、`person_comprehension∈{NOT_UNDERSTOOD,UNCERTAIN}`、`certainty∈{PROBABLE,UNCERTAIN}`、`V/F=UNKNOWN`、`B=UNRESOLVED`、`C∈{ACTIVE,UNKNOWN}`）。这批取值正是本课题要建模的认识处境，缺它们等于让模型只在"一切都确定"的世界学习。`data/p0/p0_samples_v0.3.json`（7 家族 / 14 条，`scripts/build_p0_uncertainty.py` 可复现生成）已把 11 个档位全部覆盖，合并后仅剩 `split.calibration` 待与 C 定协议；该批次当前是 `draft`（`annotator_id=agent-draft`），B 复核完成前不作为已验收数据，也不进入任何实验结论。
 
 **重要缺口**：竞赛要求“真实有效的实验数据”。当前 240 条 P0 仍是脚本化受控诊断数据，句式按机制模板生成，不能替代真实行为证据；在提交前至少需要补足一批可核查的真实或公开数据实验，否则应在方案中明确标注为受控诊断结果，不能宣称真实人类预测能力。
 

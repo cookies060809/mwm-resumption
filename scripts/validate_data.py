@@ -1,4 +1,4 @@
-"""Validate the ECR-MWM P0 datasets (v0.1 seed and v0.2 full batch).
+"""Validate the ECR-MWM P0 datasets (v0.1 seed, v0.2 full batch, v0.3 uncertainty batch).
 
 Checks JSON Schema structure plus cross-field invariants the schema cannot
 express: cutoff ordering, evidence chains, per-factor evidence, action/step
@@ -28,6 +28,7 @@ SCHEMAS = {
 DATA_FILES = (
     ROOT / "data" / "p0" / "p0_samples.json",
     ROOT / "data" / "p0" / "p0_samples_v0.2.json",
+    ROOT / "data" / "p0" / "p0_samples_v0.3.json",
 )
 DATA_PATH = DATA_FILES[0]
 

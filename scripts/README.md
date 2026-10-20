@@ -20,6 +20,7 @@ python scripts/validate_data.py
 ```text
 OK: 16 records, 8 A/B pairs; schema and cross-field checks passed.
 OK: 240 records, 120 A/B pairs; schema and cross-field checks passed.
+OK: 14 records, 7 A/B pairs; schema and cross-field checks passed.
 ```
 
 只校验单个文件：`python scripts/validate_data.py --file data/p0/p0_samples_v0.2.json`。
@@ -30,6 +31,7 @@ OK: 240 records, 120 A/B pairs; schema and cross-field checks passed.
 
 ```bash
 python scripts/pair_diff_report.py                       # 全部家族的紧凑差异表
+python scripts/pair_diff_report.py --full                # 全部家族的逐字段详情
 python scripts/pair_diff_report.py --full --pair P04     # 单对逐字段详情
 python scripts/pair_diff_report.py --file data/p0/p0_samples.json
 ```
@@ -48,9 +50,25 @@ python scripts/validate_data.py          # 构建后必须重跑
 
 生成是确定性的；改生成器等于改数据，必须重跑校验、`pair_diff_report.py` 与测试。
 
+## `build_p0_uncertainty.py`
+
+可复现构建 v0.3 不确定性候选批次：7 家族 / 14 条，专门填 v0.2 里“schema 声明过但一次没用”的 11 个不确定性档位（`V=UNKNOWN`、`F=UNKNOWN`、`A=UNCERTAIN`、`B=UNRESOLVED`、`C=ACTIVE`、`C=UNKNOWN`、事件级 `person_access=UNCERTAIN`、`person_comprehension=NOT_UNDERSTOOD/UNCERTAIN`、`certainty=PROBABLE/UNCERTAIN`），输出 `data/p0/p0_samples_v0.3.json`。
+
+```bash
+python scripts/build_p0_uncertainty.py
+python scripts/validate_data.py --file data/p0/p0_samples_v0.3.json
+python scripts/pair_diff_report.py --file data/p0/p0_samples_v0.3.json --full
+```
+
+每条的 `UNKNOWN` 都是脚本设计出来的认识处境，不是标注者没想清楚：校验器强制 `UNKNOWN` 因子不得带证据、非 `UNKNOWN` 因子必须带证据，所以偷懒的标签会直接校验失败（口径见标注手册 §1.4）。
+
+生成器沿用 v0.2 的口径，不新造惯例：`p0_scripted_policy` 与机制 1:1 固定（contact_cancellation→`continue_if_no_known_cancellation`，comprehension→`act_on_believed_status`，long_term_commitment→`resume_if_committed_and_unfinished`，resource_availability→`execute_if_ready_else_wait`）；理解不到位的一臂跟 v0.2 的 15 个误解臂一样写 `suspend_or_wait`；`indeterminate` 只留给输入不可区分的家族，所以 `V=UNKNOWN` 的 P01-W8-A 仍有点标签（没有已知取消 → 继续）。两点留给 B 复核时拍板：P01-S6 两臂期望动作同为 `do_not_resume`（操控维度是信念是否调和，不是动作），以及 7 对里 4 对（P01-S6 / P05-D6 / P02-D7 / P08-S7）A/B 事件条数不等——v0.2 是条数对齐的，这里刻意不对齐，因为操控变量本身就是"多/少一条证据事件"。
+
+**批次状态是 `draft`、`annotator_id=agent-draft`**：B 本人尚未复核，因此它不是已验收数据，不得导出给 C，也不得作为 A 的训练输入。`split.calibration` 仍为空——那要 C 先定校准协议。
+
 ## `p0_quality_report.py`
 
-从数据实算交接给 A / C 的一页质量报告，对应 `docs/annotation/label_quality_plan_v0.1.md` §4。对 `validate_data.DATA_FILES` 里的每个批次输出规模、校验结果、证据覆盖、悬空引用、cutoff 完整性、P07 输入一致性、域/划分分布和文件 SHA256，并列出 **schema 声明过但数据里一次没用到的枚举取值**。
+从数据实算交接给 A / C 的一页质量报告，对应 `docs/annotation/label_quality_plan_v0.1.md` §4。对 `validate_data.DATA_FILES` 里的每个批次输出规模、校验结果、证据覆盖、悬空引用、cutoff 完整性、P07 输入一致性、域/划分分布和文件 SHA256，并列出 **schema 声明过但数据里一次没用到的枚举取值**；最后把同一 `schema_version` 的批次合并统计，避免“缺口只存在于单个文件”这种误读。
 
 ```bash
 python scripts/p0_quality_report.py

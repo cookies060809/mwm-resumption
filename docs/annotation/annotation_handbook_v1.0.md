@@ -1,10 +1,10 @@
 # 状态标签标注手册 v1.0
 
 **项目：** ECR-MWM（认知可达性约束的动态心智世界模型）
-**文档版本：** v1.0.0｜2026-10-20（升版依据：P0 v0.2 全量 240 条、B 人工复核完成）
+**文档版本：** v1.0.1｜2026-10-20（升版依据：P0 v0.2 全量 240 条、B 人工复核完成；v1.0.1 补 §1.4 未知档位判据，2026-10-21 追加 v0.3 不确定性候选批次记录）
 **Owner：** B（数据与认知机制）
 **状态：** 已冻结事件契约与六因子定义；P0 标注状态 `reviewed`，A/C 盲审与仲裁未完成
-**配套文件：** `schema/p0_record_v0.2.schema.json`、`data/p0/p0_samples_v0.2.json`、`scripts/validate_data.py`、`scripts/pair_diff_report.py`、`scripts/build_p0_v02.py`
+**配套文件：** `schema/p0_record_v0.2.schema.json`、`data/p0/p0_samples_v0.2.json`、`data/p0/p0_samples_v0.3.json`（候选，`draft`）、`scripts/validate_data.py`、`scripts/pair_diff_report.py`、`scripts/build_p0_v02.py`、`scripts/build_p0_uncertainty.py`
 
 > **先读这一句：** P0 是脚本化的受控诊断数据，标签是“按脚本规则应出现的状态”，不是真实人类心理测量。P1 才是真实行为数据；P1 中没有证据的 `B/C/Q` 必须标 `UNKNOWN` 或遮蔽，不得用猜测补齐。
 
@@ -54,10 +54,28 @@ Z_t = (V_t, F_t, A_t, B_t, C_t, Q_t)
 | | P0 受控诊断 | P1 真实行为 |
 |---|---|---|
 | 来源 | 人工脚本 + 明确规则 | 经许可的真实连续行为/任务日志 |
-| 标签性质 | 脚本期望，可完全确定 | 有证据的观察标注，允许 `UNKNOWN` |
+| 标签性质 | 脚本规则决定的真值；可写 `UNKNOWN`/`UNCERTAIN`，但必须是脚本刻意让人物缺证据的结果（判据见 1.4） | 有证据的观察标注，缺证据的 `B/C/Q` 只能 `UNKNOWN` 或遮蔽 |
 | 用途 | 管道、泄漏、对照逻辑、状态一致性 | 真实恢复行为预测、校准、跨域 |
 | 结论口径 | 只能报告协议/逻辑结果 | 才能报告真实人类恢复预测能力 |
 | 当前状态 | 120 家族 / 240 条（v0.2，已达目标），`status=reviewed` | 未采集，`p1_observed_resume=null` |
+
+### 1.4 P0 里未知档位的合法性判据
+
+P0 的标签确实"可完全确定"，但**确定的对象是脚本设定，不是世界的模糊性**。同一个 `UNKNOWN` 有两种相反的来源，只有前一种合法：
+
+| 合法 | 非法 |
+|---|---|
+| **设计出来的认知处境**：脚本安排人物收不到通知、收到矛盾通知或只有间接线索，于是"人物此刻没有稳定信念"本身就是真值。 | **标注者没有判定**：B 自己没决定该写什么，拿 `UNKNOWN` 当空格填。 |
+| **事件证据本身模糊**：投递回执缺失或不完整，用 `person_access=UNCERTAIN`、`certainty=PROBABLE/UNCERTAIN` 如实记录证据强度。 | **为了填满字段而猜**：违反 2.3 末段“不要为了填满字段而猜”，也污染 `p0_expected`。 |
+
+唯一可操作的判据：**能不能指名 cutoff 之前缺的是哪一条证据。**
+
+- 能 → 合法。`state_evidence_by_factor` 对应因子留空列表（如 P01-B 的 `"B": []`），并在 `notes` 写明缺什么、为什么人物无法判定。
+- 不能 → 非法。回去改脚本或补事件，不许留 `UNKNOWN`。
+
+配套纪律：未知档位不得连带把 `Q` 也写成 `UNKNOWN`，除非脚本确实没给人物任何步骤线索（见 2.7）；`p0_expected` 可以要求模型输出低置信度，但不能要求它"正确答案是不知道"之外的东西。
+
+> 这条判据也是 P0 不确定性的价值来源：如果所有事实都是 `CERTAIN`、所有接触都成功，滤波器在 P0 上学不到"该犹豫时犹豫"，评测会退化成"永远自信"的平凡解。v0.2 的 1831 个事件确实全是 `CERTAIN`，11 个不确定性档位一次都没出现（见 §11.1 第 13 条）。补的那一批是 `data/p0/p0_samples_v0.3.json`（7 家族 / 14 条，`scripts/build_p0_uncertainty.py` 可复现生成），把 11 档各覆盖至少一次；截至 2026-10-21 它仍是 `status=draft`、`annotator_id=agent-draft`，即“脚本按本节判据写出、等 B 本人复核”，复核前不得当作已验收数据交给 A/C。
 
 ---
 
@@ -416,6 +434,7 @@ v0.2 把八组对照升级为八个 `mechanism`，每个家族都要声明自己
 10. ~~P04-B 的 T1 口径冲突~~ → **已按研究方案 §3.4 处理（v0.2）**：凡步骤已客观完成的重复动作不计 T1/T2，`resume_within_horizon=false, first_step=null`，主观滞后只体现在 `Q`。该决定已写入 8 个 `other_completion` 机制家族；若 A 另行定口径，需同时改 15 个家族并升版本。
 11. **字段名冲突（未解决）：** B 的 `person_access_evidence` 是自由文本，C 的同名字段是 `{status, understood}` 对象。三方合并前必须改名或改类型；建议 C 改名为 `person_access_note`，或在映射层做显式转换。
 12. **A 适配器当前只认 `p0-record/v0.1.0`：** 传入 v0.2 会显式报 `UNSUPPORTED_SCHEMA_VERSION`（这是期望行为，不是缺陷）。A 需新增版本分支后，B 才能把 v0.2 作为正式训练输入交付。
+13. **11 个不确定性档位已有候选，但未验收：** v0.2 的 240 条里 `A=UNCERTAIN`、`V/F=UNKNOWN`、`B=UNRESOLVED`、`C∈{ACTIVE,UNKNOWN}`、事件级 `person_access=UNCERTAIN`、`person_comprehension∈{NOT_UNDERSTOOD,UNCERTAIN}`、`certainty∈{PROBABLE,UNCERTAIN}` 一次都没出现。`data/p0/p0_samples_v0.3.json`（7 家族 / 14 条）按 §1.4 判据各覆盖至少一次，但 `status=draft`、`annotator_id=agent-draft`，需 B 本人逐对复核后才能升 `reviewed` 并交 A/C。`split.calibration` 仍为空，要 C 先定校准协议。
 
 ### 11.2 变更记录
 
@@ -423,6 +442,7 @@ v0.2 把八组对照升级为八个 `mechanism`，每个家族都要声明自己
 |---|---|---|
 | v0.1.0 | 2026-10-20 | 首版：六因子定义、事件词表、证据规则、P01–P08 对照、P0/P1 边界、16 条种子数据 |
 | v1.0.0 | 2026-10-20 | 升版冻结：P0 v0.2（120 家族/240 条、`split`、八机制、事件级 `U` 与人物可获得语义）；P04 恢复口径按方案 §3.4 统一；P07 改为 `indeterminate`；B 复核完成（`reviewed`） |
+| v1.0.1 | 2026-10-20 | 新增 §1.4「P0 里未知档位的合法性判据」，并把 §1.3 表格里"P0 脚本期望，可完全确定"改写为可判定口径。原写法与 §2.3（允许 `F=UNKNOWN`）以及数据里 15 条 `B=UNKNOWN` 直接冲突，A/C 按字面读会把合法的设计性未知当成违规。2026-10-21 追加：§1.4 末尾与 §11.1 第 13 条记录 v0.3 不确定性候选批次（14 条，`draft`，待 B 复核） |
 
 > **仓库迁移说明：** 本手册从 B 岗交付目录迁入主仓库时，仅更新校验/审计脚本路径并补充竞赛边界；16 条数据与标签未改。
 
