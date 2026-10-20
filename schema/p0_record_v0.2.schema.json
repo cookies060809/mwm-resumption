@@ -1,0 +1,525 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ECR-MWM P0 Record v0.2",
+  "description": "P0 scripted diagnostic record for ECR-MWM, schema v0.2.0. Adds split, mechanism, structured comprehension (U), person-available message semantics and machine-readable P0 design fields. Labels remain scripted expectations, not observed human psychology.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "sample_id",
+    "base_story_id",
+    "variant",
+    "split",
+    "domain",
+    "mechanism",
+    "goal_id",
+    "goal_description",
+    "cutoff_event_id",
+    "horizon",
+    "task_steps",
+    "task_dependencies",
+    "completed_steps_at_cutoff",
+    "observed_events",
+    "state_at_cutoff",
+    "state_evidence_event_ids",
+    "state_evidence_by_factor",
+    "p0_scripted_policy",
+    "p0_expected_action",
+    "p0_expected",
+    "p0_design",
+    "p1_observed_resume",
+    "p1_censoring_status",
+    "annotation"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "p0-record/v0.2.0"
+    },
+    "sample_id": {
+      "type": "string",
+      "pattern": "^P[0-9]{2}(-[A-Z][0-9]{1,2})?-[AB]$"
+    },
+    "base_story_id": {
+      "type": "string",
+      "pattern": "^P[0-9]{2}(-[A-Z][0-9]{1,2})?$"
+    },
+    "variant": {
+      "enum": ["A", "B"]
+    },
+    "split": {
+      "description": "Family-level split; all variants of one base_story_id share the same value.",
+      "enum": ["train", "dev", "calibration", "test"]
+    },
+    "domain": {
+      "enum": ["work", "daily_life", "collaboration_service"]
+    },
+    "mechanism": {
+      "description": "Controlled diagnostic mechanism implemented by the A/B pair.",
+      "enum": [
+        "contact_cancellation",
+        "long_term_commitment",
+        "resume_position",
+        "other_completion",
+        "resource_availability",
+        "nested_interruption",
+        "future_leak",
+        "comprehension"
+      ]
+    },
+    "goal_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "goal_description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "cutoff_event_id": {
+      "type": "string",
+      "pattern": "^e[0-9]{2,3}$"
+    },
+    "horizon": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "value"],
+      "properties": {
+        "type": {
+          "enum": ["decision_opportunities", "time_window"]
+        },
+        "value": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "unit": {
+          "enum": ["seconds", "minutes", "hours"]
+        }
+      },
+      "if": {
+        "properties": {
+          "type": {
+            "const": "time_window"
+          }
+        }
+      },
+      "then": {
+        "required": ["unit"]
+      }
+    },
+    "task_steps": {
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "task_dependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["before", "after"],
+        "properties": {
+          "before": {
+            "type": "string",
+            "minLength": 1
+          },
+          "after": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "completed_steps_at_cutoff": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "observed_events": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/event"
+      }
+    },
+    "state_at_cutoff": {
+      "$ref": "#/definitions/state"
+    },
+    "state_evidence_event_ids": {
+      "$ref": "#/definitions/evidenceList"
+    },
+    "state_evidence_by_factor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["V", "F", "A", "B", "C", "Q"],
+      "properties": {
+        "V": {
+          "$ref": "#/definitions/evidenceList"
+        },
+        "F": {
+          "$ref": "#/definitions/evidenceList"
+        },
+        "A": {
+          "$ref": "#/definitions/evidenceList"
+        },
+        "B": {
+          "$ref": "#/definitions/evidenceList"
+        },
+        "C": {
+          "$ref": "#/definitions/evidenceList"
+        },
+        "Q": {
+          "$ref": "#/definitions/evidenceList"
+        }
+      }
+    },
+    "p0_scripted_policy": {
+      "enum": [
+        "continue_if_no_known_cancellation",
+        "resume_if_committed_and_unfinished",
+        "resume_at_first_incomplete_known_step",
+        "avoid_repeat_if_known_completed",
+        "execute_if_ready_else_wait",
+        "finish_nested_task_before_parent",
+        "act_on_believed_status"
+      ]
+    },
+    "p0_expected_action": {
+      "type": "string",
+      "pattern": "^(resume_[a-z0-9_]+|do_not_resume|wait_for_tool|suspend_or_wait|indeterminate)$"
+    },
+    "p0_expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["resume_within_horizon", "first_step", "behavior_note"],
+      "properties": {
+        "resume_within_horizon": {
+          "type": ["boolean", "null"]
+        },
+        "first_step": {
+          "type": ["string", "null"]
+        },
+        "undefined_reason": {
+          "description": "Required when resume_within_horizon is null: why no point label exists.",
+          "enum": ["indistinguishable_inputs"]
+        },
+        "behavior_note": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "p0_design": {
+      "description": "Design bookkeeping for the A/B pair. NEVER a model input.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["manipulated_factor", "paired_variable", "undefined_target"],
+      "properties": {
+        "manipulated_factor": {
+          "type": "string",
+          "minLength": 1
+        },
+        "paired_variable": {
+          "type": ["string", "null"]
+        },
+        "undefined_target": {
+          "type": "boolean"
+        },
+        "future_outcome": {
+          "description": "Design-only field for the future-leakage control; must never enter inputs.",
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "properties": {
+            "A": {
+              "type": "string"
+            },
+            "B": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "p1_observed_resume": {
+      "type": ["boolean", "null"]
+    },
+    "p1_observed_first_step": {
+      "type": ["string", "null"]
+    },
+    "p1_censoring_status": {
+      "enum": ["not_collected", "uncensored", "right_censored", "left_censored", "unknown"]
+    },
+    "interruption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start_event_id",
+        "end_event_id",
+        "duration_minutes",
+        "interrupting_task",
+        "demand_level",
+        "goal_priority"
+      ],
+      "properties": {
+        "start_event_id": {
+          "type": "string",
+          "pattern": "^e[0-9]{2,3}$"
+        },
+        "end_event_id": {
+          "type": ["string", "null"]
+        },
+        "duration_minutes": {
+          "type": ["number", "null"],
+          "minimum": 0
+        },
+        "interrupting_task": {
+          "type": ["string", "null"]
+        },
+        "demand_level": {
+          "enum": ["low", "medium", "high", "unknown"]
+        },
+        "goal_priority": {
+          "enum": ["low", "medium", "high", "unknown"]
+        }
+      }
+    },
+    "interrupting_task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "task_id",
+        "goal_id",
+        "parent_goal_id",
+        "steps",
+        "status_at_cutoff",
+        "completed_steps_at_cutoff"
+      ],
+      "properties": {
+        "task_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "goal_id": {
+          "type": ["string", "null"]
+        },
+        "parent_goal_id": {
+          "type": ["string", "null"]
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "status_at_cutoff": {
+          "enum": ["COMPLETED", "IN_PROGRESS", "ABANDONED", "UNKNOWN"]
+        },
+        "completed_steps_at_cutoff": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "annotation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["annotator_id", "status", "source_confidence", "annotated_at"],
+      "properties": {
+        "annotator_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": ["draft", "reviewed", "adjudicated"]
+        },
+        "source_confidence": {
+          "enum": ["high", "medium", "low"]
+        },
+        "annotated_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "reviewed_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "second_reviewer_id": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_id",
+        "time",
+        "actor",
+        "event_type",
+        "goal_id",
+        "step_id",
+        "person_access",
+        "person_comprehension",
+        "person_available_semantics",
+        "world_effect",
+        "observer_evidence",
+        "person_access_evidence",
+        "source",
+        "certainty",
+        "description"
+      ],
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "pattern": "^e[0-9]{2,3}$"
+        },
+        "time": {
+          "type": "string",
+          "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$"
+        },
+        "actor": {
+          "enum": ["person", "colleague", "customer", "manager", "system", "environment", "other"]
+        },
+        "event_type": {
+          "enum": [
+            "goal_start",
+            "goal_abandoned",
+            "step_started",
+            "step_completed",
+            "step_attempted",
+            "interruption_started",
+            "interruption_ended",
+            "return_to_task",
+            "person_action",
+            "person_statement",
+            "commitment_expressed",
+            "task_cancelled",
+            "task_completed_by_other",
+            "notification_sent",
+            "resource_available",
+            "resource_missing"
+          ]
+        },
+        "goal_id": {
+          "type": ["string", "null"]
+        },
+        "step_id": {
+          "type": ["string", "null"]
+        },
+        "person_access": {
+          "enum": ["ACCESSED", "NOT_ACCESSED", "UNCERTAIN"]
+        },
+        "person_comprehension": {
+          "description": "U factor: did the person understand the content once accessed. NOT_APPLICABLE when not accessed or when the event carries no message content.",
+          "enum": ["UNDERSTOOD", "MISUNDERSTOOD", "NOT_UNDERSTOOD", "UNCERTAIN", "NOT_APPLICABLE"]
+        },
+        "person_available_semantics": {
+          "description": "Message content the person could in principle receive, structured so it never mixes world truth with person knowledge.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": {
+            "kind": {
+              "enum": [
+                "none",
+                "cancellation",
+                "completion_by_other",
+                "resource_missing",
+                "resource_available",
+                "commitment",
+                "abandonment",
+                "interruption",
+                "nested_task_state"
+              ]
+            },
+            "value": {
+              "type": ["string", "null"]
+            },
+            "interpretation": {
+              "enum": ["none", "accurate", "defer", "complete", "unresolved"]
+            }
+          }
+        },
+        "world_effect": {
+          "type": ["string", "null"]
+        },
+        "observer_evidence": {
+          "type": ["string", "null"]
+        },
+        "person_access_evidence": {
+          "type": ["string", "null"]
+        },
+        "source": {
+          "enum": [
+            "direct_observation",
+            "person_report",
+            "third_party_report",
+            "notification",
+            "backend_record",
+            "sensor_log",
+            "inference",
+            "other"
+          ]
+        },
+        "certainty": {
+          "enum": ["CERTAIN", "PROBABLE", "UNCERTAIN"]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["V", "F", "A", "B", "C", "Q"],
+      "properties": {
+        "V": {
+          "enum": ["VALID", "CANCELLED", "FULFILLED", "UNKNOWN"]
+        },
+        "F": {
+          "enum": ["READY", "BLOCKED", "UNKNOWN"]
+        },
+        "A": {
+          "enum": ["ACCESSED", "NOT_ACCESSED", "UNCERTAIN"]
+        },
+        "B": {
+          "enum": ["BELIEVES_VALID", "BELIEVES_INVALID", "UNRESOLVED", "UNKNOWN"]
+        },
+        "C": {
+          "enum": ["ACTIVE", "SUSPENDED", "ABANDONED", "COMPLETED", "UNKNOWN"]
+        },
+        "Q": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "evidenceList": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^e[0-9]{2,3}$"
+      }
+    }
+  }
+}

@@ -1,15 +1,15 @@
-# 状态标签标注手册 v0.1
+# 状态标签标注手册 v1.0
 
 **项目：** ECR-MWM（认知可达性约束的动态心智世界模型）
-**文档版本：** v0.1.0｜2026-10-20
+**文档版本：** v1.0.0｜2026-10-20（升版依据：P0 v0.2 全量 240 条、B 人工复核完成）
 **Owner：** B（数据与认知机制）
-**状态：** 工程草案，AI 辅助起草，待 B 人工复核后冻结
-**配套文件：** `schema/p0_record.schema.json`、`data/p0/p0_samples.json`、`scripts/validate_data.py`、`scripts/pair_diff_report.py`
+**状态：** 已冻结事件契约与六因子定义；P0 标注状态 `reviewed`，A/C 盲审与仲裁未完成
+**配套文件：** `schema/p0_record_v0.2.schema.json`、`data/p0/p0_samples_v0.2.json`、`scripts/validate_data.py`、`scripts/pair_diff_report.py`、`scripts/build_p0_v02.py`
 
 > **先读这一句：** P0 是脚本化的受控诊断数据，标签是“按脚本规则应出现的状态”，不是真实人类心理测量。P1 才是真实行为数据；P1 中没有证据的 `B/C/Q` 必须标 `UNKNOWN` 或遮蔽，不得用猜测补齐。
 
 > **竞赛阶段说明（2026-10-20）：**
-> - 当前 P0 种子批次为 P01–P08 共 16 条，`annotation.status=draft`；已通过 schema + 跨字段校验，但尚未完成 B 人工复核与第二人盲审。
+> - 当前 P0 批次为 `p0-record/v0.2.0`，120 个家族 × A/B = 240 条，B 已完成人工复核（`annotation.status=reviewed`）；A/C 盲审与仲裁尚未完成，不得写成 `adjudicated`。
 > - P1 尚未采集，竞赛方案中只能作为未来工作；不得用 P0 标签声称真实人类恢复预测能力。
 > - 对外材料（技术方案/PPT/视频）不得出现学校名称、Logo、指导教师信息；提交要求见 [`competition/README.md`](../../competition/README.md)。
 
@@ -57,7 +57,7 @@ Z_t = (V_t, F_t, A_t, B_t, C_t, Q_t)
 | 标签性质 | 脚本期望，可完全确定 | 有证据的观察标注，允许 `UNKNOWN` |
 | 用途 | 管道、泄漏、对照逻辑、状态一致性 | 真实恢复行为预测、校准、跨域 |
 | 结论口径 | 只能报告协议/逻辑结果 | 才能报告真实人类恢复预测能力 |
-| 当前状态 | 16 条种子（P01–P08），目标 240 条 | 未采集，`p1_observed_resume=null` |
+| 当前状态 | 120 家族 / 240 条（v0.2，已达目标），`status=reviewed` | 未采集，`p1_observed_resume=null` |
 
 ---
 
@@ -185,6 +185,29 @@ Z_t = (V_t, F_t, A_t, B_t, C_t, Q_t)
 
 ---
 
+### 2.8 `U`：事件级理解（v0.2 新增）
+
+`U` 不是记录级第七个互斥标签，而是**逐事件**填在 `person_comprehension` 上，专门承载“接触之后有没有读懂”。
+
+| 取值 | 含义 | 使用条件 |
+|---|---|---|
+| `UNDERSTOOD` | 有证据表明人物正确理解了消息内容 | `person_access=ACCESSED`，且有人物复述/正确行动等证据 |
+| `MISUNDERSTOOD` | 接触到了，但理解偏离（如把取消读成暂缓） | `ACCESSED`，且 `person_available_semantics.interpretation` 为 `defer/complete/unresolved` |
+| `NOT_UNDERSTOOD` | 接触但未形成理解（未读完、看不懂） | `ACCESSED`，无理解证据 |
+| `UNCERTAIN` | 理解状态不确定 | `ACCESSED` |
+| `NOT_APPLICABLE` | 该事件不含消息内容，或人物未接触 | `person_access != ACCESSED`，或事件本身无信息内容 |
+
+配套字段 `person_available_semantics` 记录**人物可能获得的语义**（`kind`/`value`/`interpretation`），与世界真值分开：世界侧仍由 `world_effect` 与事件类型表达。
+
+**三方对应关系（合并时按此映射，不各写一套）：**
+
+| 本项目 | A 适配器 | C 评测协议 |
+|---|---|---|
+| `event.person_comprehension` | `delivery.comprehension`（当前占位 `not_structurally_labeled`） | `person_access_evidence.understood`（true/false/null） |
+| `event.person_available_semantics` | 待接入人物侧编码 | `semantic.kind` / `semantic.value` / `interpretation` |
+
+**硬约束：** `person_access != ACCESSED` 时 `person_comprehension` 必须是 `NOT_APPLICABLE`；`MISUNDERSTOOD` 必须配非 `accurate` 的 `interpretation`。两条都由 `validate_data.py` 强制。
+
 ## 3. 六条硬性标注约束
 
 1. **客观与主观分离：** `V=CANCELLED` 不推出 `B=BELIEVES_INVALID`。P01 是强制反例。
@@ -211,6 +234,8 @@ Z_t = (V_t, F_t, A_t, B_t, C_t, Q_t)
 | `goal_id` | string/null | 事件影响的 goal；嵌套任务事件可填嵌套 goal |
 | `step_id` | string/null | 关联任务步骤；非步骤事件填 null |
 | `person_access` | enum | 该事件对人物的投递/接收：`ACCESSED / NOT_ACCESSED / UNCERTAIN` |
+| `person_comprehension` | enum | v0.2 事件级理解：`UNDERSTOOD / MISUNDERSTOOD / NOT_UNDERSTOOD / UNCERTAIN / NOT_APPLICABLE`，规则见 2.8 |
+| `person_available_semantics` | object | v0.2 人物可获得的语义：`kind`（cancellation / completion_by_other / resource_* / commitment / abandonment / interruption / nested_task_state / none）、`value`、`interpretation`（none / accurate / defer / complete / unresolved） |
 | `world_effect` | string/null | 客观世界/任务状态变化，自由文本但需可核验 |
 | `observer_evidence` | string/null | 观察者凭什么知道该事件 |
 | `person_access_evidence` | string/null | 人物凭什么接触/未接触该事件 |
@@ -263,7 +288,7 @@ Z_t = (V_t, F_t, A_t, B_t, C_t, Q_t)
 
 ---
 
-## 6. P0 脚本策略与八组对照
+## 6. P0 脚本策略与受控机制
 
 ### 6.1 脚本策略词表
 
@@ -279,18 +304,30 @@ Z_t = (V_t, F_t, A_t, B_t, C_t, Q_t)
 
 脚本策略是 P0 的“人物规则”，不是真实人类行为定律。P0 的 `p0_expected_action` 必须与策略一致。
 
-### 6.2 八组最小对照
+### 6.2 八个受控机制
 
-| Pair | 唯一/主要变化 | 关键检验 | A 预期 | B 预期 |
+v0.2 把八组对照升级为八个 `mechanism`，每个家族都要声明自己属于哪一个。
+
+| mechanism | 唯一变化 | 关键检验 | A 预期 | B 预期 |
 |---|---|---|---|---|
-| P01 取消认知 | 人物是否接触取消通知 | 客观事实 ≠ 人物信念 | 已知取消，不恢复 | 未接触，继续包装 |
-| P02 旧目标承诺 | 早前“继续”还是“放弃” | 长期承诺 vs 滑窗 | 恢复 | 不恢复 |
-| P03 恢复位置 | 中断前运单是否已打印且人物知情 | 主观未完成步骤 | 从交接恢复 | 从打印恢复 |
-| P04 他人代完成 | 人物是否获知同事已完成 | 完成事实与信念分离 | 避免重复 | 可能重复 |
-| P05 暂时不可执行 | 工具可用还是缺失（人物均知情） | 承诺 ≠ 可执行性 | 执行 | 等待工具 |
-| P06 嵌套中断 | 嵌套任务在截断时是否完成 | 目标层级与恢复顺序 | 回父目标 | 先完成嵌套任务 |
-| P07 未来泄漏 | 截断前输入完全相同，仅截断后设计结果不同 | 不可预知未来 | 预测应相同 | 预测应相同 |
-| P08 接触但误解 | 都读到取消通知，但一个理解、一个误读为暂缓 | 接触 ≠ 理解 | 停止 | 暂停/等待 |
+| `contact_cancellation`（P01） | 人物是否接触取消通知 | 客观事实 ≠ 人物信念 | 已知取消，不恢复 | 未接触，继续推进 |
+| `long_term_commitment`（P02） | 早前“继续”还是“放弃” | 长期承诺 vs 滑窗 | 恢复 | 不恢复 |
+| `resume_position`（P03） | 中断前关键步骤是否完成且人物知情 | 主观未完成步骤 | 从下一步恢复 | 从该步恢复 |
+| `other_completion`（P04） | 人物是否获知他人已完成 | 完成事实与信念分离 | 不重复 | 可能重复（不计恢复） |
+| `resource_availability`（P05） | 必要条件可用或缺失（人物均知情） | 承诺 ≠ 可执行性 | 执行 | 等待条件 |
+| `nested_interruption`（P06） | 嵌套任务在截断时是否完成 | 目标层级与恢复顺序 | 回父目标 | 先完成嵌套任务 |
+| `future_leak`（P07） | 截断前输入相同，仅截断后设计结果不同 | 不可预知未来 | 无点标签（`indeterminate`） | 同左，分布必须相同 |
+| `comprehension`（P08） | 都接触到取消信息，一个理解、一个误读 | 接触 ≠ 理解 | 停止 | 暂停/等待 |
+
+### 6.3 v0.2 批次结构（120 家族 / 240 条）
+
+| 维度 | 取值 |
+|---|---|
+| 规模 | 15 个任务骨架 × 8 个机制 = 120 个 `base_story_id`，每个家族 A/B 两条，共 240 条、1789 个事件 |
+| 领域 | 5 个 work / 5 个 collaboration_service / 5 个 daily_life 骨架，按机制轮换使用，家族级覆盖接近均衡（约 38–42 个/域） |
+| 划分 | 按 `base_story_id` 分层：每个机制 9 train / 3 dev / 3 test，共 72 / 24 / 24；同族 A/B 必在同一 split |
+| 种子 | P01–P08 为手写种子，保留在 v0.2 中并补齐新字段；其余 112 个家族由 `scripts/build_p0_v02.py` 按骨架 + 机制生成 |
+| 生成边界 | 家族之间任务、实体、编号独立；**句式按机制模板复用**，表达多样性有限，属已知限制，不能当作自然语言多样性证据 |
 
 **P0 数据的正确用法：** 只用于管道、泄漏、对照逻辑和状态一致性诊断；不能把 P0 的 `p0_expected_action` 当作真实人类恢复标签，也不能用 P0 结果宣称真实预测能力。
 
@@ -355,8 +392,9 @@ Z_t = (V_t, F_t, A_t, B_t, C_t, Q_t)
 - [ ] A/B 对的差异只有设计规定的那一个变量，并在 `notes` 中写明。
 - [ ] P07-A/B 的截断前输入完全一致。
 - [ ] P0 的 `p1_observed_resume=null`、`p1_censoring_status=not_collected`。
-- [ ] JSON 通过 Schema 和跨字段校验。
-- [ ] `annotation.status=draft` 直到 B 完成人工复核。
+- [ ] JSON 通过 Schema 和跨字段校验（`python scripts/validate_data.py`）。
+- [ ] v0.2 专属：`split` 为家族级、每机制 9/3/3；`person_comprehension` 与 `person_access` 一致；P07 家族 `undefined_target=true` 且 `action=indeterminate`。
+- [ ] `annotation.status` 从 `draft` 改为 `reviewed`（B 复核完成）；盲审与仲裁后才可 `adjudicated`。
 
 > 具体的质量门、P1 双人标注一致性指标、噪声上限和给 A 的质量报告模板见 [`label_quality_plan_v0.1.md`](label_quality_plan_v0.1.md)。
 
@@ -372,36 +410,60 @@ Z_t = (V_t, F_t, A_t, B_t, C_t, Q_t)
 4. **P07 的 `notes`：** 含截断后设计结果，仅用于泄漏对照说明；任何模型输入管道必须排除 `notes`。
 5. **`p0_expected` 是 v0.1 新增结构：** 文档 4.2 只有字符串 `p0_expected_action`；为支持 T1/T2 监督，v0.1 增加 `resume_within_horizon` 和 `first_step`。需 A 确认接口。
 6. **`task_dependencies` 与 `completed_steps_at_cutoff` 是 v0.1 新增字段：** 用于任务图和客观进度；需 A 确认是否按其实现。
-7. **样本规模：** 当前仅 16 条核心对照，未覆盖 120 个故事家族/240 条目标；扩增时保持同族 A/B 不跨 split。
-8. **领域覆盖：** 当前 work / daily_life / collaboration_service 各有样本，但 daily_life 仅 P05；扩增时补齐。
+7. ~~样本规模不足~~ → **已解决（v0.2）**：120 家族 / 240 条，按 `base_story_id` 分层 72/24/24，同族 A/B 不跨 split。
+8. **领域覆盖：** v0.2 已按 5+5+5 个骨架覆盖三领域，家族级每域约 38–42 个；`daily_life` 不再只有一对。
+9. ~~缺结构化“理解”字段~~ → **已解决（v0.2）**：新增事件级 `person_comprehension` 与 `person_available_semantics`，见 §2.8；A 需在适配器接入，C 需把 `understood` 映射过来。
+10. ~~P04-B 的 T1 口径冲突~~ → **已按研究方案 §3.4 处理（v0.2）**：凡步骤已客观完成的重复动作不计 T1/T2，`resume_within_horizon=false, first_step=null`，主观滞后只体现在 `Q`。该决定已写入 8 个 `other_completion` 机制家族；若 A 另行定口径，需同时改 15 个家族并升版本。
+11. **字段名冲突（未解决）：** B 的 `person_access_evidence` 是自由文本，C 的同名字段是 `{status, understood}` 对象。三方合并前必须改名或改类型；建议 C 改名为 `person_access_note`，或在映射层做显式转换。
+12. **A 适配器当前只认 `p0-record/v0.1.0`：** 传入 v0.2 会显式报 `UNSUPPORTED_SCHEMA_VERSION`（这是期望行为，不是缺陷）。A 需新增版本分支后，B 才能把 v0.2 作为正式训练输入交付。
 
 ### 11.2 变更记录
 
 | 版本 | 日期 | 变更 |
 |---|---|---|
 | v0.1.0 | 2026-10-20 | 首版：六因子定义、事件词表、证据规则、P01–P08 对照、P0/P1 边界、16 条种子数据 |
+| v1.0.0 | 2026-10-20 | 升版冻结：P0 v0.2（120 家族/240 条、`split`、八机制、事件级 `U` 与人物可获得语义）；P04 恢复口径按方案 §3.4 统一；P07 改为 `indeterminate`；B 复核完成（`reviewed`） |
 
 > **仓库迁移说明：** 本手册从 B 岗交付目录迁入主仓库时，仅更新校验/审计脚本路径并补充竞赛边界；16 条数据与标签未改。
 
 ---
 
+## 12. 与 A 适配器的接口对齐（2026-10-20）
+
+> 依据：A 分支 `origin/feat/a-ec-jmf-p0-adapter` 的 `docs/internal/a/A_INTERFACES.md`、`models/ecr_mwm/p0_adapter.py`、`tests/test_a_p0_contract.py`。A 已把本 schema 作为正式输入版本 `p0-record/v0.1.0` 接收（“B 继续拥有 schema/数据”）。本节记录“手册承诺”与“适配器实际行为”的差异，避免扩量时按错的边界造数据。
+
+| 主题 | 手册原写法 | A 适配器实际行为 | B 的后续约定 |
+|---|---|---|---|
+| `completed_steps_at_cutoff` | §1.2 列为允许输入 | 不读该字段；在诊断侧用事件重放核对（`replay_completion_evidence`） | 扩量时保持“可由事件重放出来”，不允许出现重放不出的进度 |
+| `interrupting_task.status_at_cutoff` | 列为允许输入 | 只取 `task_id`/`parent_goal_id`/`steps` 建观察者图，**不把嵌套状态快照写进心智** | 不要把嵌套状态当作模型可读信息来设计对照 |
+| 外部消息内容 | `description`/`world_effect` 属观察者证据 | 人物侧只拿 `delivery.access_evidence` 与本人陈述；外部消息内容当前**不进入**人物输入，`comprehension` 恒为 `not_structurally_labeled` | v0.2 已提供 `person_comprehension` 与 `person_available_semantics`；A 需加版本分支接入，见 §11.1 第 12 条 |
+| P06-B 的 T2 | `first_step=replace_toner` 属嵌套任务 | `scripted_targets` 判 `t2_mask=false`，T2 被遮蔽，只保留审计 | 与 §11.1 第 3 条一致；评测口径按“遮蔽”执行 |
+| P1 `first_step` 键 | P0 记录不含该键 | A 区分“缺键”与“显式 null”，记 16/16 缺键 | 不要在 P0 里补 null 键，除非同时升 `schema_version` |
+| 脚本目标读取位置 | 只说是“非输入” | 只在评测侧 `scripted_targets` 读 `p0_expected`，T2 要求 `first_step ∈ task_steps` | 改 `p0_expected` 语义时必须通知 A，否则 T2 掩码会静默变化 |
+
+**对 B 的直接含义：** v0.1 的 P0 对照主要靠 `delivery.access_evidence`（A）与本人陈述区分，**“人物看到了什么内容”没有结构化通道**；P04-A（得知同事已完成）与 P08-A（正确理解取消）在人物侧只剩一个 `ACCESSED`。v0.2 已补 `person_comprehension` 与 `person_available_semantics` 两个字段承载该通道（见 §2.8），但 **A 的适配器仍只认 `p0-record/v0.1.0`**，需 A 加版本分支后才能消费；在此之前，v0.2 只作为数据侧交付，不代表 A 已能训练。
+
 ## 附录 A：P0 记录字段速查
 
 ```text
-sample_id / base_story_id / variant / domain
+schema_version                     # v0.2 为 p0-record/v0.2.0
+sample_id / base_story_id / variant
+split / domain / mechanism         # v0.2：家族级划分与受控机制
 goal_id / goal_description
 cutoff_event_id / horizon
 task_steps / task_dependencies / completed_steps_at_cutoff
 observed_events[]                  # 模型输入
+  └ person_access / person_comprehension / person_available_semantics
 state_at_cutoff{V,F,A,B,C,Q}       # 状态标签
 state_evidence_event_ids[]         # 平铺证据
 state_evidence_by_factor{V..Q}     # 逐因子证据
 p0_scripted_policy                 # 脚本策略
-p0_expected_action                 # 下一步动作标签
-p0_expected{resume, first_step, behavior_note}
+p0_expected_action                 # 下一步动作标签（含 indeterminate）
+p0_expected{resume, first_step, undefined_reason, behavior_note}
+p0_design{manipulated_factor, paired_variable, undefined_target, future_outcome}
 p1_observed_resume / p1_observed_first_step / p1_censoring_status
 interruption / interrupting_task   # 可选
-annotation / notes                 # 审计，不可作输入
+annotation / notes                 # 审计，不可作输入（p0_design 同样不可作输入）
 ```
 
 ## 附录 B：标注时最该问的三个问题

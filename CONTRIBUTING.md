@@ -15,7 +15,7 @@
    python -m pytest
    ```
 
-3. 阅读顺序：根目录 `README.md` → `competition/README.md` → `competition/technical_report.md` → `docs/annotation/annotation_handbook_v0.1.md` → `docs/internal/ROADMAP.md`。
+3. 阅读顺序：根目录 `README.md` → `competition/README.md` → `competition/technical_report.md` → `docs/annotation/annotation_handbook_v1.0.md` → `docs/internal/ROADMAP.md`。
 4. 首次改动前确认自己的角色与评审人；不要直接推送 `main`。
 5. 不提交 P1 原始数据、个人信息、密钥或未经实验支持的结果。
 

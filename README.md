@@ -6,8 +6,8 @@
 
 > **参赛信息**：第八届全球校园人工智能算法精英大赛 · 算法创新赛 · 赛题 1「算法模型创新」
 > **官方页面**：[aicomp.cn/tracks/tracks-2/3788.html](https://www.aicomp.cn/tracks/tracks-2/3788.html)
-> **仓库状态：V0.3 迁移 P0 种子（2026-10-20）**
-> 当前已有研究方案、P0 schema、标注手册与 P01–P08 共 16 条种子数据；算法、基线、实验结果、技术方案 PDF、演示视频与答辩 PPT 均未完成。`results/` 中不得出现未经真实实验产生的数字。
+> **仓库状态：V0.4 P0 v0.2 全量批次（2026-10-20）**　〔本次变更说明见 [docs/internal/HANDOFF_2026-10-20_P0_v0.2.md](docs/internal/HANDOFF_2026-10-20_P0_v0.2.md)〕
+> 当前已有研究方案、P0 v0.2 schema、标注手册 v1.0 与 120 家族 / 240 条 P0 数据（B 复核完成）；算法、基线、实验结果、技术方案 PDF、演示视频与答辩 PPT 均未完成。`results/` 中不得出现未经真实实验产生的数字。
 
 ## 一句话定义
 
@@ -34,16 +34,18 @@
 
 - [x] 仓库结构、协作规范与 CI
 - [x] P0 schema `p0-record/v0.1.0` 与 P01–P08 共 16 条种子数据
+- [x] P0 v0.2 扩展至 120 家族 / 240 条（8 机制 × 15 骨架），含 `split` 与事件级理解字段
 - [x] 数据校验、A/B diff、可复现构建脚本与标注质量方案
+- [x] B 对 240 条完成人工复核（`annotation.status=reviewed`）
+- [ ] A/C 盲审 8 条（每机制 1 条）并仲裁至 `adjudicated`
 - [x] 竞赛材料骨架、评分映射与提交清单
-- [ ] P0 扩展至 120 家族 / 240+ 条，并完成人工复核与盲审
 - [ ] 核心算法 EC-JMF 最小实现
 - [ ] B0–B9 基线与评测框架
 - [ ] 真实实验数据与主结果、消融、校准
 - [ ] 技术方案 PDF、答辩 PPT、演示视频
 - [ ] 提交前合规与复现审查
 
-当前 P0 批次：8 个家族 × A/B = 16 条、123 条事件；`work` 6 条、`collaboration_service` 8 条、`daily_life` 2 条；`annotation.status=draft`。
+当前 P0 批次：120 个家族 × A/B = 240 条、1789 条事件；`work` 80 条、`collaboration_service` 84 条、`daily_life` 76 条；`split` 为 72/24/24；`annotation.status=reviewed`。另有 16 条 v0.1 冻结种子供 A 的现有适配器使用。
 
 ## 仓库结构
 
@@ -92,7 +94,7 @@ python -m pytest
 5. **不虚构结果。** 任何准确率、优势或新颖性结论必须来自可复现实验；P0 脚本结果不得写成真实人类恢复预测能力。
 6. **竞赛材料合规。** 所有对外材料不得出现学校名称、Logo、指导教师信息；引用他人技术/数据需标注并取得合法授权。
 
-详见 [competition/README.md](competition/README.md)、[P0 数据说明](data/p0/README.md)、[标注手册](docs/annotation/annotation_handbook_v0.1.md)、[质量方案](docs/annotation/label_quality_plan_v0.1.md) 与 [data/README.md](data/README.md)。
+详见 [competition/README.md](competition/README.md)、[P0 数据说明](data/p0/README.md)、[标注手册](docs/annotation/annotation_handbook_v1.0.md)、[质量方案](docs/annotation/label_quality_plan_v0.1.md) 与 [data/README.md](data/README.md)。
 
 ## 团队角色
 

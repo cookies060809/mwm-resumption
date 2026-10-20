@@ -4,7 +4,7 @@
 **日期：** 2026-10-20
 **Owner：** B
 **适用对象：** P0 脚本诊断集、后续 P1 真实行为数据
-**配套：** `schema/p0_record.schema.json`、`docs/annotation/annotation_handbook_v0.1.md`、`scripts/validate_data.py`、`scripts/pair_diff_report.py`
+**配套：** `schema/p0_record.schema.json`、`docs/annotation/annotation_handbook_v1.0.md`、`scripts/validate_data.py`、`scripts/pair_diff_report.py`
 
 ---
 
