@@ -1,0 +1,11 @@
+{
+  "name": "a_ec_jmf_reference",
+  "status": "untrained_numerical_infrastructure",
+  "input_schema": "p0-record/v0.1.0",
+  "adapter": "a-p0-input/v0.1.0",
+  "exact": {"max_states": 10000, "max_transitions": 1000000},
+  "smc": {"n": 128, "ess_fraction": 0.5, "seed": 0, "max_branches": 10000},
+  "information_boundary": {"share_world_person_semantic_encoder": false},
+  "training_implemented": false,
+  "external_message_semantics": "pending_audited_parser"
+}
