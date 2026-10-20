@@ -69,3 +69,7 @@ git diff -- data/p0/p0_samples.json
 - 模型实验的统计与复现检查。
 
 新增校验规则时，同时更新 `schema/README.md`、标注手册与测试。
+
+## A 的实际 P0 输入契约检查
+
+`python scripts/check_a_p0.py` 在B校验后检查实际P0的读取、映射、事件完成证据和信息隔离；输出JSON到标准输出，不写数据或生成预测。它不调用认知模型，不替代C评测，细节见 [检查报告](../docs/internal/a/A_P0_CHECK_REPORT.md)。
