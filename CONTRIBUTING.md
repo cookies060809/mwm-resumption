@@ -60,11 +60,14 @@ exp(e2): record calibration baseline run
 ## 3. 数据变更规则
 
 1. 同一 `base_story_id` 的 A/B 变体必须放在同一 PR、同一 split，禁止跨训练/测试集合。
-2. 新增或修改样例必须通过 `python scripts/validate_data.py`。
-3. 每个非 `UNKNOWN` 状态标签必须提供 `evidence_event_ids`、脚本策略或标注证据。
-4. P1 原始数据、可识别个人内容、未脱敏日志和受限材料**不得提交**。只提交元数据、模板或经批准派生结果。
+2. 新增或修改样例必须通过 `python scripts/validate_data.py` 与 `python scripts/pair_diff_report.py`。
+3. `cutoff_event_id` 必须是 `observed_events` 的最后一条；每个非 `UNKNOWN` 状态标签必须提供 `state_evidence_by_factor` 证据，平铺的 `state_evidence_event_ids` 必须等于逐因子证据的按序并集。
+4. P1 原始数据、可识别个人内容、未脱敏日志和受限材料**不得提交**。只提交元数据或经批准派生结果。
 5. Schema 变更遵循语义化版本：破坏性变更提升主版本，并在 PR 中附迁移说明；不得静默改变既有标签含义。
 6. P0 的脚本标签与 P1 的真实行为标签必须在记录中明确区分，不得合并统计后宣称真实预测能力。
+7. 当前 P0 种子 16 条（P01–P08）的 `annotation.status=draft`；B 完成人工审计、A/C 盲审并仲裁后才能改为 `reviewed/adjudicated`。
+8. `data/p0/p0_samples.json` 可由 `scripts/build_p0_seed.py` 重建；该脚本会覆盖现有文件，重建后必须审查 `git diff` 并重新校验，不能盲目提交生成结果。
+9. P07 的 `notes` 含截断后设计结果，任何输入/prompt/特征/训练管道都必须排除 `notes`。
 
 ## 4. 结果与实验规则
 

@@ -1,12 +1,13 @@
 # ECR-MWM / EC-JMF
 
 **面向任务中断与恢复预测的认知可达性约束动态心智世界模型**
+
 *Epistemically Constrained Dynamic Mental World Modeling for Task Interruption and Resumption Prediction*
 
 > **参赛信息**：第八届全球校园人工智能算法精英大赛 · 算法创新赛 · 赛题 1「算法模型创新」
 > **官方页面**：[aicomp.cn/tracks/tracks-2/3788.html](https://www.aicomp.cn/tracks/tracks-2/3788.html)
-> **仓库状态：V0.2 竞赛化重组（2026-10-20）**
-> 当前只有研究方案、schema、标注规范草案和 P01 示例；算法、基线、实验结果、技术方案 PDF、演示视频与答辩 PPT 均未完成。`results/` 中不得出现未经真实实验产生的数字。
+> **仓库状态：V0.3 迁移 P0 种子（2026-10-20）**
+> 当前已有研究方案、P0 schema、标注手册与 P01–P08 共 16 条种子数据；算法、基线、实验结果、技术方案 PDF、演示视频与答辩 PPT 均未完成。`results/` 中不得出现未经真实实验产生的数字。
 
 ## 一句话定义
 
@@ -32,15 +33,17 @@
 ## 当前进度
 
 - [x] 仓库结构、协作规范与 CI
-- [x] 事件 / 任务图 / 状态 / 标注记录 schema v0.1
-- [x] P01 最小对照示例与 P1 记录模板
+- [x] P0 schema `p0-record/v0.1.0` 与 P01–P08 共 16 条种子数据
+- [x] 数据校验、A/B diff、可复现构建脚本与标注质量方案
 - [x] 竞赛材料骨架、评分映射与提交清单
+- [ ] P0 扩展至 120 家族 / 240+ 条，并完成人工复核与盲审
 - [ ] 核心算法 EC-JMF 最小实现
 - [ ] B0–B9 基线与评测框架
-- [ ] P0 完整数据（P01–P08 与扩展家族）
 - [ ] 真实实验数据与主结果、消融、校准
 - [ ] 技术方案 PDF、答辩 PPT、演示视频
 - [ ] 提交前合规与复现审查
+
+当前 P0 批次：8 个家族 × A/B = 16 条、123 条事件；`work` 6 条、`collaboration_service` 8 条、`daily_life` 2 条；`annotation.status=draft`。
 
 ## 仓库结构
 
@@ -52,10 +55,10 @@
 │   ├── annotation/         # 标注手册
 │   ├── data/               # 数据卡
 │   └── literature/         # 竞品矩阵与原文索引
-├── schema/                 # 事件 / 状态 / 任务图 / 标注记录 JSON Schema
+├── schema/                 # P0 记录 JSON Schema（p0-record/v0.1.0）
 ├── data/
-│   ├── p0/                 # P0 受控诊断集与示例
-│   └── p1/                 # P1 模板与未来工作（默认不入库）
+│   ├── p0/                 # 16 条 P0 种子与说明
+│   └── p1/                 # P1 合规说明（尚未采集，默认不入库）
 ├── models/
 │   ├── ec_jmf/             # 联合后验更新核心算法契约
 │   └── ecr_mwm/            # 端到端包装与 T1/T2/T3 接口
@@ -64,7 +67,7 @@
 ├── evaluation/             # 指标、消融、校准、泄漏检查
 ├── configs/                # 模型与推理预算配置
 ├── results/                # 逐样例预测、成本、种子、聚合结果（生成物）
-├── scripts/                # 数据校验等工程脚本
+├── scripts/                # 数据校验、A/B diff、可复现构建
 ├── tests/                  # schema / 数据 / 评测单测
 └── .github/                # CI、Issue/PR 模板
 ```
@@ -76,19 +79,20 @@ python -m venv .venv
 source .venv/Scripts/activate    # Windows Git Bash
 python -m pip install -r requirements-dev.txt
 python scripts/validate_data.py
+python scripts/pair_diff_report.py
 python -m pytest
 ```
 
 ## 数据与证据边界
 
-1. **P0 与 P1 严格分离。** P0 是人工脚本与明确规则下的协议诊断集，不能用于声称预测真实人类心理；P1 才对应经许可的真实连续行为证据。
-2. **P1 原始数据默认不入库。** 只允许提交经批准的元数据、模板或脱敏派生结果；禁止提交可识别个人的视频、音频、屏幕录制或原始日志。
+1. **P0 与 P1 严格分离。** 当前 P0 为 16 条脚本诊断种子，不能用于声称预测真实人类心理；P1 才对应经许可的真实连续行为证据，目前尚未采集。
+2. **P1 原始数据默认不入库。** 只允许提交经批准的元数据或脱敏派生结果；禁止提交可识别个人的视频、音频、屏幕录制或原始日志。
 3. **人物能否获知事件必须有独立证据字段。** 不允许把客观世界事实直接复制为人物信念。
 4. **禁止未来泄漏。** 预测时刻 `t` 之后的标签、事件或测试集信息不得进入 `observed_events`。
 5. **不虚构结果。** 任何准确率、优势或新颖性结论必须来自可复现实验；P0 脚本结果不得写成真实人类恢复预测能力。
 6. **竞赛材料合规。** 所有对外材料不得出现学校名称、Logo、指导教师信息；引用他人技术/数据需标注并取得合法授权。
 
-详见 [competition/README.md](competition/README.md)、[标注手册](docs/annotation/annotation_handbook_v0.1.md) 与 [data/README.md](data/README.md)。
+详见 [competition/README.md](competition/README.md)、[P0 数据说明](data/p0/README.md)、[标注手册](docs/annotation/annotation_handbook_v0.1.md)、[质量方案](docs/annotation/label_quality_plan_v0.1.md) 与 [data/README.md](data/README.md)。
 
 ## 团队角色
 

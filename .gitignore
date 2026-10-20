@@ -29,11 +29,9 @@ secrets/
 Thumbs.db
 desktop.ini
 
-# P1 data is access-controlled. Keep only the README and templates in Git.
+# P1 data is access-controlled. Keep only the README in Git.
 data/p1/*
 !data/p1/README.md
-!data/p1/templates/
-!data/p1/templates/**
 
 # Raw or private data must not be committed
 data/**/raw/

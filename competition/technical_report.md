@@ -237,10 +237,12 @@ $$
 
 | 数据 | 设计 | 当前状态 | 竞赛用途 |
 |---|---|---|---|
-| P0 受控诊断集 | 目标 120 个基础故事家族、≥240 条最小对照；三领域 | 仅 P01 一对示例 | 协议诊断、泄漏测试、消融 |
+| P0 受控诊断集 | 目标 120 个基础故事家族、≥240 条最小对照；三领域 | 已有 P01–P08 共 16 条种子（8 对、123 条事件）；`p0-record/v0.1.0`；`annotation.status=draft`；结构与跨字段校验通过 | 协议诊断、泄漏测试、消融 |
 | P1 真实行为数据 | 经许可的连续行为/任务日志；双人标注；删失处理 | 未采集 | 真实恢复预测；当前只能作为未来工作 |
 
-**重要缺口**：竞赛要求“真实有效的实验数据”。P0 脚本数据不能替代真实行为证据；在提交前至少需要补足一批可核查的真实或公开数据实验，否则应在方案中明确标注为受控诊断结果，不能宣称真实人类预测能力。
+当前 P0 数据位于 `data/p0/p0_samples.json`，覆盖 `work` 6 条、`collaboration_service` 8 条、`daily_life` 2 条。`python scripts/validate_data.py` 输出 16/16 通过，P07 截断前输入一致性 PASS；但尚未完成 B 人工复核、A/C 盲审，也尚未运行任何模型。
+
+**重要缺口**：竞赛要求“真实有效的实验数据”。当前 16 条 P0 是脚本化种子，不是最终 240 条数据，也不能替代真实行为证据；在提交前至少需要补足一批可核查的真实或公开数据实验，否则应在方案中明确标注为受控诊断结果，不能宣称真实人类预测能力。
 
 划分：按 `base_story_id` 与人物/任务族分组，约 60%/20%/20%；同族变体不跨训练/开发/测试。
 
@@ -340,10 +342,12 @@ $$
 
 ### 5.2 实验数据
 
-- Schema：[schema/README.md](../schema/README.md)
-- P0 示例：[data/p0/examples/work/P01-A.json](../data/p0/examples/work/P01-A.json)、[P01-B.json](../data/p0/examples/work/P01-B.json)
+- P0 数据：[data/p0/p0_samples.json](../data/p0/p0_samples.json)（16 条种子）
+- 数据说明：[data/p0/README.md](../data/p0/README.md)
+- Schema：[schema/p0_record.schema.json](../schema/p0_record.schema.json)、[schema/README.md](../schema/README.md)
 - 数据卡：[docs/data/data_card.md](../docs/data/data_card.md)
 - 标注手册：[docs/annotation/annotation_handbook_v0.1.md](../docs/annotation/annotation_handbook_v0.1.md)
+- 质量方案：[docs/annotation/label_quality_plan_v0.1.md](../docs/annotation/label_quality_plan_v0.1.md)
 
 ### 5.3 参考文献
 

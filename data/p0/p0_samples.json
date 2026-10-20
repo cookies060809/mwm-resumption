@@ -1,0 +1,3413 @@
+[
+  {
+    "schema_version": "p0-record/v0.1.0",
+    "sample_id": "P01-A",
+    "base_story_id": "P01",
+    "variant": "A",
+    "domain": "collaboration_service",
+    "goal_id": "order_O17",
+    "goal_description": "完成订单 O17 的地址核对、包装与运单打印。",
+    "cutoff_event_id": "e08",
+    "horizon": {
+      "type": "decision_opportunities",
+      "value": 3
+    },
+    "task_steps": [
+      "verify_address",
+      "pack_item",
+      "print_label"
+    ],
+    "task_dependencies": [
+      {
+        "before": "verify_address",
+        "after": "pack_item"
+      },
+      {
+        "before": "pack_item",
+        "after": "print_label"
+      }
+    ],
+    "completed_steps_at_cutoff": [
+      "verify_address"
+    ],
+    "observed_events": [
+      {
+        "event_id": "e01",
+        "time": "10:00",
+        "actor": "person",
+        "event_type": "goal_start",
+        "goal_id": "order_O17",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "目标激活；订单 O17 处理中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始处理订单 O17。"
+      },
+      {
+        "event_id": "e02",
+        "time": "10:01",
+        "actor": "person",
+        "event_type": "step_completed",
+        "goal_id": "order_O17",
+        "step_id": "verify_address",
+        "person_access": "ACCESSED",
+        "world_effect": "verify_address 完成。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "核对收货地址完成。"
+      },
+      {
+        "event_id": "e03",
+        "time": "10:02",
+        "actor": "person",
+        "event_type": "step_started",
+        "goal_id": "order_O17",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "pack_item 进行中；包装工具可用。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始包装商品；包装台工具可用。"
+      },
+      {
+        "event_id": "e04",
+        "time": "10:03",
+        "actor": "person",
+        "event_type": "interruption_started",
+        "goal_id": "order_O17",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "原目标因 support_call 暂停。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "接听客服电话，暂停包装。"
+      },
+      {
+        "event_id": "e05",
+        "time": "10:04",
+        "actor": "customer",
+        "event_type": "task_cancelled",
+        "goal_id": "order_O17",
+        "step_id": null,
+        "person_access": "NOT_ACCESSED",
+        "world_effect": "订单 O17 状态=CANCELLED。",
+        "observer_evidence": "后台订单记录",
+        "person_access_evidence": "仅后台记录，无人物可见通知",
+        "source": "backend_record",
+        "certainty": "CERTAIN",
+        "description": "客户在后台取消订单 O17。"
+      },
+      {
+        "event_id": "e06",
+        "time": "10:05",
+        "actor": "system",
+        "event_type": "notification_sent",
+        "goal_id": "order_O17",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "通知已显示并被人物确认。",
+        "observer_evidence": "通知投递日志",
+        "person_access_evidence": "屏幕显示，人物点击确认",
+        "source": "notification",
+        "certainty": "CERTAIN",
+        "description": "取消通知显示在人物屏幕上；人物打开并确认取消。"
+      },
+      {
+        "event_id": "e07",
+        "time": "10:06",
+        "actor": "person",
+        "event_type": "interruption_ended",
+        "goal_id": "order_O17",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "中断结束。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "电话结束。"
+      },
+      {
+        "event_id": "e08",
+        "time": "10:07",
+        "actor": "person",
+        "event_type": "return_to_task",
+        "goal_id": "order_O17",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "人物位于工作台，处于决策点。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "人物回到同一工作台。"
+      }
+    ],
+    "state_at_cutoff": {
+      "V": "CANCELLED",
+      "F": "READY",
+      "A": "ACCESSED",
+      "B": "BELIEVES_INVALID",
+      "C": "ABANDONED",
+      "Q": "NOT_APPLICABLE"
+    },
+    "state_evidence_event_ids": [
+      "e03",
+      "e05",
+      "e06"
+    ],
+    "state_evidence_by_factor": {
+      "V": [
+        "e05"
+      ],
+      "F": [
+        "e03"
+      ],
+      "A": [
+        "e06"
+      ],
+      "B": [
+        "e06"
+      ],
+      "C": [
+        "e06"
+      ],
+      "Q": [
+        "e06"
+      ]
+    },
+    "p0_scripted_policy": "continue_if_no_known_cancellation",
+    "p0_expected_action": "do_not_resume",
+    "p0_expected": {
+      "resume_within_horizon": false,
+      "first_step": null,
+      "behavior_note": "人物已确认取消，按脚本策略停止原任务。"
+    },
+    "p1_observed_resume": null,
+    "p1_censoring_status": "not_collected",
+    "annotation": {
+      "annotator_id": "B",
+      "status": "draft",
+      "source_confidence": "medium",
+      "annotated_at": "2026-10-20"
+    },
+    "interruption": {
+      "start_event_id": "e04",
+      "end_event_id": "e07",
+      "duration_minutes": 3,
+      "interrupting_task": "support_call",
+      "demand_level": "medium",
+      "goal_priority": "high"
+    },
+    "notes": "P01-A：人物确认取消通知；V=CANCELLED 且 B=BELIEVES_INVALID，预期不恢复。"
+  },
+  {
+    "schema_version": "p0-record/v0.1.0",
+    "sample_id": "P01-B",
+    "base_story_id": "P01",
+    "variant": "B",
+    "domain": "collaboration_service",
+    "goal_id": "order_O17",
+    "goal_description": "完成订单 O17 的地址核对、包装与运单打印。",
+    "cutoff_event_id": "e08",
+    "horizon": {
+      "type": "decision_opportunities",
+      "value": 3
+    },
+    "task_steps": [
+      "verify_address",
+      "pack_item",
+      "print_label"
+    ],
+    "task_dependencies": [
+      {
+        "before": "verify_address",
+        "after": "pack_item"
+      },
+      {
+        "before": "pack_item",
+        "after": "print_label"
+      }
+    ],
+    "completed_steps_at_cutoff": [
+      "verify_address"
+    ],
+    "observed_events": [
+      {
+        "event_id": "e01",
+        "time": "10:00",
+        "actor": "person",
+        "event_type": "goal_start",
+        "goal_id": "order_O17",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "目标激活；订单 O17 处理中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始处理订单 O17。"
+      },
+      {
+        "event_id": "e02",
+        "time": "10:01",
+        "actor": "person",
+        "event_type": "step_completed",
+        "goal_id": "order_O17",
+        "step_id": "verify_address",
+        "person_access": "ACCESSED",
+        "world_effect": "verify_address 完成。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "核对收货地址完成。"
+      },
+      {
+        "event_id": "e03",
+        "time": "10:02",
+        "actor": "person",
+        "event_type": "step_started",
+        "goal_id": "order_O17",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "pack_item 进行中；包装工具可用。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始包装商品；包装台工具可用。"
+      },
+      {
+        "event_id": "e04",
+        "time": "10:03",
+        "actor": "person",
+        "event_type": "interruption_started",
+        "goal_id": "order_O17",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "原目标因 support_call 暂停。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "接听客服电话，暂停包装。"
+      },
+      {
+        "event_id": "e05",
+        "time": "10:04",
+        "actor": "customer",
+        "event_type": "task_cancelled",
+        "goal_id": "order_O17",
+        "step_id": null,
+        "person_access": "NOT_ACCESSED",
+        "world_effect": "订单 O17 状态=CANCELLED。",
+        "observer_evidence": "后台订单记录",
+        "person_access_evidence": "仅后台记录，无人物可见通知",
+        "source": "backend_record",
+        "certainty": "CERTAIN",
+        "description": "客户在后台取消订单 O17。"
+      },
+      {
+        "event_id": "e06",
+        "time": "10:05",
+        "actor": "system",
+        "event_type": "notification_sent",
+        "goal_id": "order_O17",
+        "step_id": null,
+        "person_access": "NOT_ACCESSED",
+        "world_effect": "通知仅进入后台运营队列。",
+        "observer_evidence": "通知投递日志",
+        "person_access_evidence": "未投递到任何人物可见通道",
+        "source": "notification",
+        "certainty": "CERTAIN",
+        "description": "取消通知仅进入后台运营队列；工作台无可见或可听提示。"
+      },
+      {
+        "event_id": "e07",
+        "time": "10:06",
+        "actor": "person",
+        "event_type": "interruption_ended",
+        "goal_id": "order_O17",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "中断结束。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "电话结束。"
+      },
+      {
+        "event_id": "e08",
+        "time": "10:07",
+        "actor": "person",
+        "event_type": "return_to_task",
+        "goal_id": "order_O17",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "人物位于工作台，处于决策点。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "人物回到同一工作台。"
+      }
+    ],
+    "state_at_cutoff": {
+      "V": "CANCELLED",
+      "F": "READY",
+      "A": "NOT_ACCESSED",
+      "B": "UNKNOWN",
+      "C": "SUSPENDED",
+      "Q": "pack_item"
+    },
+    "state_evidence_event_ids": [
+      "e03",
+      "e04",
+      "e05",
+      "e06"
+    ],
+    "state_evidence_by_factor": {
+      "V": [
+        "e05"
+      ],
+      "F": [
+        "e03"
+      ],
+      "A": [
+        "e05",
+        "e06"
+      ],
+      "B": [],
+      "C": [
+        "e04"
+      ],
+      "Q": [
+        "e03",
+        "e04"
+      ]
+    },
+    "p0_scripted_policy": "continue_if_no_known_cancellation",
+    "p0_expected_action": "resume_pack_item",
+    "p0_expected": {
+      "resume_within_horizon": true,
+      "first_step": "pack_item",
+      "behavior_note": "人物未接触取消通知，按旧信息继续包装。"
+    },
+    "p1_observed_resume": null,
+    "p1_censoring_status": "not_collected",
+    "annotation": {
+      "annotator_id": "B",
+      "status": "draft",
+      "source_confidence": "medium",
+      "annotated_at": "2026-10-20"
+    },
+    "interruption": {
+      "start_event_id": "e04",
+      "end_event_id": "e07",
+      "duration_minutes": 3,
+      "interrupting_task": "support_call",
+      "demand_level": "medium",
+      "goal_priority": "high"
+    },
+    "notes": "P01-B：人物未接触取消通知；B=UNKNOWN，按旧信息恢复包装。"
+  },
+  {
+    "schema_version": "p0-record/v0.1.0",
+    "sample_id": "P02-A",
+    "base_story_id": "P02",
+    "variant": "A",
+    "domain": "work",
+    "goal_id": "report_R12",
+    "goal_description": "完成月度报告 R12 的第三节并提交。",
+    "cutoff_event_id": "e08",
+    "horizon": {
+      "type": "decision_opportunities",
+      "value": 3
+    },
+    "task_steps": [
+      "collect_data",
+      "draft_section_3",
+      "revise_section_3",
+      "submit_report"
+    ],
+    "task_dependencies": [
+      {
+        "before": "collect_data",
+        "after": "draft_section_3"
+      },
+      {
+        "before": "draft_section_3",
+        "after": "revise_section_3"
+      },
+      {
+        "before": "revise_section_3",
+        "after": "submit_report"
+      }
+    ],
+    "completed_steps_at_cutoff": [
+      "collect_data"
+    ],
+    "observed_events": [
+      {
+        "event_id": "e01",
+        "time": "08:40",
+        "actor": "person",
+        "event_type": "goal_start",
+        "goal_id": "report_R12",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "目标激活；报告 R12 处理中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始撰写月度报告 R12。"
+      },
+      {
+        "event_id": "e02",
+        "time": "08:50",
+        "actor": "person",
+        "event_type": "step_completed",
+        "goal_id": "report_R12",
+        "step_id": "collect_data",
+        "person_access": "ACCESSED",
+        "world_effect": "collect_data 完成。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "资料收集完成。"
+      },
+      {
+        "event_id": "e03",
+        "time": "09:00",
+        "actor": "person",
+        "event_type": "commitment_expressed",
+        "goal_id": "report_R12",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "人物对报告 R12 作出继续承诺。",
+        "observer_evidence": "人物当面明确陈述",
+        "person_access_evidence": "人物明确自述",
+        "source": "person_report",
+        "certainty": "CERTAIN",
+        "description": "人物明确说：开完会后继续写第三节。"
+      },
+      {
+        "event_id": "e04",
+        "time": "09:30",
+        "actor": "other",
+        "event_type": "interruption_started",
+        "goal_id": "report_R12",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "team_meeting 开始。",
+        "observer_evidence": "观察者看到人物进入会议室",
+        "person_access_evidence": "人物进入并参与会议",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "人物去参加团队会议。"
+      },
+      {
+        "event_id": "e05",
+        "time": "10:00",
+        "actor": "person",
+        "event_type": "interruption_ended",
+        "goal_id": "report_R12",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "中断结束。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "会议结束。"
+      },
+      {
+        "event_id": "e06",
+        "time": "10:02",
+        "actor": "person",
+        "event_type": "return_to_task",
+        "goal_id": "report_R12",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "人物回到工位。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "人物回到工位。"
+      },
+      {
+        "event_id": "e07",
+        "time": "10:03",
+        "actor": "person",
+        "event_type": "person_action",
+        "goal_id": "report_R12",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": null,
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "人物坐下并打开电脑。"
+      },
+      {
+        "event_id": "e08",
+        "time": "10:05",
+        "actor": "person",
+        "event_type": "person_action",
+        "goal_id": "report_R12",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "到达预测截断点。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "人物浏览屏幕，处于决策点。"
+      }
+    ],
+    "state_at_cutoff": {
+      "V": "VALID",
+      "F": "READY",
+      "A": "ACCESSED",
+      "B": "BELIEVES_VALID",
+      "C": "SUSPENDED",
+      "Q": "draft_section_3"
+    },
+    "state_evidence_event_ids": [
+      "e01",
+      "e02",
+      "e03",
+      "e04"
+    ],
+    "state_evidence_by_factor": {
+      "V": [
+        "e01"
+      ],
+      "F": [
+        "e01"
+      ],
+      "A": [
+        "e03"
+      ],
+      "B": [
+        "e01",
+        "e03"
+      ],
+      "C": [
+        "e03",
+        "e04"
+      ],
+      "Q": [
+        "e02"
+      ]
+    },
+    "p0_scripted_policy": "resume_if_committed_and_unfinished",
+    "p0_expected_action": "resume_draft_section_3",
+    "p0_expected": {
+      "resume_within_horizon": true,
+      "first_step": "draft_section_3",
+      "behavior_note": "人物早前明确承诺会后继续，按承诺恢复。"
+    },
+    "p1_observed_resume": null,
+    "p1_censoring_status": "not_collected",
+    "annotation": {
+      "annotator_id": "B",
+      "status": "draft",
+      "source_confidence": "medium",
+      "annotated_at": "2026-10-20"
+    },
+    "interruption": {
+      "start_event_id": "e04",
+      "end_event_id": "e05",
+      "duration_minutes": 30,
+      "interrupting_task": "team_meeting",
+      "demand_level": "high",
+      "goal_priority": "medium"
+    },
+    "notes": "P02-A：早前明确承诺继续；最后五个事件与 B 相同，预期恢复。"
+  },
+  {
+    "schema_version": "p0-record/v0.1.0",
+    "sample_id": "P02-B",
+    "base_story_id": "P02",
+    "variant": "B",
+    "domain": "work",
+    "goal_id": "report_R12",
+    "goal_description": "完成月度报告 R12 的第三节并提交。",
+    "cutoff_event_id": "e08",
+    "horizon": {
+      "type": "decision_opportunities",
+      "value": 3
+    },
+    "task_steps": [
+      "collect_data",
+      "draft_section_3",
+      "revise_section_3",
+      "submit_report"
+    ],
+    "task_dependencies": [
+      {
+        "before": "collect_data",
+        "after": "draft_section_3"
+      },
+      {
+        "before": "draft_section_3",
+        "after": "revise_section_3"
+      },
+      {
+        "before": "revise_section_3",
+        "after": "submit_report"
+      }
+    ],
+    "completed_steps_at_cutoff": [
+      "collect_data"
+    ],
+    "observed_events": [
+      {
+        "event_id": "e01",
+        "time": "08:40",
+        "actor": "person",
+        "event_type": "goal_start",
+        "goal_id": "report_R12",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "目标激活；报告 R12 处理中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始撰写月度报告 R12。"
+      },
+      {
+        "event_id": "e02",
+        "time": "08:50",
+        "actor": "person",
+        "event_type": "step_completed",
+        "goal_id": "report_R12",
+        "step_id": "collect_data",
+        "person_access": "ACCESSED",
+        "world_effect": "collect_data 完成。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "资料收集完成。"
+      },
+      {
+        "event_id": "e03",
+        "time": "09:00",
+        "actor": "person",
+        "event_type": "goal_abandoned",
+        "goal_id": "report_R12",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "人物明确放弃报告 R12。",
+        "observer_evidence": "人物当面明确陈述",
+        "person_access_evidence": "人物明确自述",
+        "source": "person_report",
+        "certainty": "CERTAIN",
+        "description": "人物明确说：我放弃报告 R12，不再继续。"
+      },
+      {
+        "event_id": "e04",
+        "time": "09:30",
+        "actor": "other",
+        "event_type": "interruption_started",
+        "goal_id": "report_R12",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "team_meeting 开始。",
+        "observer_evidence": "观察者看到人物进入会议室",
+        "person_access_evidence": "人物进入并参与会议",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "人物去参加团队会议。"
+      },
+      {
+        "event_id": "e05",
+        "time": "10:00",
+        "actor": "person",
+        "event_type": "interruption_ended",
+        "goal_id": "report_R12",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "中断结束。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "会议结束。"
+      },
+      {
+        "event_id": "e06",
+        "time": "10:02",
+        "actor": "person",
+        "event_type": "return_to_task",
+        "goal_id": "report_R12",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "人物回到工位。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "人物回到工位。"
+      },
+      {
+        "event_id": "e07",
+        "time": "10:03",
+        "actor": "person",
+        "event_type": "person_action",
+        "goal_id": "report_R12",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": null,
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "人物坐下并打开电脑。"
+      },
+      {
+        "event_id": "e08",
+        "time": "10:05",
+        "actor": "person",
+        "event_type": "person_action",
+        "goal_id": "report_R12",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "到达预测截断点。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "人物浏览屏幕，处于决策点。"
+      }
+    ],
+    "state_at_cutoff": {
+      "V": "VALID",
+      "F": "READY",
+      "A": "ACCESSED",
+      "B": "BELIEVES_VALID",
+      "C": "ABANDONED",
+      "Q": "NOT_APPLICABLE"
+    },
+    "state_evidence_event_ids": [
+      "e01",
+      "e03"
+    ],
+    "state_evidence_by_factor": {
+      "V": [
+        "e01"
+      ],
+      "F": [
+        "e01"
+      ],
+      "A": [
+        "e03"
+      ],
+      "B": [
+        "e01",
+        "e03"
+      ],
+      "C": [
+        "e03"
+      ],
+      "Q": [
+        "e03"
+      ]
+    },
+    "p0_scripted_policy": "resume_if_committed_and_unfinished",
+    "p0_expected_action": "do_not_resume",
+    "p0_expected": {
+      "resume_within_horizon": false,
+      "first_step": null,
+      "behavior_note": "人物早前已明确放弃，尽管最近事件相同也不应恢复。"
+    },
+    "p1_observed_resume": null,
+    "p1_censoring_status": "not_collected",
+    "annotation": {
+      "annotator_id": "B",
+      "status": "draft",
+      "source_confidence": "medium",
+      "annotated_at": "2026-10-20"
+    },
+    "interruption": {
+      "start_event_id": "e04",
+      "end_event_id": "e05",
+      "duration_minutes": 30,
+      "interrupting_task": "team_meeting",
+      "demand_level": "high",
+      "goal_priority": "medium"
+    },
+    "notes": "P02-B：早前明确放弃；最后五个事件与 A 相同，预期不恢复。"
+  },
+  {
+    "schema_version": "p0-record/v0.1.0",
+    "sample_id": "P03-A",
+    "base_story_id": "P03",
+    "variant": "A",
+    "domain": "collaboration_service",
+    "goal_id": "order_O21",
+    "goal_description": "完成订单 O21 的运单打印与快递交接。",
+    "cutoff_event_id": "e07",
+    "horizon": {
+      "type": "decision_opportunities",
+      "value": 3
+    },
+    "task_steps": [
+      "verify_address",
+      "pack_item",
+      "print_label",
+      "handoff_courier"
+    ],
+    "task_dependencies": [
+      {
+        "before": "verify_address",
+        "after": "pack_item"
+      },
+      {
+        "before": "pack_item",
+        "after": "print_label"
+      },
+      {
+        "before": "print_label",
+        "after": "handoff_courier"
+      }
+    ],
+    "completed_steps_at_cutoff": [
+      "verify_address",
+      "pack_item",
+      "print_label"
+    ],
+    "observed_events": [
+      {
+        "event_id": "e01",
+        "time": "10:00",
+        "actor": "person",
+        "event_type": "goal_start",
+        "goal_id": "order_O21",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "目标激活；订单 O21 处理中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始处理订单 O21。"
+      },
+      {
+        "event_id": "e02",
+        "time": "10:01",
+        "actor": "person",
+        "event_type": "step_completed",
+        "goal_id": "order_O21",
+        "step_id": "verify_address",
+        "person_access": "ACCESSED",
+        "world_effect": "verify_address 完成。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "地址核对完成。"
+      },
+      {
+        "event_id": "e03",
+        "time": "10:04",
+        "actor": "person",
+        "event_type": "step_completed",
+        "goal_id": "order_O21",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "pack_item 完成。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "包装完成。"
+      },
+      {
+        "event_id": "e04",
+        "time": "10:06",
+        "actor": "person",
+        "event_type": "step_completed",
+        "goal_id": "order_O21",
+        "step_id": "print_label",
+        "person_access": "ACCESSED",
+        "world_effect": "print_label 完成；运单已核对。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "人物打印并核对运单，确认打印完成。"
+      },
+      {
+        "event_id": "e05",
+        "time": "10:10",
+        "actor": "person",
+        "event_type": "interruption_started",
+        "goal_id": "order_O21",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "原目标因 customer_call 暂停。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "接听客户电话，暂停订单处理。"
+      },
+      {
+        "event_id": "e06",
+        "time": "10:13",
+        "actor": "person",
+        "event_type": "interruption_ended",
+        "goal_id": "order_O21",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "中断结束。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "电话结束。"
+      },
+      {
+        "event_id": "e07",
+        "time": "10:14",
+        "actor": "person",
+        "event_type": "return_to_task",
+        "goal_id": "order_O21",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "人物位于工作台，处于决策点。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "人物回到同一工作台。"
+      }
+    ],
+    "state_at_cutoff": {
+      "V": "VALID",
+      "F": "READY",
+      "A": "ACCESSED",
+      "B": "BELIEVES_VALID",
+      "C": "SUSPENDED",
+      "Q": "handoff_courier"
+    },
+    "state_evidence_event_ids": [
+      "e01",
+      "e04",
+      "e05"
+    ],
+    "state_evidence_by_factor": {
+      "V": [
+        "e01"
+      ],
+      "F": [
+        "e04"
+      ],
+      "A": [
+        "e04"
+      ],
+      "B": [
+        "e01",
+        "e04"
+      ],
+      "C": [
+        "e05"
+      ],
+      "Q": [
+        "e04"
+      ]
+    },
+    "p0_scripted_policy": "resume_at_first_incomplete_known_step",
+    "p0_expected_action": "resume_handoff_courier",
+    "p0_expected": {
+      "resume_within_horizon": true,
+      "first_step": "handoff_courier",
+      "behavior_note": "运单已打印核对，首个未完成步骤是交接快递。"
+    },
+    "p1_observed_resume": null,
+    "p1_censoring_status": "not_collected",
+    "annotation": {
+      "annotator_id": "B",
+      "status": "draft",
+      "source_confidence": "medium",
+      "annotated_at": "2026-10-20"
+    },
+    "interruption": {
+      "start_event_id": "e05",
+      "end_event_id": "e06",
+      "duration_minutes": 3,
+      "interrupting_task": "customer_call",
+      "demand_level": "medium",
+      "goal_priority": "high"
+    },
+    "notes": "P03-A：中断前已打印并核对运单；恢复点为 handoff_courier。"
+  },
+  {
+    "schema_version": "p0-record/v0.1.0",
+    "sample_id": "P03-B",
+    "base_story_id": "P03",
+    "variant": "B",
+    "domain": "collaboration_service",
+    "goal_id": "order_O21",
+    "goal_description": "完成订单 O21 的运单打印与快递交接。",
+    "cutoff_event_id": "e07",
+    "horizon": {
+      "type": "decision_opportunities",
+      "value": 3
+    },
+    "task_steps": [
+      "verify_address",
+      "pack_item",
+      "print_label",
+      "handoff_courier"
+    ],
+    "task_dependencies": [
+      {
+        "before": "verify_address",
+        "after": "pack_item"
+      },
+      {
+        "before": "pack_item",
+        "after": "print_label"
+      },
+      {
+        "before": "print_label",
+        "after": "handoff_courier"
+      }
+    ],
+    "completed_steps_at_cutoff": [
+      "verify_address",
+      "pack_item"
+    ],
+    "observed_events": [
+      {
+        "event_id": "e01",
+        "time": "10:00",
+        "actor": "person",
+        "event_type": "goal_start",
+        "goal_id": "order_O21",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "目标激活；订单 O21 处理中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始处理订单 O21。"
+      },
+      {
+        "event_id": "e02",
+        "time": "10:01",
+        "actor": "person",
+        "event_type": "step_completed",
+        "goal_id": "order_O21",
+        "step_id": "verify_address",
+        "person_access": "ACCESSED",
+        "world_effect": "verify_address 完成。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "地址核对完成。"
+      },
+      {
+        "event_id": "e03",
+        "time": "10:04",
+        "actor": "person",
+        "event_type": "step_completed",
+        "goal_id": "order_O21",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "pack_item 完成。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "包装完成。"
+      },
+      {
+        "event_id": "e04",
+        "time": "10:06",
+        "actor": "person",
+        "event_type": "step_attempted",
+        "goal_id": "order_O21",
+        "step_id": "print_label",
+        "person_access": "ACCESSED",
+        "world_effect": "print job not triggered；运单缺失。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "人物准备打印；打印任务尚未触发，运单缺失，人物看到未完成状态。"
+      },
+      {
+        "event_id": "e05",
+        "time": "10:10",
+        "actor": "person",
+        "event_type": "interruption_started",
+        "goal_id": "order_O21",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "原目标因 customer_call 暂停。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "接听客户电话，暂停订单处理。"
+      },
+      {
+        "event_id": "e06",
+        "time": "10:13",
+        "actor": "person",
+        "event_type": "interruption_ended",
+        "goal_id": "order_O21",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "中断结束。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "电话结束。"
+      },
+      {
+        "event_id": "e07",
+        "time": "10:14",
+        "actor": "person",
+        "event_type": "return_to_task",
+        "goal_id": "order_O21",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "人物位于工作台，处于决策点。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "人物回到同一工作台。"
+      }
+    ],
+    "state_at_cutoff": {
+      "V": "VALID",
+      "F": "READY",
+      "A": "ACCESSED",
+      "B": "BELIEVES_VALID",
+      "C": "SUSPENDED",
+      "Q": "print_label"
+    },
+    "state_evidence_event_ids": [
+      "e01",
+      "e04",
+      "e05"
+    ],
+    "state_evidence_by_factor": {
+      "V": [
+        "e01"
+      ],
+      "F": [
+        "e04"
+      ],
+      "A": [
+        "e04"
+      ],
+      "B": [
+        "e01",
+        "e04"
+      ],
+      "C": [
+        "e05"
+      ],
+      "Q": [
+        "e04"
+      ]
+    },
+    "p0_scripted_policy": "resume_at_first_incomplete_known_step",
+    "p0_expected_action": "resume_print_label",
+    "p0_expected": {
+      "resume_within_horizon": true,
+      "first_step": "print_label",
+      "behavior_note": "运单未打印且人物知情，首个未完成步骤是打印运单。"
+    },
+    "p1_observed_resume": null,
+    "p1_censoring_status": "not_collected",
+    "annotation": {
+      "annotator_id": "B",
+      "status": "draft",
+      "source_confidence": "medium",
+      "annotated_at": "2026-10-20"
+    },
+    "interruption": {
+      "start_event_id": "e05",
+      "end_event_id": "e06",
+      "duration_minutes": 3,
+      "interrupting_task": "customer_call",
+      "demand_level": "medium",
+      "goal_priority": "high"
+    },
+    "notes": "P03-B：中断前打印未执行且人物知情；恢复点为 print_label。"
+  },
+  {
+    "schema_version": "p0-record/v0.1.0",
+    "sample_id": "P04-A",
+    "base_story_id": "P04",
+    "variant": "A",
+    "domain": "work",
+    "goal_id": "expense_E9",
+    "goal_description": "提交报销单 E9。",
+    "cutoff_event_id": "e07",
+    "horizon": {
+      "type": "decision_opportunities",
+      "value": 3
+    },
+    "task_steps": [
+      "collect_receipts",
+      "fill_form",
+      "submit_portal"
+    ],
+    "task_dependencies": [
+      {
+        "before": "collect_receipts",
+        "after": "fill_form"
+      },
+      {
+        "before": "fill_form",
+        "after": "submit_portal"
+      }
+    ],
+    "completed_steps_at_cutoff": [
+      "collect_receipts",
+      "fill_form",
+      "submit_portal"
+    ],
+    "observed_events": [
+      {
+        "event_id": "e01",
+        "time": "10:00",
+        "actor": "person",
+        "event_type": "goal_start",
+        "goal_id": "expense_E9",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "目标激活；报销单 E9 处理中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始处理报销单 E9。"
+      },
+      {
+        "event_id": "e02",
+        "time": "10:01",
+        "actor": "person",
+        "event_type": "step_completed",
+        "goal_id": "expense_E9",
+        "step_id": "collect_receipts",
+        "person_access": "ACCESSED",
+        "world_effect": "collect_receipts 完成。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "收集并整理发票。"
+      },
+      {
+        "event_id": "e03",
+        "time": "10:03",
+        "actor": "person",
+        "event_type": "step_started",
+        "goal_id": "expense_E9",
+        "step_id": "fill_form",
+        "person_access": "ACCESSED",
+        "world_effect": "fill_form 进行中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始填写报销表单。"
+      },
+      {
+        "event_id": "e04",
+        "time": "10:04",
+        "actor": "person",
+        "event_type": "interruption_started",
+        "goal_id": "expense_E9",
+        "step_id": "fill_form",
+        "person_access": "ACCESSED",
+        "world_effect": "原目标因 phone_call 暂停。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "接听电话，暂停报销单处理。"
+      },
+      {
+        "event_id": "e05",
+        "time": "10:06",
+        "actor": "colleague",
+        "event_type": "task_completed_by_other",
+        "goal_id": "expense_E9",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "fill_form 与 submit_portal 完成；门户状态=SUBMITTED。",
+        "observer_evidence": "门户提交记录与同事陈述",
+        "person_access_evidence": "同事消息送达并被人物回复",
+        "source": "third_party_report",
+        "certainty": "CERTAIN",
+        "description": "同事完成并提交报销单；同事发消息告知人物，人物在电话中看到并回复。"
+      },
+      {
+        "event_id": "e06",
+        "time": "10:08",
+        "actor": "person",
+        "event_type": "interruption_ended",
+        "goal_id": "expense_E9",
+        "step_id": "fill_form",
+        "person_access": "ACCESSED",
+        "world_effect": "中断结束。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "电话结束。"
+      },
+      {
+        "event_id": "e07",
+        "time": "10:09",
+        "actor": "person",
+        "event_type": "return_to_task",
+        "goal_id": "expense_E9",
+        "step_id": "fill_form",
+        "person_access": "ACCESSED",
+        "world_effect": "人物位于工位，处于决策点。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "人物回到工位。"
+      }
+    ],
+    "state_at_cutoff": {
+      "V": "FULFILLED",
+      "F": "READY",
+      "A": "ACCESSED",
+      "B": "BELIEVES_VALID",
+      "C": "COMPLETED",
+      "Q": "NOT_APPLICABLE"
+    },
+    "state_evidence_event_ids": [
+      "e01",
+      "e02",
+      "e05"
+    ],
+    "state_evidence_by_factor": {
+      "V": [
+        "e05"
+      ],
+      "F": [
+        "e02",
+        "e05"
+      ],
+      "A": [
+        "e05"
+      ],
+      "B": [
+        "e01",
+        "e05"
+      ],
+      "C": [
+        "e05"
+      ],
+      "Q": [
+        "e05"
+      ]
+    },
+    "p0_scripted_policy": "avoid_repeat_if_known_completed",
+    "p0_expected_action": "do_not_resume",
+    "p0_expected": {
+      "resume_within_horizon": false,
+      "first_step": null,
+      "behavior_note": "人物已知任务由同事完成，避免重复提交。"
+    },
+    "p1_observed_resume": null,
+    "p1_censoring_status": "not_collected",
+    "annotation": {
+      "annotator_id": "B",
+      "status": "draft",
+      "source_confidence": "medium",
+      "annotated_at": "2026-10-20"
+    },
+    "interruption": {
+      "start_event_id": "e04",
+      "end_event_id": "e06",
+      "duration_minutes": 4,
+      "interrupting_task": "phone_call",
+      "demand_level": "medium",
+      "goal_priority": "high"
+    },
+    "notes": "P04-A：人物被明确告知同事已完成；C=COMPLETED，预期不重复。"
+  },
+  {
+    "schema_version": "p0-record/v0.1.0",
+    "sample_id": "P04-B",
+    "base_story_id": "P04",
+    "variant": "B",
+    "domain": "work",
+    "goal_id": "expense_E9",
+    "goal_description": "提交报销单 E9。",
+    "cutoff_event_id": "e07",
+    "horizon": {
+      "type": "decision_opportunities",
+      "value": 3
+    },
+    "task_steps": [
+      "collect_receipts",
+      "fill_form",
+      "submit_portal"
+    ],
+    "task_dependencies": [
+      {
+        "before": "collect_receipts",
+        "after": "fill_form"
+      },
+      {
+        "before": "fill_form",
+        "after": "submit_portal"
+      }
+    ],
+    "completed_steps_at_cutoff": [
+      "collect_receipts",
+      "fill_form",
+      "submit_portal"
+    ],
+    "observed_events": [
+      {
+        "event_id": "e01",
+        "time": "10:00",
+        "actor": "person",
+        "event_type": "goal_start",
+        "goal_id": "expense_E9",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "目标激活；报销单 E9 处理中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始处理报销单 E9。"
+      },
+      {
+        "event_id": "e02",
+        "time": "10:01",
+        "actor": "person",
+        "event_type": "step_completed",
+        "goal_id": "expense_E9",
+        "step_id": "collect_receipts",
+        "person_access": "ACCESSED",
+        "world_effect": "collect_receipts 完成。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "收集并整理发票。"
+      },
+      {
+        "event_id": "e03",
+        "time": "10:03",
+        "actor": "person",
+        "event_type": "step_started",
+        "goal_id": "expense_E9",
+        "step_id": "fill_form",
+        "person_access": "ACCESSED",
+        "world_effect": "fill_form 进行中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始填写报销表单。"
+      },
+      {
+        "event_id": "e04",
+        "time": "10:04",
+        "actor": "person",
+        "event_type": "interruption_started",
+        "goal_id": "expense_E9",
+        "step_id": "fill_form",
+        "person_access": "ACCESSED",
+        "world_effect": "原目标因 phone_call 暂停。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "接听电话，暂停报销单处理。"
+      },
+      {
+        "event_id": "e05",
+        "time": "10:06",
+        "actor": "colleague",
+        "event_type": "task_completed_by_other",
+        "goal_id": "expense_E9",
+        "step_id": null,
+        "person_access": "NOT_ACCESSED",
+        "world_effect": "fill_form 与 submit_portal 完成；门户状态=SUBMITTED。",
+        "observer_evidence": "门户提交记录与同事陈述",
+        "person_access_evidence": "无消息、无可见提示；人物未查看门户",
+        "source": "third_party_report",
+        "certainty": "CERTAIN",
+        "description": "同事完成并提交报销单；同事未通知人物，随后离开；人物未查看门户。"
+      },
+      {
+        "event_id": "e06",
+        "time": "10:08",
+        "actor": "person",
+        "event_type": "interruption_ended",
+        "goal_id": "expense_E9",
+        "step_id": "fill_form",
+        "person_access": "ACCESSED",
+        "world_effect": "中断结束。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "电话结束。"
+      },
+      {
+        "event_id": "e07",
+        "time": "10:09",
+        "actor": "person",
+        "event_type": "return_to_task",
+        "goal_id": "expense_E9",
+        "step_id": "fill_form",
+        "person_access": "ACCESSED",
+        "world_effect": "人物位于工位，处于决策点。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "人物回到工位。"
+      }
+    ],
+    "state_at_cutoff": {
+      "V": "FULFILLED",
+      "F": "READY",
+      "A": "NOT_ACCESSED",
+      "B": "BELIEVES_VALID",
+      "C": "SUSPENDED",
+      "Q": "fill_form"
+    },
+    "state_evidence_event_ids": [
+      "e01",
+      "e02",
+      "e03",
+      "e04",
+      "e05"
+    ],
+    "state_evidence_by_factor": {
+      "V": [
+        "e05"
+      ],
+      "F": [
+        "e02",
+        "e05"
+      ],
+      "A": [
+        "e05"
+      ],
+      "B": [
+        "e01",
+        "e03"
+      ],
+      "C": [
+        "e03",
+        "e04"
+      ],
+      "Q": [
+        "e03"
+      ]
+    },
+    "p0_scripted_policy": "avoid_repeat_if_known_completed",
+    "p0_expected_action": "resume_fill_form",
+    "p0_expected": {
+      "resume_within_horizon": true,
+      "first_step": "fill_form",
+      "behavior_note": "人物未获知完成事实，可能从 fill_form 重复推进。"
+    },
+    "p1_observed_resume": null,
+    "p1_censoring_status": "not_collected",
+    "annotation": {
+      "annotator_id": "B",
+      "status": "draft",
+      "source_confidence": "medium",
+      "annotated_at": "2026-10-20"
+    },
+    "interruption": {
+      "start_event_id": "e04",
+      "end_event_id": "e06",
+      "duration_minutes": 4,
+      "interrupting_task": "phone_call",
+      "demand_level": "medium",
+      "goal_priority": "high"
+    },
+    "notes": "P04-B：人物未获知同事已完成；C=SUSPENDED，可能重复推进。"
+  },
+  {
+    "schema_version": "p0-record/v0.1.0",
+    "sample_id": "P05-A",
+    "base_story_id": "P05",
+    "variant": "A",
+    "domain": "daily_life",
+    "goal_id": "chair_repair_R5",
+    "goal_description": "修好松动椅架。",
+    "cutoff_event_id": "e06",
+    "horizon": {
+      "type": "decision_opportunities",
+      "value": 3
+    },
+    "task_steps": [
+      "remove_old_bracket",
+      "attach_new_bracket",
+      "tighten_screws",
+      "test_stability"
+    ],
+    "task_dependencies": [
+      {
+        "before": "remove_old_bracket",
+        "after": "attach_new_bracket"
+      },
+      {
+        "before": "attach_new_bracket",
+        "after": "tighten_screws"
+      },
+      {
+        "before": "tighten_screws",
+        "after": "test_stability"
+      }
+    ],
+    "completed_steps_at_cutoff": [
+      "remove_old_bracket"
+    ],
+    "observed_events": [
+      {
+        "event_id": "e01",
+        "time": "10:00",
+        "actor": "person",
+        "event_type": "goal_start",
+        "goal_id": "chair_repair_R5",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "目标激活；椅架修理进行中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始修理松动椅架。"
+      },
+      {
+        "event_id": "e02",
+        "time": "10:01",
+        "actor": "person",
+        "event_type": "step_completed",
+        "goal_id": "chair_repair_R5",
+        "step_id": "remove_old_bracket",
+        "person_access": "ACCESSED",
+        "world_effect": "remove_old_bracket 完成。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "拆下旧支架。"
+      },
+      {
+        "event_id": "e03",
+        "time": "10:02",
+        "actor": "person",
+        "event_type": "interruption_started",
+        "goal_id": "chair_repair_R5",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "原目标因 phone_call 暂停。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "接听电话，暂停修理。"
+      },
+      {
+        "event_id": "e04",
+        "time": "10:05",
+        "actor": "person",
+        "event_type": "interruption_ended",
+        "goal_id": "chair_repair_R5",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "中断结束。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "电话结束。"
+      },
+      {
+        "event_id": "e05",
+        "time": "10:06",
+        "actor": "environment",
+        "event_type": "resource_available",
+        "goal_id": "chair_repair_R5",
+        "step_id": "attach_new_bracket",
+        "person_access": "ACCESSED",
+        "world_effect": "screwdriver present。",
+        "observer_evidence": "人物直接查看工具盒",
+        "person_access_evidence": "人物看到并拿起螺丝刀",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "工具盒中螺丝刀可见；人物拿起螺丝刀。"
+      },
+      {
+        "event_id": "e06",
+        "time": "10:07",
+        "actor": "person",
+        "event_type": "return_to_task",
+        "goal_id": "chair_repair_R5",
+        "step_id": "attach_new_bracket",
+        "person_access": "ACCESSED",
+        "world_effect": "人物位于任务点，处于决策点。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "人物回到椅架旁。"
+      }
+    ],
+    "state_at_cutoff": {
+      "V": "VALID",
+      "F": "READY",
+      "A": "ACCESSED",
+      "B": "BELIEVES_VALID",
+      "C": "SUSPENDED",
+      "Q": "attach_new_bracket"
+    },
+    "state_evidence_event_ids": [
+      "e01",
+      "e02",
+      "e03",
+      "e05"
+    ],
+    "state_evidence_by_factor": {
+      "V": [
+        "e01"
+      ],
+      "F": [
+        "e05"
+      ],
+      "A": [
+        "e05"
+      ],
+      "B": [
+        "e01"
+      ],
+      "C": [
+        "e03",
+        "e05"
+      ],
+      "Q": [
+        "e02"
+      ]
+    },
+    "p0_scripted_policy": "execute_if_ready_else_wait",
+    "p0_expected_action": "resume_attach_new_bracket",
+    "p0_expected": {
+      "resume_within_horizon": true,
+      "first_step": "attach_new_bracket",
+      "behavior_note": "工具可用且人物知情，执行原步骤。"
+    },
+    "p1_observed_resume": null,
+    "p1_censoring_status": "not_collected",
+    "annotation": {
+      "annotator_id": "B",
+      "status": "draft",
+      "source_confidence": "medium",
+      "annotated_at": "2026-10-20"
+    },
+    "interruption": {
+      "start_event_id": "e03",
+      "end_event_id": "e04",
+      "duration_minutes": 3,
+      "interrupting_task": "phone_call",
+      "demand_level": "low",
+      "goal_priority": "medium"
+    },
+    "notes": "P05-A：工具可用；F=READY，预期执行 attach_new_bracket。"
+  },
+  {
+    "schema_version": "p0-record/v0.1.0",
+    "sample_id": "P05-B",
+    "base_story_id": "P05",
+    "variant": "B",
+    "domain": "daily_life",
+    "goal_id": "chair_repair_R5",
+    "goal_description": "修好松动椅架。",
+    "cutoff_event_id": "e06",
+    "horizon": {
+      "type": "decision_opportunities",
+      "value": 3
+    },
+    "task_steps": [
+      "remove_old_bracket",
+      "attach_new_bracket",
+      "tighten_screws",
+      "test_stability"
+    ],
+    "task_dependencies": [
+      {
+        "before": "remove_old_bracket",
+        "after": "attach_new_bracket"
+      },
+      {
+        "before": "attach_new_bracket",
+        "after": "tighten_screws"
+      },
+      {
+        "before": "tighten_screws",
+        "after": "test_stability"
+      }
+    ],
+    "completed_steps_at_cutoff": [
+      "remove_old_bracket"
+    ],
+    "observed_events": [
+      {
+        "event_id": "e01",
+        "time": "10:00",
+        "actor": "person",
+        "event_type": "goal_start",
+        "goal_id": "chair_repair_R5",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "目标激活；椅架修理进行中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始修理松动椅架。"
+      },
+      {
+        "event_id": "e02",
+        "time": "10:01",
+        "actor": "person",
+        "event_type": "step_completed",
+        "goal_id": "chair_repair_R5",
+        "step_id": "remove_old_bracket",
+        "person_access": "ACCESSED",
+        "world_effect": "remove_old_bracket 完成。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "拆下旧支架。"
+      },
+      {
+        "event_id": "e03",
+        "time": "10:02",
+        "actor": "person",
+        "event_type": "interruption_started",
+        "goal_id": "chair_repair_R5",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "原目标因 phone_call 暂停。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "接听电话，暂停修理。"
+      },
+      {
+        "event_id": "e04",
+        "time": "10:05",
+        "actor": "person",
+        "event_type": "interruption_ended",
+        "goal_id": "chair_repair_R5",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "中断结束。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "电话结束。"
+      },
+      {
+        "event_id": "e05",
+        "time": "10:06",
+        "actor": "environment",
+        "event_type": "resource_missing",
+        "goal_id": "chair_repair_R5",
+        "step_id": "attach_new_bracket",
+        "person_access": "ACCESSED",
+        "world_effect": "screwdriver missing。",
+        "observer_evidence": "人物直接查看工具盒",
+        "person_access_evidence": "人物看到空位并确认缺失",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "人物检查工具盒；螺丝刀缺失，空位清晰可见。"
+      },
+      {
+        "event_id": "e06",
+        "time": "10:07",
+        "actor": "person",
+        "event_type": "return_to_task",
+        "goal_id": "chair_repair_R5",
+        "step_id": "attach_new_bracket",
+        "person_access": "ACCESSED",
+        "world_effect": "人物位于任务点，处于决策点。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "人物回到椅架旁。"
+      }
+    ],
+    "state_at_cutoff": {
+      "V": "VALID",
+      "F": "BLOCKED",
+      "A": "ACCESSED",
+      "B": "BELIEVES_VALID",
+      "C": "SUSPENDED",
+      "Q": "attach_new_bracket"
+    },
+    "state_evidence_event_ids": [
+      "e01",
+      "e02",
+      "e03",
+      "e05"
+    ],
+    "state_evidence_by_factor": {
+      "V": [
+        "e01"
+      ],
+      "F": [
+        "e05"
+      ],
+      "A": [
+        "e05"
+      ],
+      "B": [
+        "e01"
+      ],
+      "C": [
+        "e03",
+        "e05"
+      ],
+      "Q": [
+        "e02"
+      ]
+    },
+    "p0_scripted_policy": "execute_if_ready_else_wait",
+    "p0_expected_action": "wait_for_tool",
+    "p0_expected": {
+      "resume_within_horizon": false,
+      "first_step": null,
+      "behavior_note": "工具缺失且人物知情；保持目标但等待/寻找工具，H 内不执行原步骤。"
+    },
+    "p1_observed_resume": null,
+    "p1_censoring_status": "not_collected",
+    "annotation": {
+      "annotator_id": "B",
+      "status": "draft",
+      "source_confidence": "medium",
+      "annotated_at": "2026-10-20"
+    },
+    "interruption": {
+      "start_event_id": "e03",
+      "end_event_id": "e04",
+      "duration_minutes": 3,
+      "interrupting_task": "phone_call",
+      "demand_level": "low",
+      "goal_priority": "medium"
+    },
+    "notes": "P05-B：工具缺失；F=BLOCKED 且 C=SUSPENDED，预期等待而非执行。"
+  },
+  {
+    "schema_version": "p0-record/v0.1.0",
+    "sample_id": "P06-A",
+    "base_story_id": "P06",
+    "variant": "A",
+    "domain": "work",
+    "goal_id": "report_R7",
+    "goal_description": "完成报告 R7；期间插入打印机维修任务。",
+    "cutoff_event_id": "e11",
+    "horizon": {
+      "type": "decision_opportunities",
+      "value": 3
+    },
+    "task_steps": [
+      "draft_intro",
+      "analyze_data",
+      "write_conclusion",
+      "submit_report"
+    ],
+    "task_dependencies": [
+      {
+        "before": "draft_intro",
+        "after": "analyze_data"
+      },
+      {
+        "before": "analyze_data",
+        "after": "write_conclusion"
+      },
+      {
+        "before": "write_conclusion",
+        "after": "submit_report"
+      }
+    ],
+    "completed_steps_at_cutoff": [
+      "draft_intro"
+    ],
+    "observed_events": [
+      {
+        "event_id": "e01",
+        "time": "09:00",
+        "actor": "person",
+        "event_type": "goal_start",
+        "goal_id": "report_R7",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "目标激活；报告 R7 处理中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始处理报告 R7。"
+      },
+      {
+        "event_id": "e02",
+        "time": "09:05",
+        "actor": "person",
+        "event_type": "step_completed",
+        "goal_id": "report_R7",
+        "step_id": "draft_intro",
+        "person_access": "ACCESSED",
+        "world_effect": "draft_intro 完成。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "完成报告引言。"
+      },
+      {
+        "event_id": "e03",
+        "time": "09:15",
+        "actor": "person",
+        "event_type": "step_started",
+        "goal_id": "report_R7",
+        "step_id": "analyze_data",
+        "person_access": "ACCESSED",
+        "world_effect": "analyze_data 进行中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始分析数据。"
+      },
+      {
+        "event_id": "e04",
+        "time": "09:20",
+        "actor": "person",
+        "event_type": "interruption_started",
+        "goal_id": "report_R7",
+        "step_id": "analyze_data",
+        "person_access": "ACCESSED",
+        "world_effect": "report_R7 暂停；fix_printer 开始。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "打印机卡纸，人物转向插入任务 fix_printer。"
+      },
+      {
+        "event_id": "e05",
+        "time": "09:22",
+        "actor": "person",
+        "event_type": "step_completed",
+        "goal_id": "printer_P3",
+        "step_id": "clear_jam",
+        "person_access": "ACCESSED",
+        "world_effect": "clear_jam 完成。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "清除卡纸。"
+      },
+      {
+        "event_id": "e06",
+        "time": "09:24",
+        "actor": "person",
+        "event_type": "step_started",
+        "goal_id": "printer_P3",
+        "step_id": "replace_toner",
+        "person_access": "ACCESSED",
+        "world_effect": "replace_toner 进行中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始更换硒鼓。"
+      },
+      {
+        "event_id": "e07",
+        "time": "09:27",
+        "actor": "person",
+        "event_type": "step_completed",
+        "goal_id": "printer_P3",
+        "step_id": "replace_toner",
+        "person_access": "ACCESSED",
+        "world_effect": "replace_toner 完成。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "更换硒鼓完成。"
+      },
+      {
+        "event_id": "e08",
+        "time": "09:28",
+        "actor": "person",
+        "event_type": "step_completed",
+        "goal_id": "printer_P3",
+        "step_id": "test_print",
+        "person_access": "ACCESSED",
+        "world_effect": "test_print 完成；fix_printer 完成。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "测试打印成功。"
+      },
+      {
+        "event_id": "e09",
+        "time": "09:30",
+        "actor": "manager",
+        "event_type": "interruption_started",
+        "goal_id": null,
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "manager_call 开始。",
+        "observer_evidence": "人物接听电话，观察者在场",
+        "person_access_evidence": "人物接听经理电话",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "经理来电，当前活动暂停。"
+      },
+      {
+        "event_id": "e10",
+        "time": "09:40",
+        "actor": "person",
+        "event_type": "interruption_ended",
+        "goal_id": null,
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "manager_call 结束。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "经理电话结束。"
+      },
+      {
+        "event_id": "e11",
+        "time": "09:41",
+        "actor": "person",
+        "event_type": "person_action",
+        "goal_id": "report_R7",
+        "step_id": "analyze_data",
+        "person_access": "ACCESSED",
+        "world_effect": "到达预测截断点。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "人物回到工作区，同时面对未完成的报告与打印机任务。"
+      }
+    ],
+    "state_at_cutoff": {
+      "V": "VALID",
+      "F": "READY",
+      "A": "ACCESSED",
+      "B": "BELIEVES_VALID",
+      "C": "SUSPENDED",
+      "Q": "analyze_data"
+    },
+    "state_evidence_event_ids": [
+      "e01",
+      "e03",
+      "e04",
+      "e07",
+      "e09"
+    ],
+    "state_evidence_by_factor": {
+      "V": [
+        "e01"
+      ],
+      "F": [
+        "e03"
+      ],
+      "A": [
+        "e07"
+      ],
+      "B": [
+        "e01"
+      ],
+      "C": [
+        "e04",
+        "e09"
+      ],
+      "Q": [
+        "e03"
+      ]
+    },
+    "p0_scripted_policy": "finish_nested_task_before_parent",
+    "p0_expected_action": "resume_analyze_data",
+    "p0_expected": {
+      "resume_within_horizon": true,
+      "first_step": "analyze_data",
+      "behavior_note": "插入任务已完成，按脚本优先级回到原目标。"
+    },
+    "p1_observed_resume": null,
+    "p1_censoring_status": "not_collected",
+    "annotation": {
+      "annotator_id": "B",
+      "status": "draft",
+      "source_confidence": "medium",
+      "annotated_at": "2026-10-20"
+    },
+    "interruption": {
+      "start_event_id": "e04",
+      "end_event_id": null,
+      "duration_minutes": null,
+      "interrupting_task": "fix_printer",
+      "demand_level": "high",
+      "goal_priority": "high"
+    },
+    "interrupting_task": {
+      "task_id": "fix_printer",
+      "goal_id": "printer_P3",
+      "parent_goal_id": "report_R7",
+      "steps": [
+        "clear_jam",
+        "replace_toner",
+        "test_print"
+      ],
+      "status_at_cutoff": "COMPLETED",
+      "completed_steps_at_cutoff": [
+        "clear_jam",
+        "replace_toner",
+        "test_print"
+      ]
+    },
+    "notes": "P06-A：结束嵌套电话时 fix_printer 已完成；预期回到 report_R7。"
+  },
+  {
+    "schema_version": "p0-record/v0.1.0",
+    "sample_id": "P06-B",
+    "base_story_id": "P06",
+    "variant": "B",
+    "domain": "work",
+    "goal_id": "report_R7",
+    "goal_description": "完成报告 R7；期间插入打印机维修任务。",
+    "cutoff_event_id": "e11",
+    "horizon": {
+      "type": "decision_opportunities",
+      "value": 3
+    },
+    "task_steps": [
+      "draft_intro",
+      "analyze_data",
+      "write_conclusion",
+      "submit_report"
+    ],
+    "task_dependencies": [
+      {
+        "before": "draft_intro",
+        "after": "analyze_data"
+      },
+      {
+        "before": "analyze_data",
+        "after": "write_conclusion"
+      },
+      {
+        "before": "write_conclusion",
+        "after": "submit_report"
+      }
+    ],
+    "completed_steps_at_cutoff": [
+      "draft_intro"
+    ],
+    "observed_events": [
+      {
+        "event_id": "e01",
+        "time": "09:00",
+        "actor": "person",
+        "event_type": "goal_start",
+        "goal_id": "report_R7",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "目标激活；报告 R7 处理中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始处理报告 R7。"
+      },
+      {
+        "event_id": "e02",
+        "time": "09:05",
+        "actor": "person",
+        "event_type": "step_completed",
+        "goal_id": "report_R7",
+        "step_id": "draft_intro",
+        "person_access": "ACCESSED",
+        "world_effect": "draft_intro 完成。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "完成报告引言。"
+      },
+      {
+        "event_id": "e03",
+        "time": "09:15",
+        "actor": "person",
+        "event_type": "step_started",
+        "goal_id": "report_R7",
+        "step_id": "analyze_data",
+        "person_access": "ACCESSED",
+        "world_effect": "analyze_data 进行中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始分析数据。"
+      },
+      {
+        "event_id": "e04",
+        "time": "09:20",
+        "actor": "person",
+        "event_type": "interruption_started",
+        "goal_id": "report_R7",
+        "step_id": "analyze_data",
+        "person_access": "ACCESSED",
+        "world_effect": "report_R7 暂停；fix_printer 开始。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "打印机卡纸，人物转向插入任务 fix_printer。"
+      },
+      {
+        "event_id": "e05",
+        "time": "09:22",
+        "actor": "person",
+        "event_type": "step_completed",
+        "goal_id": "printer_P3",
+        "step_id": "clear_jam",
+        "person_access": "ACCESSED",
+        "world_effect": "clear_jam 完成。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "清除卡纸。"
+      },
+      {
+        "event_id": "e06",
+        "time": "09:24",
+        "actor": "person",
+        "event_type": "step_started",
+        "goal_id": "printer_P3",
+        "step_id": "replace_toner",
+        "person_access": "ACCESSED",
+        "world_effect": "replace_toner 进行中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始更换硒鼓。"
+      },
+      {
+        "event_id": "e07",
+        "time": "09:27",
+        "actor": "person",
+        "event_type": "step_attempted",
+        "goal_id": "printer_P3",
+        "step_id": "replace_toner",
+        "person_access": "ACCESSED",
+        "world_effect": "replace_toner 未完成；test_print 无法执行。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "硒鼓只装到一半；尚未完成时被电话打断。"
+      },
+      {
+        "event_id": "e09",
+        "time": "09:30",
+        "actor": "manager",
+        "event_type": "interruption_started",
+        "goal_id": null,
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "manager_call 开始。",
+        "observer_evidence": "人物接听电话，观察者在场",
+        "person_access_evidence": "人物接听经理电话",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "经理来电，当前活动暂停。"
+      },
+      {
+        "event_id": "e10",
+        "time": "09:40",
+        "actor": "person",
+        "event_type": "interruption_ended",
+        "goal_id": null,
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "manager_call 结束。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "经理电话结束。"
+      },
+      {
+        "event_id": "e11",
+        "time": "09:41",
+        "actor": "person",
+        "event_type": "person_action",
+        "goal_id": "report_R7",
+        "step_id": "analyze_data",
+        "person_access": "ACCESSED",
+        "world_effect": "到达预测截断点。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "人物回到工作区，同时面对未完成的报告与打印机任务。"
+      }
+    ],
+    "state_at_cutoff": {
+      "V": "VALID",
+      "F": "READY",
+      "A": "ACCESSED",
+      "B": "BELIEVES_VALID",
+      "C": "SUSPENDED",
+      "Q": "analyze_data"
+    },
+    "state_evidence_event_ids": [
+      "e01",
+      "e03",
+      "e04",
+      "e07",
+      "e09"
+    ],
+    "state_evidence_by_factor": {
+      "V": [
+        "e01"
+      ],
+      "F": [
+        "e03"
+      ],
+      "A": [
+        "e07"
+      ],
+      "B": [
+        "e01"
+      ],
+      "C": [
+        "e04",
+        "e09"
+      ],
+      "Q": [
+        "e03"
+      ]
+    },
+    "p0_scripted_policy": "finish_nested_task_before_parent",
+    "p0_expected_action": "resume_replace_toner",
+    "p0_expected": {
+      "resume_within_horizon": false,
+      "first_step": "replace_toner",
+      "behavior_note": "插入任务未完成；按脚本优先级先完成 fix_printer，H 内不恢复原目标。"
+    },
+    "p1_observed_resume": null,
+    "p1_censoring_status": "not_collected",
+    "annotation": {
+      "annotator_id": "B",
+      "status": "draft",
+      "source_confidence": "medium",
+      "annotated_at": "2026-10-20"
+    },
+    "interruption": {
+      "start_event_id": "e04",
+      "end_event_id": null,
+      "duration_minutes": null,
+      "interrupting_task": "fix_printer",
+      "demand_level": "high",
+      "goal_priority": "high"
+    },
+    "interrupting_task": {
+      "task_id": "fix_printer",
+      "goal_id": "printer_P3",
+      "parent_goal_id": "report_R7",
+      "steps": [
+        "clear_jam",
+        "replace_toner",
+        "test_print"
+      ],
+      "status_at_cutoff": "IN_PROGRESS",
+      "completed_steps_at_cutoff": [
+        "clear_jam"
+      ]
+    },
+    "notes": "P06-B：结束嵌套电话时 fix_printer 仍未完成；预期先完成插入任务。"
+  },
+  {
+    "schema_version": "p0-record/v0.1.0",
+    "sample_id": "P07-A",
+    "base_story_id": "P07",
+    "variant": "A",
+    "domain": "collaboration_service",
+    "goal_id": "order_O44",
+    "goal_description": "完成订单 O44 的地址核对、包装与运单打印。",
+    "cutoff_event_id": "e06",
+    "horizon": {
+      "type": "decision_opportunities",
+      "value": 3
+    },
+    "task_steps": [
+      "verify_address",
+      "pack_item",
+      "print_label"
+    ],
+    "task_dependencies": [
+      {
+        "before": "verify_address",
+        "after": "pack_item"
+      },
+      {
+        "before": "pack_item",
+        "after": "print_label"
+      }
+    ],
+    "completed_steps_at_cutoff": [
+      "verify_address"
+    ],
+    "observed_events": [
+      {
+        "event_id": "e01",
+        "time": "10:00",
+        "actor": "person",
+        "event_type": "goal_start",
+        "goal_id": "order_O44",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "目标激活；订单 O44 处理中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始处理订单 O44。"
+      },
+      {
+        "event_id": "e02",
+        "time": "10:01",
+        "actor": "person",
+        "event_type": "step_completed",
+        "goal_id": "order_O44",
+        "step_id": "verify_address",
+        "person_access": "ACCESSED",
+        "world_effect": "verify_address 完成。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "核对收货地址完成。"
+      },
+      {
+        "event_id": "e03",
+        "time": "10:03",
+        "actor": "person",
+        "event_type": "step_started",
+        "goal_id": "order_O44",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "pack_item 进行中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始包装商品。"
+      },
+      {
+        "event_id": "e04",
+        "time": "10:04",
+        "actor": "person",
+        "event_type": "interruption_started",
+        "goal_id": "order_O44",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "原目标因 support_call 暂停。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "接听客服电话，暂停包装。"
+      },
+      {
+        "event_id": "e05",
+        "time": "10:07",
+        "actor": "person",
+        "event_type": "interruption_ended",
+        "goal_id": "order_O44",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "中断结束。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "电话结束。"
+      },
+      {
+        "event_id": "e06",
+        "time": "10:08",
+        "actor": "person",
+        "event_type": "return_to_task",
+        "goal_id": "order_O44",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "人物位于工作台，处于决策点。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "人物回到同一工作台。"
+      }
+    ],
+    "state_at_cutoff": {
+      "V": "VALID",
+      "F": "READY",
+      "A": "ACCESSED",
+      "B": "BELIEVES_VALID",
+      "C": "SUSPENDED",
+      "Q": "pack_item"
+    },
+    "state_evidence_event_ids": [
+      "e01",
+      "e03",
+      "e04",
+      "e06"
+    ],
+    "state_evidence_by_factor": {
+      "V": [
+        "e01"
+      ],
+      "F": [
+        "e03"
+      ],
+      "A": [
+        "e04",
+        "e06"
+      ],
+      "B": [
+        "e01"
+      ],
+      "C": [
+        "e04"
+      ],
+      "Q": [
+        "e03"
+      ]
+    },
+    "p0_scripted_policy": "resume_if_committed_and_unfinished",
+    "p0_expected_action": "resume_pack_item",
+    "p0_expected": {
+      "resume_within_horizon": true,
+      "first_step": "pack_item",
+      "behavior_note": "截断点输入无已知阻碍，按脚本策略恢复包装；截断后设计结果不进入输入或标签。"
+    },
+    "p1_observed_resume": null,
+    "p1_censoring_status": "not_collected",
+    "annotation": {
+      "annotator_id": "B",
+      "status": "draft",
+      "source_confidence": "medium",
+      "annotated_at": "2026-10-20"
+    },
+    "interruption": {
+      "start_event_id": "e04",
+      "end_event_id": "e05",
+      "duration_minutes": 3,
+      "interrupting_task": "support_call",
+      "demand_level": "medium",
+      "goal_priority": "high"
+    },
+    "notes": "P07-A：未来泄漏负对照。截断前输入与 P07-B 完全一致；设计上的截断后结果为人物恢复包装。截断后结果仅用于设计说明，绝不作为模型输入。"
+  },
+  {
+    "schema_version": "p0-record/v0.1.0",
+    "sample_id": "P07-B",
+    "base_story_id": "P07",
+    "variant": "B",
+    "domain": "collaboration_service",
+    "goal_id": "order_O44",
+    "goal_description": "完成订单 O44 的地址核对、包装与运单打印。",
+    "cutoff_event_id": "e06",
+    "horizon": {
+      "type": "decision_opportunities",
+      "value": 3
+    },
+    "task_steps": [
+      "verify_address",
+      "pack_item",
+      "print_label"
+    ],
+    "task_dependencies": [
+      {
+        "before": "verify_address",
+        "after": "pack_item"
+      },
+      {
+        "before": "pack_item",
+        "after": "print_label"
+      }
+    ],
+    "completed_steps_at_cutoff": [
+      "verify_address"
+    ],
+    "observed_events": [
+      {
+        "event_id": "e01",
+        "time": "10:00",
+        "actor": "person",
+        "event_type": "goal_start",
+        "goal_id": "order_O44",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "目标激活；订单 O44 处理中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始处理订单 O44。"
+      },
+      {
+        "event_id": "e02",
+        "time": "10:01",
+        "actor": "person",
+        "event_type": "step_completed",
+        "goal_id": "order_O44",
+        "step_id": "verify_address",
+        "person_access": "ACCESSED",
+        "world_effect": "verify_address 完成。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "核对收货地址完成。"
+      },
+      {
+        "event_id": "e03",
+        "time": "10:03",
+        "actor": "person",
+        "event_type": "step_started",
+        "goal_id": "order_O44",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "pack_item 进行中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始包装商品。"
+      },
+      {
+        "event_id": "e04",
+        "time": "10:04",
+        "actor": "person",
+        "event_type": "interruption_started",
+        "goal_id": "order_O44",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "原目标因 support_call 暂停。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "接听客服电话，暂停包装。"
+      },
+      {
+        "event_id": "e05",
+        "time": "10:07",
+        "actor": "person",
+        "event_type": "interruption_ended",
+        "goal_id": "order_O44",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "中断结束。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "电话结束。"
+      },
+      {
+        "event_id": "e06",
+        "time": "10:08",
+        "actor": "person",
+        "event_type": "return_to_task",
+        "goal_id": "order_O44",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "人物位于工作台，处于决策点。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "人物回到同一工作台。"
+      }
+    ],
+    "state_at_cutoff": {
+      "V": "VALID",
+      "F": "READY",
+      "A": "ACCESSED",
+      "B": "BELIEVES_VALID",
+      "C": "SUSPENDED",
+      "Q": "pack_item"
+    },
+    "state_evidence_event_ids": [
+      "e01",
+      "e03",
+      "e04",
+      "e06"
+    ],
+    "state_evidence_by_factor": {
+      "V": [
+        "e01"
+      ],
+      "F": [
+        "e03"
+      ],
+      "A": [
+        "e04",
+        "e06"
+      ],
+      "B": [
+        "e01"
+      ],
+      "C": [
+        "e04"
+      ],
+      "Q": [
+        "e03"
+      ]
+    },
+    "p0_scripted_policy": "resume_if_committed_and_unfinished",
+    "p0_expected_action": "resume_pack_item",
+    "p0_expected": {
+      "resume_within_horizon": true,
+      "first_step": "pack_item",
+      "behavior_note": "截断点输入无已知阻碍，按脚本策略恢复包装；截断后设计结果不进入输入或标签。"
+    },
+    "p1_observed_resume": null,
+    "p1_censoring_status": "not_collected",
+    "annotation": {
+      "annotator_id": "B",
+      "status": "draft",
+      "source_confidence": "medium",
+      "annotated_at": "2026-10-20"
+    },
+    "interruption": {
+      "start_event_id": "e04",
+      "end_event_id": "e05",
+      "duration_minutes": 3,
+      "interrupting_task": "support_call",
+      "demand_level": "medium",
+      "goal_priority": "high"
+    },
+    "notes": "P07-B：未来泄漏负对照。截断前输入与 P07-A 完全一致；设计上的截断后结果为人物在 H 内不恢复。截断后结果仅用于设计说明，绝不作为模型输入。"
+  },
+  {
+    "schema_version": "p0-record/v0.1.0",
+    "sample_id": "P08-A",
+    "base_story_id": "P08",
+    "variant": "A",
+    "domain": "collaboration_service",
+    "goal_id": "order_O33",
+    "goal_description": "完成订单 O33 的地址核对、包装与运单打印。",
+    "cutoff_event_id": "e09",
+    "horizon": {
+      "type": "decision_opportunities",
+      "value": 3
+    },
+    "task_steps": [
+      "verify_address",
+      "pack_item",
+      "print_label"
+    ],
+    "task_dependencies": [
+      {
+        "before": "verify_address",
+        "after": "pack_item"
+      },
+      {
+        "before": "pack_item",
+        "after": "print_label"
+      }
+    ],
+    "completed_steps_at_cutoff": [
+      "verify_address"
+    ],
+    "observed_events": [
+      {
+        "event_id": "e01",
+        "time": "10:00",
+        "actor": "person",
+        "event_type": "goal_start",
+        "goal_id": "order_O33",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "目标激活；订单 O33 处理中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始处理订单 O33。"
+      },
+      {
+        "event_id": "e02",
+        "time": "10:01",
+        "actor": "person",
+        "event_type": "step_completed",
+        "goal_id": "order_O33",
+        "step_id": "verify_address",
+        "person_access": "ACCESSED",
+        "world_effect": "verify_address 完成。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "核对收货地址完成。"
+      },
+      {
+        "event_id": "e03",
+        "time": "10:02",
+        "actor": "person",
+        "event_type": "step_started",
+        "goal_id": "order_O33",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "pack_item 进行中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始包装商品。"
+      },
+      {
+        "event_id": "e04",
+        "time": "10:03",
+        "actor": "customer",
+        "event_type": "task_cancelled",
+        "goal_id": "order_O33",
+        "step_id": null,
+        "person_access": "NOT_ACCESSED",
+        "world_effect": "订单 O33 状态=CANCELLED。",
+        "observer_evidence": "后台订单记录",
+        "person_access_evidence": "仅后台记录，无人物可见通知",
+        "source": "backend_record",
+        "certainty": "CERTAIN",
+        "description": "客户在后台取消订单 O33。"
+      },
+      {
+        "event_id": "e05",
+        "time": "10:04",
+        "actor": "system",
+        "event_type": "notification_sent",
+        "goal_id": "order_O33",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "通知已显示；文本=order cancelled。",
+        "observer_evidence": "通知投递日志与屏幕记录",
+        "person_access_evidence": "屏幕显示，人物阅读",
+        "source": "notification",
+        "certainty": "CERTAIN",
+        "description": "通知文本：订单 O33 已取消；人物在屏幕上读到该通知。"
+      },
+      {
+        "event_id": "e06",
+        "time": "10:05",
+        "actor": "person",
+        "event_type": "person_statement",
+        "goal_id": "order_O33",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "人物正确理解取消。",
+        "observer_evidence": "人物当面陈述",
+        "person_access_evidence": "人物明确自述",
+        "source": "person_report",
+        "certainty": "CERTAIN",
+        "description": "人物说：订单已取消，停止包装。"
+      },
+      {
+        "event_id": "e07",
+        "time": "10:06",
+        "actor": "person",
+        "event_type": "interruption_started",
+        "goal_id": "order_O33",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "原目标因 phone_call 暂停。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "接听电话。"
+      },
+      {
+        "event_id": "e08",
+        "time": "10:09",
+        "actor": "person",
+        "event_type": "interruption_ended",
+        "goal_id": "order_O33",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "中断结束。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "电话结束。"
+      },
+      {
+        "event_id": "e09",
+        "time": "10:10",
+        "actor": "person",
+        "event_type": "return_to_task",
+        "goal_id": "order_O33",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "人物位于工作台，处于决策点。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "人物回到同一工作台。"
+      }
+    ],
+    "state_at_cutoff": {
+      "V": "CANCELLED",
+      "F": "READY",
+      "A": "ACCESSED",
+      "B": "BELIEVES_INVALID",
+      "C": "ABANDONED",
+      "Q": "NOT_APPLICABLE"
+    },
+    "state_evidence_event_ids": [
+      "e03",
+      "e04",
+      "e05",
+      "e06"
+    ],
+    "state_evidence_by_factor": {
+      "V": [
+        "e04"
+      ],
+      "F": [
+        "e03"
+      ],
+      "A": [
+        "e05"
+      ],
+      "B": [
+        "e05",
+        "e06"
+      ],
+      "C": [
+        "e06"
+      ],
+      "Q": [
+        "e06"
+      ]
+    },
+    "p0_scripted_policy": "act_on_believed_status",
+    "p0_expected_action": "do_not_resume",
+    "p0_expected": {
+      "resume_within_horizon": false,
+      "first_step": null,
+      "behavior_note": "人物已读且正确理解取消，停止原任务。"
+    },
+    "p1_observed_resume": null,
+    "p1_censoring_status": "not_collected",
+    "annotation": {
+      "annotator_id": "B",
+      "status": "draft",
+      "source_confidence": "medium",
+      "annotated_at": "2026-10-20"
+    },
+    "interruption": {
+      "start_event_id": "e07",
+      "end_event_id": "e08",
+      "duration_minutes": 3,
+      "interrupting_task": "phone_call",
+      "demand_level": "medium",
+      "goal_priority": "high"
+    },
+    "notes": "P08-A：人物已读且正确理解取消；A=ACCESSED 且 B=BELIEVES_INVALID。"
+  },
+  {
+    "schema_version": "p0-record/v0.1.0",
+    "sample_id": "P08-B",
+    "base_story_id": "P08",
+    "variant": "B",
+    "domain": "collaboration_service",
+    "goal_id": "order_O33",
+    "goal_description": "完成订单 O33 的地址核对、包装与运单打印。",
+    "cutoff_event_id": "e09",
+    "horizon": {
+      "type": "decision_opportunities",
+      "value": 3
+    },
+    "task_steps": [
+      "verify_address",
+      "pack_item",
+      "print_label"
+    ],
+    "task_dependencies": [
+      {
+        "before": "verify_address",
+        "after": "pack_item"
+      },
+      {
+        "before": "pack_item",
+        "after": "print_label"
+      }
+    ],
+    "completed_steps_at_cutoff": [
+      "verify_address"
+    ],
+    "observed_events": [
+      {
+        "event_id": "e01",
+        "time": "10:00",
+        "actor": "person",
+        "event_type": "goal_start",
+        "goal_id": "order_O33",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "目标激活；订单 O33 处理中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始处理订单 O33。"
+      },
+      {
+        "event_id": "e02",
+        "time": "10:01",
+        "actor": "person",
+        "event_type": "step_completed",
+        "goal_id": "order_O33",
+        "step_id": "verify_address",
+        "person_access": "ACCESSED",
+        "world_effect": "verify_address 完成。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "核对收货地址完成。"
+      },
+      {
+        "event_id": "e03",
+        "time": "10:02",
+        "actor": "person",
+        "event_type": "step_started",
+        "goal_id": "order_O33",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "pack_item 进行中。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "开始包装商品。"
+      },
+      {
+        "event_id": "e04",
+        "time": "10:03",
+        "actor": "customer",
+        "event_type": "task_cancelled",
+        "goal_id": "order_O33",
+        "step_id": null,
+        "person_access": "NOT_ACCESSED",
+        "world_effect": "订单 O33 状态=CANCELLED。",
+        "observer_evidence": "后台订单记录",
+        "person_access_evidence": "仅后台记录，无人物可见通知",
+        "source": "backend_record",
+        "certainty": "CERTAIN",
+        "description": "客户在后台取消订单 O33。"
+      },
+      {
+        "event_id": "e05",
+        "time": "10:04",
+        "actor": "system",
+        "event_type": "notification_sent",
+        "goal_id": "order_O33",
+        "step_id": null,
+        "person_access": "ACCESSED",
+        "world_effect": "通知已显示；文本=order cancelled。",
+        "observer_evidence": "通知投递日志与屏幕记录",
+        "person_access_evidence": "屏幕显示，人物阅读",
+        "source": "notification",
+        "certainty": "CERTAIN",
+        "description": "通知文本：订单 O33 已取消；人物在屏幕上读到该通知。"
+      },
+      {
+        "event_id": "e06",
+        "time": "10:05",
+        "actor": "person",
+        "event_type": "person_statement",
+        "goal_id": "order_O33",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "人物把取消误读为暂缓。",
+        "observer_evidence": "人物当面陈述",
+        "person_access_evidence": "人物明确自述",
+        "source": "person_report",
+        "certainty": "CERTAIN",
+        "description": "人物说：通知说先暂缓，先把东西放一边等进一步通知。"
+      },
+      {
+        "event_id": "e07",
+        "time": "10:06",
+        "actor": "person",
+        "event_type": "interruption_started",
+        "goal_id": "order_O33",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "原目标因 phone_call 暂停。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "接听电话。"
+      },
+      {
+        "event_id": "e08",
+        "time": "10:09",
+        "actor": "person",
+        "event_type": "interruption_ended",
+        "goal_id": "order_O33",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "中断结束。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "电话结束。"
+      },
+      {
+        "event_id": "e09",
+        "time": "10:10",
+        "actor": "person",
+        "event_type": "return_to_task",
+        "goal_id": "order_O33",
+        "step_id": "pack_item",
+        "person_access": "ACCESSED",
+        "world_effect": "人物位于工作台，处于决策点。",
+        "observer_evidence": "观察者直接观察",
+        "person_access_evidence": "人物本人执行或陈述",
+        "source": "direct_observation",
+        "certainty": "CERTAIN",
+        "description": "人物回到同一工作台。"
+      }
+    ],
+    "state_at_cutoff": {
+      "V": "CANCELLED",
+      "F": "READY",
+      "A": "ACCESSED",
+      "B": "BELIEVES_VALID",
+      "C": "SUSPENDED",
+      "Q": "pack_item"
+    },
+    "state_evidence_event_ids": [
+      "e03",
+      "e04",
+      "e05",
+      "e06",
+      "e07"
+    ],
+    "state_evidence_by_factor": {
+      "V": [
+        "e04"
+      ],
+      "F": [
+        "e03"
+      ],
+      "A": [
+        "e05"
+      ],
+      "B": [
+        "e05",
+        "e06"
+      ],
+      "C": [
+        "e06",
+        "e07"
+      ],
+      "Q": [
+        "e03"
+      ]
+    },
+    "p0_scripted_policy": "act_on_believed_status",
+    "p0_expected_action": "suspend_or_wait",
+    "p0_expected": {
+      "resume_within_horizon": false,
+      "first_step": null,
+      "behavior_note": "人物把取消误读为暂缓；保持承诺但等待，不在 H 内继续包装。"
+    },
+    "p1_observed_resume": null,
+    "p1_censoring_status": "not_collected",
+    "annotation": {
+      "annotator_id": "B",
+      "status": "draft",
+      "source_confidence": "medium",
+      "annotated_at": "2026-10-20"
+    },
+    "interruption": {
+      "start_event_id": "e07",
+      "end_event_id": "e08",
+      "duration_minutes": 3,
+      "interrupting_task": "phone_call",
+      "demand_level": "medium",
+      "goal_priority": "high"
+    },
+    "notes": "P08-B：人物已读但误读为暂缓；A=ACCESSED 但 B=BELIEVES_VALID，C=SUSPENDED。"
+  }
+]

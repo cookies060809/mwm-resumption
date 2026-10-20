@@ -1,26 +1,25 @@
-"""Validate ECR-MWM P0 records and P1 templates against the v0.1 schemas."""
+"""Validate the ECR-MWM P0 seed dataset.
+
+Checks JSON Schema structure plus cross-field invariants that the schema cannot
+express: cutoff ordering, evidence chains, per-factor evidence, action/step
+alignment, resource/task implications, and P07 input identity.
+
+Usage: python scripts/validate_data.py
+"""
 
 from __future__ import annotations
 
 import json
 import sys
-from datetime import datetime, time
+from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
-from jsonschema import Draft202012Validator
-from referencing import Registry, Resource
-from referencing.jsonschema import DRAFT202012
+from jsonschema import Draft7Validator
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA_DIR = ROOT / "schema"
-SCHEMA_FILES = (
-    "events.schema.json",
-    "task_graph.schema.json",
-    "state.schema.json",
-    "annotation.schema.json",
-)
-SENTINEL_Q = {"UNKNOWN", "NOT_APPLICABLE"}
+SCHEMA_PATH = ROOT / "schema" / "p0_record.schema.json"
+DATA_PATH = ROOT / "data" / "p0" / "p0_samples.json"
 
 
 def load_json(path: Path) -> Any:
@@ -28,231 +27,262 @@ def load_json(path: Path) -> Any:
         return json.load(handle)
 
 
-def build_validator() -> Draft202012Validator:
-    schemas = {name: load_json(SCHEMA_DIR / name) for name in SCHEMA_FILES}
-    registry = Registry().with_resources(
-        (
-            schema["$id"],
-            Resource.from_contents(schema, default_specification=DRAFT202012),
-        )
-        for schema in schemas.values()
+def load_records() -> list[dict[str, Any]]:
+    return load_json(DATA_PATH)
+
+
+def equal_json(left: Any, right: Any) -> bool:
+    return json.dumps(left, ensure_ascii=False, sort_keys=True) == json.dumps(
+        right, ensure_ascii=False, sort_keys=True
     )
-    return Draft202012Validator(schemas["annotation.schema.json"], registry=registry)
 
 
-def parse_time(value: Any) -> datetime | time | None:
-    if not isinstance(value, str):
-        return None
-    for fmt in ("%H:%M:%S", "%H:%M"):
-        try:
-            return datetime.strptime(value, fmt).time()
-        except ValueError:
-            pass
-    try:
-        return datetime.fromisoformat(value.replace("Z", "+00:00"))
-    except ValueError:
-        return None
+def non_unknown(factor: str, value: Any) -> bool:
+    if factor == "Q":
+        return value not in ("UNKNOWN",)
+    return value != "UNKNOWN"
 
 
-def semantic_errors(record: dict[str, Any]) -> list[str]:
-    errors: list[str] = []
-    steps = record["task_graph"]["steps"]
-    step_ids = [step["step_id"] for step in steps]
-    step_id_set = set(step_ids)
+def check_record(record: dict[str, Any], errors: list[str]) -> None:
+    sample_id = record.get("sample_id", "<unknown>")
 
-    if len(step_ids) != len(step_id_set):
-        errors.append("task_graph has duplicate step_id values")
-    if record["task_graph"]["goal_id"] != record["goal_id"]:
-        errors.append("task_graph.goal_id does not match goal_id")
-    for step in steps:
-        unknown = set(step["depends_on"]) - step_id_set
-        if unknown:
-            errors.append(
-                f"step {step['step_id']!r} depends on unknown steps: {sorted(unknown)}"
-            )
-        if step["step_id"] in step["depends_on"]:
-            errors.append(f"step {step['step_id']!r} depends on itself")
+    def err(message: str) -> None:
+        errors.append(f"{sample_id}: {message}")
 
-    events = record["observed_events"]
-    event_ids = [event["event_id"] for event in events]
-    event_id_set = set(event_ids)
-    if len(event_ids) != len(event_id_set):
-        errors.append("observed_events has duplicate event_id values")
-    if record["cutoff_event_id"] not in event_id_set:
-        errors.append(
-            f"cutoff_event_id {record['cutoff_event_id']!r} is not in observed_events"
-        )
+    events = record.get("observed_events", [])
+    if not isinstance(events, list) or not events:
+        err("observed_events is empty or not an array")
+        return
+
+    event_by_id = {event.get("event_id"): event for event in events}
+    if len(event_by_id) != len(events):
+        err("duplicate event_id")
+
+    if record.get("sample_id") != (
+        f"{record.get('base_story_id')}-{record.get('variant')}"
+    ):
+        err("sample_id does not match base_story_id-variant")
+    if events[-1].get("event_id") != record.get("cutoff_event_id"):
+        err("cutoff_event_id is not the last observed event")
+
+    times = [event.get("time", "") for event in events]
+    if times != sorted(times):
+        err("event times are not non-decreasing")
+    cutoff_time = events[-1].get("time")
+    if any(event.get("time", "") > cutoff_time for event in events):
+        err("event after cutoff")
+
+    allowed_goals = {record.get("goal_id")}
+    interrupting = record.get("interrupting_task")
+    if interrupting:
+        allowed_goals.add(interrupting.get("goal_id"))
+        if interrupting.get("parent_goal_id") != record.get("goal_id"):
+            err("interrupting_task.parent_goal_id does not match top-level goal_id")
+        if not set(interrupting.get("completed_steps_at_cutoff", [])).issubset(
+            set(interrupting.get("steps", []))
+        ):
+            err("interrupting_task completed steps not subset of its steps")
 
     for event in events:
-        if event["goal_id"] is not None and event["goal_id"] != record["goal_id"]:
-            errors.append(
-                f"event {event['event_id']!r} has goal_id {event['goal_id']!r} "
-                f"but record goal_id is {record['goal_id']!r}"
-            )
-        if event["step_id"] is not None and event["step_id"] not in step_id_set:
-            errors.append(
-                f"event {event['event_id']!r} references unknown step "
-                f"{event['step_id']!r}"
-            )
+        goal = event.get("goal_id")
+        if goal is not None and goal not in allowed_goals:
+            err(f"event {event.get('event_id')} references unexpected goal_id {goal!r}")
+        if event.get("actor") == "person" and event.get("person_access") != "ACCESSED":
+            err(f"person event {event.get('event_id')} must be ACCESSED")
 
-    evidence = set(record["state_evidence_event_ids"])
-    missing_evidence = evidence - event_id_set
-    if missing_evidence:
-        errors.append(
-            "state_evidence_event_ids not observed: "
-            f"{sorted(missing_evidence)}"
-        )
+    steps = set(record.get("task_steps", []))
+    completed = set(record.get("completed_steps_at_cutoff", []))
+    if not completed.issubset(steps):
+        err("completed_steps_at_cutoff not subset of task_steps")
+    for dependency in record.get("task_dependencies", []):
+        if dependency.get("before") not in steps or dependency.get("after") not in steps:
+            err(f"task dependency references unknown step: {dependency}")
 
-    q_value = record["state_at_cutoff"]["Q"]
-    if q_value not in SENTINEL_Q and q_value not in step_id_set:
-        errors.append(f"state_at_cutoff.Q references unknown step {q_value!r}")
+    state = record.get("state_at_cutoff", {})
+    evidence = record.get("state_evidence_by_factor", {})
+    if set(evidence) != {"V", "F", "A", "B", "C", "Q"}:
+        err("state_evidence_by_factor must have exactly V/F/A/B/C/Q")
 
-    cutoff_event = next(
-        (event for event in events if event["event_id"] == record["cutoff_event_id"]),
-        None,
+    for factor, value in state.items():
+        ids = evidence.get(factor, [])
+        unknown_ids = [event_id for event_id in ids if event_id not in event_by_id]
+        if unknown_ids:
+            err(f"{factor} evidence references unknown events {unknown_ids}")
+        if non_unknown(factor, value) and not ids:
+            err(f"{factor}={value} requires at least one evidence event")
+        if factor != "Q" and value == "UNKNOWN" and ids:
+            err(f"{factor}=UNKNOWN should not carry positive evidence")
+
+    ordered_ids = [event.get("event_id") for event in events]
+    expected_flat = [
+        event_id
+        for event_id in ordered_ids
+        if any(event_id in ids for ids in evidence.values())
+    ]
+    if record.get("state_evidence_event_ids") != expected_flat:
+        err("state_evidence_event_ids is not the ordered union of per-factor evidence")
+
+    q_value = state.get("Q")
+    all_steps = set(record.get("task_steps", []))
+    if interrupting:
+        all_steps |= set(interrupting.get("steps", []))
+    if q_value not in ("UNKNOWN", "NOT_APPLICABLE") and q_value not in all_steps:
+        err(f"Q={q_value!r} is neither a known step nor UNKNOWN/NOT_APPLICABLE")
+
+    commitment = state.get("C")
+    if commitment in ("ABANDONED", "COMPLETED") and q_value != "NOT_APPLICABLE":
+        err("C=ABANDONED/COMPLETED requires Q=NOT_APPLICABLE")
+    if q_value == "NOT_APPLICABLE" and commitment not in ("ABANDONED", "COMPLETED"):
+        err("Q=NOT_APPLICABLE requires C=ABANDONED/COMPLETED")
+
+    expected = record.get("p0_expected", {})
+    first_step = expected.get("first_step")
+    action = record.get("p0_expected_action", "")
+    resume = expected.get("resume_within_horizon")
+    if first_step is not None and first_step not in all_steps:
+        err(f"p0_expected.first_step={first_step!r} is not a known step")
+    if action.startswith("resume_"):
+        action_step = action[len("resume_") :]
+        if first_step != action_step:
+            err("p0_expected_action step does not match p0_expected.first_step")
+        if action_step in record.get("task_steps", []):
+            if resume is not True:
+                err("resuming an original task step requires resume_within_horizon=true")
+        elif interrupting and action_step in interrupting.get("steps", []):
+            if not isinstance(resume, bool):
+                err("nested-task resume must set resume_within_horizon explicitly")
+        else:
+            err("resume action references a step outside both task graphs")
+    else:
+        if first_step is not None:
+            err("non-resume action must have first_step=null")
+        if resume is not False:
+            err("non-resume action must have resume_within_horizon=false")
+
+    if record.get("p1_censoring_status") == "not_collected":
+        if record.get("p1_observed_resume") is not None:
+            err("P0 not_collected record must keep p1_observed_resume=null")
+        if record.get("p1_observed_first_step") is not None:
+            err("P0 not_collected record must keep p1_observed_first_step=null")
+
+    for label, value in state.items():
+        if label == "V":
+            if any(
+                event.get("event_type") == "task_cancelled"
+                and event.get("goal_id") == record.get("goal_id")
+                for event in events
+            ) and value != "CANCELLED":
+                err("task_cancelled event implies V=CANCELLED")
+            if any(
+                event.get("event_type") == "task_completed_by_other"
+                and event.get("goal_id") == record.get("goal_id")
+                for event in events
+            ) and value != "FULFILLED":
+                err("task_completed_by_other implies V=FULFILLED")
+        if label == "F":
+            if any(event.get("event_type") == "resource_missing" for event in events) and value != "BLOCKED":
+                err("resource_missing implies F=BLOCKED")
+            if any(event.get("event_type") == "resource_available" for event in events) and value != "READY":
+                err("resource_available implies F=READY")
+
+    interruption = record.get("interruption")
+    if interruption:
+        if interruption.get("start_event_id") not in event_by_id:
+            err("interruption.start_event_id does not exist")
+        end_id = interruption.get("end_event_id")
+        if end_id is not None and end_id not in event_by_id:
+            err("interruption.end_event_id does not exist")
+
+
+def check_pairs(records: list[dict[str, Any]], errors: list[str]) -> None:
+    by_story: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for record in records:
+        by_story[record.get("base_story_id")].append(record)
+
+    for story_id, pair in sorted(by_story.items()):
+        variants = {record.get("variant") for record in pair}
+        if variants != {"A", "B"} or len(pair) != 2:
+            errors.append(f"{story_id}: expected exactly one A and one B record")
+            continue
+        if story_id == "P07":
+            a, b = sorted(pair, key=lambda record: record["variant"])
+            ignore = {"sample_id", "variant", "notes"}
+            a_core = {key: value for key, value in a.items() if key not in ignore}
+            b_core = {key: value for key, value in b.items() if key not in ignore}
+            if not equal_json(a_core, b_core):
+                errors.append("P07-A/B: pre-cutoff inputs are not identical")
+            if "未来泄漏" not in a.get("notes", "") or "未来泄漏" not in b.get(
+                "notes", ""
+            ):
+                errors.append("P07-A/B: notes must document the future-leakage design")
+
+
+def print_summary(records: list[dict[str, Any]]) -> None:
+    print(
+        f"{'sample':7} {'V':10} {'F':8} {'A':13} {'B':18} "
+        f"{'C':11} {'Q':16} expected"
     )
-    if cutoff_event is not None:
-        cutoff_time = parse_time(cutoff_event["time"])
-        if cutoff_time is not None:
-            for event in events:
-                event_time = parse_time(event["time"])
-                if event_time is None or type(event_time) is not type(cutoff_time):
-                    continue
-                try:
-                    if event_time > cutoff_time:
-                        errors.append(
-                            f"event {event['event_id']!r} occurs after cutoff "
-                            f"{record['cutoff_event_id']!r}"
-                        )
-                except TypeError:
-                    continue
-
-    p0 = record.get("p0_expectation")
-    if p0 is not None:
-        expected_step = p0["expected_resume_step"]
-        if expected_step is not None and expected_step not in step_id_set:
-            errors.append(f"p0_expectation references unknown step {expected_step!r}")
-        if p0["expected_resume"] and expected_step is None:
-            errors.append("p0_expectation.expected_resume is true but no step is given")
-        if not p0["expected_resume"] and expected_step is not None:
-            errors.append(
-                "p0_expectation.expected_resume is false but a step is given"
-            )
-
-    p1 = record.get("p1_observation")
-    if p1 is not None:
-        resume_step = p1["resume_step"]
-        if resume_step is not None and resume_step not in step_id_set:
-            errors.append(f"p1_observation references unknown step {resume_step!r}")
-        if p1["observed_resume"] is True and resume_step is None:
-            errors.append("p1_observation.observed_resume is true but no step is given")
-        if p1["observed_resume"] is not True and resume_step is not None:
-            errors.append(
-                "p1_observation.resume_step is set but observed_resume is not true"
-            )
-        if (
-            p1["censoring_status"] == "complete_window"
-            and p1["observed_resume"] is None
-        ):
-            errors.append(
-                "p1_observation.censoring_status is complete_window but "
-                "observed_resume is null"
-            )
-        if (
-            p1["censoring_status"] == "not_collected"
-            and p1["observed_resume"] is not None
-        ):
-            errors.append(
-                "p1_observation.censoring_status is not_collected but "
-                "observed_resume is not null"
-            )
-
-    return errors
+    for record in records:
+        state = record.get("state_at_cutoff", {})
+        print(
+            f"{record.get('sample_id', '?'):7} "
+            f"{state.get('V', '?'):10} {state.get('F', '?'):8} "
+            f"{state.get('A', '?'):13} {state.get('B', '?'):18} "
+            f"{state.get('C', '?'):11} {state.get('Q', '?'):16} "
+            f"{record.get('p0_expected_action', '?')}"
+        )
+    domains = Counter(record.get("domain", "?") for record in records)
+    statuses = Counter(
+        record.get("annotation", {}).get("status", "?") for record in records
+    )
+    print()
+    print("domains:", dict(domains))
+    print("annotation status:", dict(statuses))
 
 
-def pair_errors(
-    records: dict[str, dict[str, Any]], record_paths: dict[str, str]
-) -> list[str]:
+def validate_records(records: list[dict[str, Any]]) -> list[str]:
     errors: list[str] = []
-    for sample_id, record in records.items():
-        pair = record.get("counterfactual_pair")
-        if pair is None:
+    schema = load_json(SCHEMA_PATH)
+    Draft7Validator.check_schema(schema)
+    validator = Draft7Validator(schema)
+
+    for index, record in enumerate(records):
+        if not isinstance(record, dict):
+            errors.append(f"$[{index}]: record is not an object")
             continue
-        path = record_paths[sample_id]
-        other_id = pair["paired_sample_id"]
-        other = records.get(other_id)
-        if other is None:
-            errors.append(f"{path}: paired_sample_id {other_id!r} not found")
-            continue
-        other_pair = other.get("counterfactual_pair")
-        if other_pair is None or other_pair.get("paired_sample_id") != sample_id:
-            errors.append(
-                f"{path}: counterfactual_pair is not reciprocal with {other_id!r}"
-            )
-        if record["base_story_id"] != other["base_story_id"]:
-            errors.append(f"{path}: paired records use different base_story_id")
-        if record["pair_id"] != other["pair_id"]:
-            errors.append(f"{path}: paired records use different pair_id")
-        if record["variant_id"] == other["variant_id"]:
-            errors.append(f"{path}: paired records use the same variant_id")
-        if record["split"] != other["split"]:
-            errors.append(f"{path}: paired records use different split values")
-        if pair["information_equivalence"] != other_pair.get("information_equivalence"):
-            errors.append(
-                f"{path}: paired records disagree on information_equivalence"
-            )
+        for error in sorted(
+            validator.iter_errors(record), key=lambda item: list(item.absolute_path)
+        ):
+            errors.append(f"$[{index}] {error.json_path}: {error.message}")
+        check_record(record, errors)
+
+    check_pairs(records, errors)
     return errors
 
 
 def validate_all(verbose: bool = True) -> list[str]:
-    validator = build_validator()
-    errors: list[str] = []
-    records: dict[str, dict[str, Any]] = {}
-    record_paths: dict[str, str] = {}
+    records = load_records()
+    if not isinstance(records, list):
+        return ["data file must contain a JSON array"]
 
-    data_paths = sorted((ROOT / "data" / "p0").rglob("*.json"))
-    p1_templates = ROOT / "data" / "p1" / "templates"
-    if p1_templates.exists():
-        data_paths.extend(sorted(p1_templates.rglob("*.json")))
-
-    for path in data_paths:
-        relative = str(path.relative_to(ROOT))
-        record = load_json(path)
-        schema_errors = sorted(
-            validator.iter_errors(record), key=lambda error: list(error.absolute_path)
-        )
-        if schema_errors:
-            for error in schema_errors:
-                location = "/".join(str(part) for part in error.absolute_path) or "<root>"
-                errors.append(f"{relative}: {location}: {error.message}")
-            continue
-
-        errors.extend(f"{relative}: {message}" for message in semantic_errors(record))
-        sample_id = record["sample_id"]
-        if sample_id in records:
-            errors.append(
-                f"{relative}: duplicate sample_id {sample_id!r} "
-                f"also used in {record_paths[sample_id]}"
-            )
-            continue
-        records[sample_id] = record
-        record_paths[sample_id] = relative
-
-    errors.extend(pair_errors(records, record_paths))
-
+    errors = validate_records(records)
     if verbose:
-        for error in errors:
-            print(error, file=sys.stderr)
-        print(
-            f"Validated {len(data_paths)} record file(s); "
-            f"{len(errors)} error(s)."
-        )
+        print_summary(records)
+        if errors:
+            for message in errors:
+                print(f"  - {message}", file=sys.stderr)
+            print(f"FAILED with {len(errors)} error(s).", file=sys.stderr)
+        else:
+            pair_count = len({record.get("base_story_id") for record in records})
+            print(
+                f"OK: {len(records)} records, {pair_count} A/B pairs; "
+                "schema and cross-field checks passed."
+            )
     return errors
 
 
 def main() -> int:
-    errors = validate_all(verbose=True)
-    return 1 if errors else 0
+    return 1 if validate_all(verbose=True) else 0
 
 
 if __name__ == "__main__":

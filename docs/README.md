@@ -21,8 +21,10 @@
 
 | 文档 | 用途 | Owner | 状态 |
 |---|---|---|---|
-| [annotation/annotation_handbook_v0.1.md](annotation/annotation_handbook_v0.1.md) | 事件、状态标签、证据链与标注流程 | B | v0.1 草案 |
-| [data/data_card.md](data/data_card.md) | 数据集说明、规模目标、许可与限制 | B | 模板 |
+| [annotation/annotation_handbook_v0.1.md](annotation/annotation_handbook_v0.1.md) | 事件、状态标签、证据链、P0/P1 边界与标注 SOP | B | v0.1 草案 |
+| [annotation/label_quality_plan_v0.1.md](annotation/label_quality_plan_v0.1.md) | P0 质量门、P1 一致性指标、噪声上限与交接模板 | B | v0.1 |
+| [annotation/p0_pair_review_table.md](annotation/p0_pair_review_table.md) | P01–P08 八组 A/B 对照的人工复核表 | B | v0.1 |
+| [data/data_card.md](data/data_card.md) | 数据集说明、当前 16 条种子、规模目标与限制 | B | 已更新 |
 | [literature/competitor_matrix.md](literature/competitor_matrix.md) | 直接竞争工作与创新边界索引 | B | 初始索引 |
 
 ## 写作与核查原则

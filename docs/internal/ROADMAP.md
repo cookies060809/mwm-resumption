@@ -54,7 +54,7 @@
 ### A
 
 - [ ] 确认 `V/F/A/B/C/Q` 状态因子与事件接口
-- [ ] 评审 [schema/annotation.schema.json](../../schema/annotation.schema.json)
+- [ ] 评审 [schema/p0_record.schema.json](../../schema/p0_record.schema.json) 与 P0 接口字段
 - [ ] 确认 `EC-JMF.update(...)` 输入输出契约
 - [ ] 给出结构化状态更新的最小实现计划
 

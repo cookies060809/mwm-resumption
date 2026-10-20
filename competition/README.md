@@ -3,7 +3,7 @@
 **赛道**：算法创新赛 · 赛题 1「算法模型创新」
 **官方页面**：[aicomp.cn/tracks/tracks-2/3788.html](https://www.aicomp.cn/tracks/tracks-2/3788.html)
 **候选作品名**：ECR-MWM：跨中断心智世界模型（待团队确认，≤20 字）
-**当前状态**：仓库与技术方案骨架已建立；算法、实验、视频、PPT 均未完成，不能作为最终作品提交。
+**当前状态**：P0 种子 16 条已入库并通过结构/跨字段校验；技术方案骨架已建立；算法、实验、视频、PPT 均未完成，不能作为最终作品提交。
 
 ---
 
@@ -34,7 +34,7 @@
 |---|---|---|---|
 | 创新性 | EC-JMF 的认知可达性约束联合更新、承诺—进度联合滤波、信息等价反事实约束 | [models/ec_jmf](../models/ec_jmf/README.md)、[技术方案 §2](technical_report.md) | 仅接口与文字方案 |
 | 技术实现难度 | 因子化转移 `T^W/T^AU/T^B/T^C/T^Q`、粒子滤波、任务图约束、恢复步骤输出 | [models/](../models/README.md)、[configs/base.yaml](../configs/base.yaml) | 未实现 |
-| 实验验证 | P0 最小对照、B0–B9 基线、消融、校准、效率与泄漏检查 | [data/p0](../data/p0/README.md)、[baselines](../baselines/README.md)、[evaluation](../evaluation/README.md)、[results](../results/README.md) | 无实验结果 |
+| 实验验证 | P0 最小对照、B0–B9 基线、消融、校准、效率与泄漏检查 | [data/p0](../data/p0/README.md)、[baselines](../baselines/README.md)、[evaluation](../evaluation/README.md)、[results](../results/README.md) | P0 种子 16 条已校验；无实验结果 |
 | 方案完整性 | 按官方大纲逐节撰写技术方案 | [competition/technical_report.md](technical_report.md) | 仅提纲与草稿 |
 | 应用价值 | 任务中断辅助、具身智能/主动辅助、工作流恢复 | [技术方案 §3.5](technical_report.md) | 待撰写应用论证 |
 | 总结与展望 | 局限、失败案例、后续研究计划 | [技术方案 §4](technical_report.md) | 待写 |
@@ -80,7 +80,7 @@
 ## 5. 当前优先级
 
 1. **冻结算法故事**：确认 EC-JMF 的相对已有工作的差异点，避免“首次提出”类不可辩护表述。
-2. **冻结评估协议**：P01–P08、截止点、T1/T2 标签、基线与指标。
+2. **冻结并扩充评估协议**：P01–P08 种子已建；继续扩增、完成人工复核与盲审，并冻结 T1/T2 标签、基线与指标。
 3. **实现最小闭环**：EC-JMF 最小版本 + B0–B7 基线，先在 P0 上跑通。
 4. **形成证据链**：主实验、消融、校准、成本、逐样例失败分析。
 5. **成稿与提交**：技术方案 PDF、答辩 PPT、3–5 分钟视频、佐证材料、代码链接。
