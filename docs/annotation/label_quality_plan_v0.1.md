@@ -193,7 +193,7 @@ python scripts/p0_quality_report.py
 
 ### v0.2 的覆盖度短板（2026-10-20 实测）
 
-240 条 / 120 家族 / 1831 事件全部通过校验，但 schema 声明的取值里有 **11 个一次都没出现过**，而且几乎全是承载不确定性的取值：
+240 条 / 120 家族 / 1831 事件全部通过校验，但 schema 声明的取值里有 **12 个一次都没出现过**。其中 11 个几乎全是承载不确定性的取值，另外 1 个是 C 的交接协议要求的 `calibration` 划分：
 
 | 字段 | 声明的取值 | 数据里为 0 的 |
 |---|---|---|
@@ -204,6 +204,9 @@ python scripts/p0_quality_report.py
 | `state.V`、`state.F` | 各含 UNKNOWN | **UNKNOWN** |
 | `state.B` | 含 UNRESOLVED | **UNRESOLVED** |
 | `state.C` | 含 ACTIVE、UNKNOWN | **ACTIVE、UNKNOWN** |
+| `split` | train / dev / calibration / test | **calibration**（144 / 48 / 0 / 48） |
+
+`split.calibration` 为空不只是覆盖率问题：C 的 `schema/模型交接协议.md` 要求每条记录带 train/dev/calibration/test 四档，当前 240 条只给出三档，锁版本前必须和 C 确认是补划档还是改协议。
 
 这正是 A 在 `A_P0_CHECK_REPORT.md` 里点名的"缺少 UNCERTAIN 接触和完整状态覆盖"。**规模目标达成 ≠ 机制覆盖达成**：滤波器在这份数据上学不到"接触不确定""理解不可判定""证据只是大概"这几档，而它们恰好是本项目要建模的东西。下一批的靶子按这张表补，不要再按家族数凑量。
 
@@ -251,14 +254,15 @@ known_issues: ...
 ### 已完成
 
 - 16 条 P0 记录通过 Schema + 跨字段校验。
-- v0.2 批次 240 条 / 120 家族 / 1831 事件通过 Schema + 跨字段校验，`split` 与 `mechanism` 已就绪。
+- v0.2 批次 240 条 / 120 家族 / 1831 事件通过 Schema + 跨字段校验，`mechanism` 八档全覆盖，`split` 只落了三档（`calibration` 为空）。
 - 逐字段 A/B diff 报告已生成；P07 输入一致性 PASS。
 - 六因子定义、证据规则、易错点已写入标注手册。
 
 ### 待完成
 
 - [ ] **抽查 B 的自审结论。** v0.2 的 240/240 `reviewed` 是 B 自己写入的，尚无第二双眼睛验证；随机抽 20 条用 `pair_diff_report.py --pair` 逐对复核，确认"reviewed"名副其实。
-- [ ] **补 §4 表里 11 个"声明过但从未出现"的取值。** 全部是承载不确定性的档位（`A.UNCERTAIN`、`person_access.UNCERTAIN`、`person_comprehension.{NOT_UNDERSTOOD,UNCERTAIN}`、`certainty.{PROBABLE,UNCERTAIN}`、`V/F.UNKNOWN`、`B.UNRESOLVED`、`C.{ACTIVE,UNKNOWN}`）。这是 A 点名的缺口，比再加家族数优先。
+- [ ] **补 §4 表里 11 个"声明过但从未出现"的不确定性档位。**（`A.UNCERTAIN`、`person_access.UNCERTAIN`、`person_comprehension.{NOT_UNDERSTOOD,UNCERTAIN}`、`certainty.{PROBABLE,UNCERTAIN}`、`V/F.UNKNOWN`、`B.UNRESOLVED`、`C.{ACTIVE,UNKNOWN}`）这是 A 点名的缺口，比再加家族数优先。
+- [ ] **和 C 定 `split.calibration`。** C 的交接协议要四档，v0.2 只给了 train/dev/test；要么按家族重划出一档 calibration，要么由 C 改协议。锁版本前必须三方确认，B 不单方面改字段。
 - [ ] A/C 盲审 8 条（A、C 各 4 条，每机制抽 1 条），只给事件与任务图，记录分歧。
 - [ ] 根据分歧改手册/事件，不强行说服。
 - [x] `annotation.status` 从 `draft` 改为 `reviewed`（v0.2 已改，B 自审；v0.1 的 16 条保持 `draft`，作为 A 适配器的冻结基线）。

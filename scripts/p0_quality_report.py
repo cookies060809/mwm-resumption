@@ -22,6 +22,9 @@ import validate_data as vd
 
 FACTORS = ("V", "F", "A", "B", "C", "Q")
 REVIEWED = ("reviewed", "adjudicated")
+RECORD_ENUMS = {
+    name: ("properties", name, "enum") for name in ("domain", "split", "mechanism")
+}
 EVENT_ENUMS = {
     "person_access": ("definitions", "event", "properties", "person_access", "enum"),
     "person_comprehension": (
@@ -122,6 +125,11 @@ def report(path):
         observed[f"state.{factor}"] = (
             lookup(schema, ("definitions", "state", "properties", factor, "enum")),
             Counter(record["state_at_cutoff"].get(factor) for record in records),
+        )
+    for field, keys in RECORD_ENUMS.items():
+        observed[f"record.{field}"] = (
+            lookup(schema, keys),
+            Counter(str(record.get(field)) for record in records),
         )
     for field, keys in EVENT_ENUMS.items():
         observed[f"event.{field}"] = (lookup(schema, keys), Counter(event.get(field) for event in events))

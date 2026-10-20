@@ -58,7 +58,7 @@ python scripts/p0_quality_report.py
 
 `human_audit` 读 `annotation.status`，人工复核签完自动变化；`second_reviewer` 无数据依据，恒为 `not recorded`，只能由 A/C 本人声明后另行记录。报告数字不得手工改写，也不得由 B 代 A/C 勾选。
 
-未使用的枚举取值不是装饰：v0.2 有 11 个，且全部是 `UNCERTAIN` / `UNKNOWN` / `PROBABLE` 这类不确定性档位。批次可以达标 240 条而机制覆盖仍为空，这个检查就是用来暴露这件事的。
+未使用的枚举取值不是装饰：v0.2 有 12 个，其中 11 个是 `UNCERTAIN` / `UNKNOWN` / `PROBABLE` 这类不确定性档位，第 12 个是 `split.calibration`（C 的交接协议要求四档划分，数据只落了三档）。批次可以达标 240 条而机制覆盖仍为空，这个检查就是用来暴露这件事的。检查范围覆盖记录级 `domain` / `split` / `mechanism`、六因子状态和事件级枚举。
 
 ## `build_p0_seed.py`
 
