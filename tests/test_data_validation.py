@@ -9,10 +9,15 @@ sys.path.insert(0, str(ROOT))
 from scripts.validate_data import check_record, load_records, validate_all  # noqa: E402
 
 V02_PATH = ROOT / "data" / "p0" / "p0_samples_v0.2.json"
+V03_PATH = ROOT / "data" / "p0" / "p0_samples_v0.3.json"
 
 
 def load_v02():
     return json.loads(V02_PATH.read_text(encoding="utf-8"))
+
+
+def load_v03():
+    return json.loads(V03_PATH.read_text(encoding="utf-8"))
 
 
 def test_repository_data_valid() -> None:
@@ -133,8 +138,8 @@ def test_v02_other_completion_repeat_is_not_resume() -> None:
     assert p04["B"]["state_at_cutoff"]["Q"] != "NOT_APPLICABLE"
 
 
-def test_v02_completed_steps_replay() -> None:
-    for record in load_v02():
+def test_completed_steps_replay_over_every_batch() -> None:
+    for record in load_v02() + load_v03():
         steps = set(record["task_steps"])
         completed = {
             event["step_id"]
@@ -160,8 +165,9 @@ def test_v02_unknown_labels_carry_no_evidence() -> None:
 
 def test_v02_split_is_blueprint_disjoint() -> None:
     """A task blueprint must not appear in two splits, otherwise the model can
-    memorise the task rather than the mechanism."""
-    records = load_v02()
+    memorise the task rather than the mechanism. Checked over every v0.2-line
+    batch, because a follow-up batch is where a reused blueprint would slip in."""
+    records = load_v02() + load_v03()
     blueprint_splits: dict[str, set[str]] = {}
     for record in records:
         family = record["base_story_id"]
@@ -169,6 +175,35 @@ def test_v02_split_is_blueprint_disjoint() -> None:
         blueprint_splits.setdefault(blueprint, set()).add(record["split"])
     crossed = {key: value for key, value in blueprint_splits.items() if len(value) > 1}
     assert crossed == {}, f"blueprints crossing splits: {crossed}"
+
+
+def test_v03_batch_is_draft_candidate_work() -> None:
+    records = load_v03()
+    assert len(records) == 14
+    assert len({record["base_story_id"] for record in records}) == 7
+    assert all(record["schema_version"] == "p0-record/v0.2.0" for record in records)
+    # B has not signed this batch yet, so it must not look like accepted data.
+    assert all(record["annotation"]["status"] == "draft" for record in records)
+    assert all(record["annotation"]["annotator_id"] == "agent-draft" for record in records)
+
+
+def test_v03_closes_the_uncertainty_enum_gaps() -> None:
+    """v0.2 hits its 240-record target while 11 uncertainty values stay unused, so
+    volume alone cannot show the mechanism cells are covered. Pooling v0.2 with the
+    v0.3 uncertainty batch must leave only the split C has not decided on."""
+    from scripts.p0_quality_report import enum_counts
+    from scripts.validate_data import SCHEMAS, load_json
+
+    schema = load_json(SCHEMAS["p0-record/v0.2.0"])
+    records = load_v02() + load_v03()
+    events = [event for record in records for event in record["observed_events"]]
+    unused = [
+        f"{label}.{value}"
+        for label, (allowed, counts) in enum_counts(records, events, schema).items()
+        for value in allowed
+        if not counts.get(value)
+    ]
+    assert unused == ["record.split.calibration"]
 
 
 def test_export_matches_evaluation_protocol() -> None:
@@ -219,3 +254,35 @@ def test_export_matches_evaluation_protocol() -> None:
             b, sort_keys=True, ensure_ascii=False
         )
         assert item["observation"]["cutoff"] > 0
+
+
+def test_audit_packet_sample_is_pinned() -> None:
+    """docs/annotation/p0_spot_audit_*.md are signed by hand, so CI cannot diff them
+    against a fresh run. Pinning the seed and the mechanism coverage is the part a
+    refactor could silently break."""
+    from scripts.audit_packet import clean_pairs, select
+
+    pairs = clean_pairs(load_v02())
+    assert len(pairs) == 120
+    sample = select(pairs, 10, 20261021)
+    assert sample == select(clean_pairs(load_v02()), 10, 20261021)
+    assert len(set(sample)) == 10
+    assert {pairs[family][0]["mechanism"] for family in sample} == {
+        pair["mechanism"] for pair in load_v02()
+    }
+    assert all(len(pairs[family]) == 2 for family in sample)
+
+
+def test_spot_audit_packets_are_unsigned() -> None:
+    """A committed packet that already carries ticks would fake a review nobody did.
+    The box counts are also quoted in data/p0/README.md, so a sampler change must
+    fail here rather than leave a stale number in the handoff page."""
+    packets = {
+        "p0_spot_audit_v0.2_seed20261021.md": (38, 10),
+        "p0_spot_audit_v0.3_all7.md": (28, 7),
+    }
+    for name, (boxes, families) in packets.items():
+        text = (ROOT / "docs" / "annotation" / name).read_text(encoding="utf-8")
+        assert text.count("- [ ]") == boxes, name
+        assert "- [x]" not in text, name
+        assert text.count("### ") == families, name

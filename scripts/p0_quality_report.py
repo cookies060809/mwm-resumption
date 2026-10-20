@@ -5,7 +5,9 @@ themselves once `annotation.status` is actually flipped. Nothing here asserts a
 review that no person signed.
 
 Declared-but-unused enum values are reported because a batch can hit its record
-target while still leaving the mechanism cells A asked for empty.
+target while still leaving the mechanism cells A asked for empty. The last
+section pools every batch on the same schema version, which is how "value X is
+still unused" stops being a per-file artefact once a follow-up batch exists.
 
 Usage: python scripts/p0_quality_report.py
 """
@@ -94,6 +96,24 @@ def p07_identity(records):
     return "PASS" if vd.equal_json(cores[0], cores[1]) else "FAIL"
 
 
+def enum_counts(records, events, schema):
+    """Declared enum values per field vs how often the batch actually uses each."""
+    sources = {}
+    for factor in FACTORS:
+        sources[f"state.{factor}"] = (
+            lookup(schema, ("definitions", "state", "properties", factor, "enum")),
+            Counter(record["state_at_cutoff"].get(factor) for record in records),
+        )
+    for field, keys in RECORD_ENUMS.items():
+        sources[f"record.{field}"] = (
+            lookup(schema, keys),
+            Counter(str(record.get(field)) for record in records),
+        )
+    for field, keys in EVENT_ENUMS.items():
+        sources[f"event.{field}"] = (lookup(schema, keys), Counter(event.get(field) for event in events))
+    return {label: pair for label, pair in sources.items() if pair[0]}
+
+
 def report(path):
     records = vd.load_json(path)
     total = len(records)
@@ -117,43 +137,57 @@ def report(path):
 
     if schema is None:
         print("enum coverage: skipped (no schema for this version)")
-        return
+        return version, {}
 
     events = [event for record in records for event in record["observed_events"]]
-    observed = {}
-    for factor in FACTORS:
-        observed[f"state.{factor}"] = (
-            lookup(schema, ("definitions", "state", "properties", factor, "enum")),
-            Counter(record["state_at_cutoff"].get(factor) for record in records),
-        )
-    for field, keys in RECORD_ENUMS.items():
-        observed[f"record.{field}"] = (
-            lookup(schema, keys),
-            Counter(str(record.get(field)) for record in records),
-        )
-    for field, keys in EVENT_ENUMS.items():
-        observed[f"event.{field}"] = (lookup(schema, keys), Counter(event.get(field) for event in events))
+    observed = enum_counts(records, events, schema)
 
     print("enum coverage (declared in schema vs used in data):")
     unused = []
     for label, (allowed, counts) in observed.items():
-        if not allowed:
-            continue
         used = {value: counts.get(value, 0) for value in allowed}
         print(f"  {label}: " + ", ".join(f"{value}={n}" for value, n in used.items()))
         unused += [f"{label}.{value}" for value, n in used.items() if n == 0]
     if unused:
         print(f"  DECLARED BUT NEVER USED ({len(unused)}): {', '.join(unused)}")
+    return version, observed
 
 
 def main() -> int:
     sys.stdout.reconfigure(encoding="utf-8")
     print("P0 quality report -- computed, not hand-typed")
+    merged: dict[str, tuple[list[str], Counter]] = {}
     for path in vd.DATA_FILES:
-        if path.exists():
-            report(path)
-        else:
+        if not path.exists():
             print(f"\n### {path.name}   (absent)")
+            continue
+        version, observed = report(path)
+        # Only batches sharing this schema can be pooled: v0.1 has no split,
+        # mechanism or comprehension field, so its counts would skew the gap list.
+        if version != "p0-record/v0.2.0":
+            continue
+        for label, (allowed, counts) in observed.items():
+            slot = merged.setdefault(label, (list(allowed), Counter()))
+            for value in allowed:
+                if value not in slot[0]:
+                    slot[0].append(value)
+            slot[1].update(counts)
+
+    print("\n### p0-record/v0.2.0 batches combined")
+    unused = [
+        f"{label}.{value}"
+        for label, (allowed, counts) in merged.items()
+        for value in allowed
+        if not counts.get(value)
+    ]
+    if unused:
+        print(f"DECLARED BUT NEVER USED ({len(unused)}): {', '.join(unused)}")
+    else:
+        print("every enum value declared in the v0.2 schema is used by at least one batch")
+    print(
+        "note: a value covered only by a batch whose human_audit is below its record "
+        "count is provisional until B signs that batch."
+    )
     return 0
 
 
