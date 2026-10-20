@@ -31,6 +31,8 @@ DATA_FILES = (
 )
 DATA_PATH = DATA_FILES[0]
 
+PAIR_IDENTITY_IGNORED = {"sample_id", "variant", "notes"}
+
 
 def load_json(path: Path) -> Any:
     with path.open(encoding="utf-8") as handle:
@@ -265,9 +267,8 @@ def check_pairs(records: list[dict[str, Any]], errors: list[str]) -> None:
 
         if story_id.startswith("P07"):
             a, b = sorted(pair, key=lambda record: record["variant"])
-            ignore = {"sample_id", "variant", "notes"}
-            a_core = {key: value for key, value in a.items() if key not in ignore}
-            b_core = {key: value for key, value in b.items() if key not in ignore}
+            a_core = {key: value for key, value in a.items() if key not in PAIR_IDENTITY_IGNORED}
+            b_core = {key: value for key, value in b.items() if key not in PAIR_IDENTITY_IGNORED}
             if not equal_json(a_core, b_core):
                 errors.append(f"{story_id}-A/B: pre-cutoff inputs are not identical")
             for record in pair:
@@ -376,6 +377,9 @@ def validate_all(verbose: bool = True) -> list[str]:
 
 
 def main() -> int:
+    # Windows consoles default to a legacy code page; domains and notes are Chinese.
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
     if "--file" in sys.argv:
         path = Path(sys.argv[sys.argv.index("--file") + 1])
         return 1 if validate_file(path) else 0

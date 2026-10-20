@@ -48,6 +48,18 @@ python scripts/validate_data.py          # 构建后必须重跑
 
 生成是确定性的；改生成器等于改数据，必须重跑校验、`pair_diff_report.py` 与测试。
 
+## `p0_quality_report.py`
+
+从数据实算交接给 A / C 的一页质量报告，对应 `docs/annotation/label_quality_plan_v0.1.md` §4。对 `validate_data.DATA_FILES` 里的每个批次输出规模、校验结果、证据覆盖、悬空引用、cutoff 完整性、P07 输入一致性、域/划分分布和文件 SHA256，并列出 **schema 声明过但数据里一次没用到的枚举取值**。
+
+```bash
+python scripts/p0_quality_report.py
+```
+
+`human_audit` 读 `annotation.status`，人工复核签完自动变化；`second_reviewer` 无数据依据，恒为 `not recorded`，只能由 A/C 本人声明后另行记录。报告数字不得手工改写，也不得由 B 代 A/C 勾选。
+
+未使用的枚举取值不是装饰：v0.2 有 11 个，且全部是 `UNCERTAIN` / `UNKNOWN` / `PROBABLE` 这类不确定性档位。批次可以达标 240 条而机制覆盖仍为空，这个检查就是用来暴露这件事的。
+
 ## `build_p0_seed.py`
 
 可复现构建当前 16 条 P0 种子，输出 `data/p0/p0_samples.json`。

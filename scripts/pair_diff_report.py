@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -155,6 +156,8 @@ def report_pair(story_id, pair):
 
 
 def main():
+    # Windows consoles default to a legacy code page; the descriptions are Chinese.
+    sys.stdout.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser()
     parser.add_argument("--file", type=Path, default=None)
     parser.add_argument("--pair", default=None)
