@@ -1,5 +1,6 @@
 import copy
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -257,9 +258,11 @@ def test_export_matches_evaluation_protocol() -> None:
 
 
 def test_audit_packet_sample_is_pinned() -> None:
-    """docs/annotation/p0_spot_audit_*.md are signed by hand, so CI cannot diff them
-    against a fresh run. Pinning the seed and the mechanism coverage is the part a
-    refactor could silently break."""
+    """The worksheets are signed by hand, so CI cannot byte-diff them against a fresh
+    run. They are also the only thing proving the draw is interpreter-independent:
+    `random.Random(seed)` shuffles differently across Python series, the packets were
+    drawn on 3.13 and CI pins 3.11, so comparing the committed family list against
+    select() is what keeps a re-shuffle from silently invalidating a signature."""
     from scripts.audit_packet import clean_pairs, select
 
     pairs = clean_pairs(load_v02())
@@ -272,17 +275,28 @@ def test_audit_packet_sample_is_pinned() -> None:
     }
     assert all(len(pairs[family]) == 2 for family in sample)
 
+    worksheets = {
+        "p0_spot_audit_v0.2_seed20261021.md": (sample, 10),
+        "p0_spot_audit_v0.3_all7.md": (
+            select(clean_pairs(load_v03()), 7, 20261021),
+            7,
+        ),
+    }
+    for name, (expected, count) in worksheets.items():
+        text = (ROOT / "docs" / "annotation" / name).read_text(encoding="utf-8")
+        assert re.findall(r"^### (\S+)", text, re.M) == expected, name
+        assert text.count("### ") == count, name
+
 
 def test_spot_audit_packets_are_unsigned() -> None:
     """A committed packet that already carries ticks would fake a review nobody did.
     The box counts are also quoted in data/p0/README.md, so a sampler change must
     fail here rather than leave a stale number in the handoff page."""
     packets = {
-        "p0_spot_audit_v0.2_seed20261021.md": (38, 10),
-        "p0_spot_audit_v0.3_all7.md": (28, 7),
+        "p0_spot_audit_v0.2_seed20261021.md": 39,
+        "p0_spot_audit_v0.3_all7.md": 28,
     }
-    for name, (boxes, families) in packets.items():
+    for name, boxes in packets.items():
         text = (ROOT / "docs" / "annotation" / name).read_text(encoding="utf-8")
         assert text.count("- [ ]") == boxes, name
         assert "- [x]" not in text, name
-        assert text.count("### ") == families, name

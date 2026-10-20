@@ -68,7 +68,7 @@ python scripts/pair_diff_report.py --file data/p0/p0_samples_v0.3.json --full
 
 ## `audit_packet.py`
 
-从任一批次里抽一批**可复现**的人工抽查样本，打印成带空白签核框的工作表：`docs/annotation/p0_spot_audit_v0.2_seed20261021.md`（10 对 / 20 条，8 个机制各 1 对 + 随机补齐）与 `docs/annotation/p0_spot_audit_v0.3_all7.md`（v0.3 全批 7 对）。每对给出事件条数、逐字段差异数、变化因子、差异字段、期望动作与政策，并把不确定档位和零证据因子挑出来——这三样正是审计人要判的三件事（单变量性、手册 §1.4、Gate 5）。
+从任一批次里抽一批**可复现**的人工抽查样本，打印成带空白签核框的工作表：`docs/annotation/p0_spot_audit_v0.2_seed20261021.md`（10 对 / 20 条，8 个机制各 1 对 + 哈希排序补齐，共 39 个框——`future_leak` 那对只有 3 个，它的单变量性由输入一致性预检代劳）与 `docs/annotation/p0_spot_audit_v0.3_all7.md`（v0.3 全批 7 对）。每对给出事件条数、逐字段差异数、变化因子、差异字段、期望动作与政策，并把不确定档位和零证据因子挑出来——这三样正是审计人要判的三件事（单变量性、手册 §1.4、Gate 5）。
 
 ```bash
 python scripts/audit_packet.py --records 20 --seed 20261021

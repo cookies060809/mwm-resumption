@@ -5,7 +5,7 @@
 
 - 数据 SHA256：`03cf8744d1753b32614a1b4cbbf0dec81a550a6d64b1b84e9cbcdcdc67b10548`
 - 抽样：7 对 / 14 条，机制覆盖 4 种（仓库该批次共 7 对 / 14 条）
-- 抽样规则：先按机制各取 1 对（机制名排序），不足再随机补齐；`random.Random(20261021)`，与机器和运行次数无关
+- 抽样规则：先按机制各取 1 对（机制名排序），不足再按 `sha256("20261021:家族名")` 排序补齐；与机器、Python 版本、运行次数都无关
 
 ### P08-W7  ·  comprehension  ·  dev
 
@@ -21,14 +21,14 @@
 - [ ] `p0_expected_action` 能由 `p0_scripted_policy` + 截断状态推出（Gate 5）
 - [ ] 结论：通过 / 需改（写样本号与字段）：＿＿＿＿＿＿
 
-### P01-W8  ·  contact_cancellation  ·  test
+### P01-W6  ·  contact_cancellation  ·  train
 
-- 事件条数：A 5 / B 5；逐字段差异 12 处
-- 状态变化因子：V
-- 差异字段：actor、certainty、description、event_type、goal_id、observer_evidence、person_access_evidence、person_available_semantics、person_comprehension、source、world_effect
-- 期望动作：`resume_build_summary` | `do_not_resume`（政策 `continue_if_no_known_cancellation`）
-  - P01-W8-A（A 臂）不确定档位：V=UNKNOWN、e04.person_comprehension=UNCERTAIN、e04.certainty=UNCERTAIN；零证据因子：V
-  - P01-W8-B（B 臂）不确定档位：e04.person_comprehension=MISUNDERSTOOD；零证据因子：无
+- 事件条数：A 5 / B 5；逐字段差异 5 处
+- 状态变化因子：A
+- 差异字段：certainty、description、person_access、person_access_evidence、person_comprehension
+- 期望动作：`resume_fill_expense_form` | `do_not_resume`（政策 `continue_if_no_known_cancellation`）
+  - P01-W6-A（A 臂）不确定档位：A=UNCERTAIN、B=UNKNOWN、e05.person_access=UNCERTAIN、e05.certainty=UNCERTAIN；零证据因子：B
+  - P01-W6-B（B 臂）不确定档位：B=UNKNOWN、e05.person_comprehension=UNCERTAIN；零证据因子：B
 
 - [ ] 只改了一个设计变量，其余差异都是它的必然后果
 - [ ] 每个不确定档位都能指名 cutoff 前缺的是哪一条证据（手册 §1.4）
@@ -63,20 +63,6 @@
 - [ ] `p0_expected_action` 能由 `p0_scripted_policy` + 截断状态推出（Gate 5）
 - [ ] 结论：通过 / 需改（写样本号与字段）：＿＿＿＿＿＿
 
-### P01-S6  ·  contact_cancellation  ·  train
-
-- 事件条数：A 6 / B 5；逐字段差异 12 处
-- 状态变化因子：B
-- 差异字段：actor、certainty、description、event_type、person_access_evidence、person_available_semantics、person_comprehension、source、step_id、time、world_effect
-- 期望动作：`do_not_resume` | `do_not_resume`（政策 `continue_if_no_known_cancellation`）
-  - P01-S6-A（A 臂）不确定档位：B=UNRESOLVED、e05.person_comprehension=UNCERTAIN、e05.certainty=PROBABLE；零证据因子：无
-  - P01-S6-B（B 臂）不确定档位：无；零证据因子：无
-
-- [ ] 只改了一个设计变量，其余差异都是它的必然后果
-- [ ] 每个不确定档位都能指名 cutoff 前缺的是哪一条证据（手册 §1.4）
-- [ ] `p0_expected_action` 能由 `p0_scripted_policy` + 截断状态推出（Gate 5）
-- [ ] 结论：通过 / 需改（写样本号与字段）：＿＿＿＿＿＿
-
 ### P08-S7  ·  comprehension  ·  dev
 
 - 事件条数：A 6 / B 5；逐字段差异 5 处
@@ -91,14 +77,28 @@
 - [ ] `p0_expected_action` 能由 `p0_scripted_policy` + 截断状态推出（Gate 5）
 - [ ] 结论：通过 / 需改（写样本号与字段）：＿＿＿＿＿＿
 
-### P01-W6  ·  contact_cancellation  ·  train
+### P01-W8  ·  contact_cancellation  ·  test
 
-- 事件条数：A 5 / B 5；逐字段差异 5 处
-- 状态变化因子：A
-- 差异字段：certainty、description、person_access、person_access_evidence、person_comprehension
-- 期望动作：`resume_fill_expense_form` | `do_not_resume`（政策 `continue_if_no_known_cancellation`）
-  - P01-W6-A（A 臂）不确定档位：A=UNCERTAIN、B=UNKNOWN、e05.person_access=UNCERTAIN、e05.certainty=UNCERTAIN；零证据因子：B
-  - P01-W6-B（B 臂）不确定档位：B=UNKNOWN、e05.person_comprehension=UNCERTAIN；零证据因子：B
+- 事件条数：A 5 / B 5；逐字段差异 12 处
+- 状态变化因子：V
+- 差异字段：actor、certainty、description、event_type、goal_id、observer_evidence、person_access_evidence、person_available_semantics、person_comprehension、source、world_effect
+- 期望动作：`resume_build_summary` | `do_not_resume`（政策 `continue_if_no_known_cancellation`）
+  - P01-W8-A（A 臂）不确定档位：V=UNKNOWN、e04.person_comprehension=UNCERTAIN、e04.certainty=UNCERTAIN；零证据因子：V
+  - P01-W8-B（B 臂）不确定档位：e04.person_comprehension=MISUNDERSTOOD；零证据因子：无
+
+- [ ] 只改了一个设计变量，其余差异都是它的必然后果
+- [ ] 每个不确定档位都能指名 cutoff 前缺的是哪一条证据（手册 §1.4）
+- [ ] `p0_expected_action` 能由 `p0_scripted_policy` + 截断状态推出（Gate 5）
+- [ ] 结论：通过 / 需改（写样本号与字段）：＿＿＿＿＿＿
+
+### P01-S6  ·  contact_cancellation  ·  train
+
+- 事件条数：A 6 / B 5；逐字段差异 12 处
+- 状态变化因子：B
+- 差异字段：actor、certainty、description、event_type、person_access_evidence、person_available_semantics、person_comprehension、source、step_id、time、world_effect
+- 期望动作：`do_not_resume` | `do_not_resume`（政策 `continue_if_no_known_cancellation`）
+  - P01-S6-A（A 臂）不确定档位：B=UNRESOLVED、e05.person_comprehension=UNCERTAIN、e05.certainty=PROBABLE；零证据因子：无
+  - P01-S6-B（B 臂）不确定档位：无；零证据因子：无
 
 - [ ] 只改了一个设计变量，其余差异都是它的必然后果
 - [ ] 每个不确定档位都能指名 cutoff 前缺的是哪一条证据（手册 §1.4）

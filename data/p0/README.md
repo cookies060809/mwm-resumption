@@ -19,13 +19,13 @@
 | [`../../scripts/build_p0_seed.py`](../../scripts/build_p0_seed.py) | 可复现构建 16 条 v0.1 种子 |
 | [`../../scripts/validate_data.py`](../../scripts/validate_data.py) | 三个批次的 Schema + 跨字段一致性校验 |
 | [`../../scripts/pair_diff_report.py`](../../scripts/pair_diff_report.py) | 逐字段 A/B 差异报告（`--pair P01-W2` 看单对，`--full` 看全部对） |
-| [`../../scripts/audit_packet.py`](../../scripts/audit_packet.py) | 生成可复现的人工抽查包（固定 seed，机制各 1 对再随机补齐，签核框留空） |
+| [`../../scripts/audit_packet.py`](../../scripts/audit_packet.py) | 生成可复现的人工抽查包（固定 seed，机制各 1 对再按哈希排序补齐，签核框留空） |
 | [`../../scripts/export_eval_format.py`](../../scripts/export_eval_format.py) | 转成 C 的 `inputs.jsonl` / `labels.jsonl`（协议 `c-evaluation-draft-1`） |
 | [`eval_v0.2/`](eval_v0.2/) | 已导出的评测格式：`inputs.jsonl`、`labels.jsonl`、`MAPPING.md` |
 | [`../../docs/annotation/annotation_handbook_v1.0.md`](../../docs/annotation/annotation_handbook_v1.0.md) | 标注手册 v1.0 |
 | [`../../docs/annotation/label_quality_plan_v0.1.md`](../../docs/annotation/label_quality_plan_v0.1.md) | 标注质量方案 |
 | [`../../docs/annotation/p0_pair_review_table.md`](../../docs/annotation/p0_pair_review_table.md) | 复核表与机器预检结果 |
-| [`../../docs/annotation/p0_spot_audit_v0.2_seed20261021.md`](../../docs/annotation/p0_spot_audit_v0.2_seed20261021.md) | v0.2 抽查包（10 对 / 20 条，38 个复选框全空，待 B 本人打勾） |
+| [`../../docs/annotation/p0_spot_audit_v0.2_seed20261021.md`](../../docs/annotation/p0_spot_audit_v0.2_seed20261021.md) | v0.2 抽查包（10 对 / 20 条，39 个复选框全空，待 B 本人打勾） |
 | [`../../docs/annotation/p0_spot_audit_v0.3_all7.md`](../../docs/annotation/p0_spot_audit_v0.3_all7.md) | v0.3 全批抽查包（7 对 / 14 条，28 个复选框全空） |
 
 ## 2. 加载示例与输入/标签硬边界

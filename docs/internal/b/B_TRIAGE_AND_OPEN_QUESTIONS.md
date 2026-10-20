@@ -74,7 +74,7 @@
 > # ① v0.3 全批 7 对（交 A/C 的前置）
 > #    docs/annotation/p0_spot_audit_v0.3_all7.md —— 28 个复选框
 > # ② v0.2 抽查 10 对（验证 240/240 reviewed 名副其实）
-> #    docs/annotation/p0_spot_audit_v0.2_seed20261021.md —— 38 个复选框
+> #    docs/annotation/p0_spot_audit_v0.2_seed20261021.md —— 39 个复选框
 > git pull                              # 拉到最新 qiqi/main 再签，别签旧哈希
 > python -B scripts/validate_data.py    # 先确认数据与表头哈希对得上
 > ```

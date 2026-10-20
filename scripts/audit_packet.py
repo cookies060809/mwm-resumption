@@ -2,9 +2,9 @@
 
 v0.2 reports 240/240 `reviewed`, but B wrote every one of those rows, so the
 number measures self-consistency, not independent agreement. This packet picks a
-fixed sample with a documented seed -- one pair per mechanism first, then random
-fill -- and puts the machine preflight next to empty sign-off boxes. It records
-no verdicts: filling them in is the audit.
+fixed sample with a documented seed -- one pair per mechanism first, then a
+hash-ordered fill -- and puts the machine preflight next to empty sign-off boxes.
+It records no verdicts: filling them in is the audit.
 
 Usage:
     python scripts/audit_packet.py --records 20 --seed 20261021
@@ -15,7 +15,6 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import random
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -61,16 +60,27 @@ def clean_pairs(records):
     return pairs
 
 
+def draw_key(seed: int, family: str) -> str:
+    """Shuffle key that does not depend on the interpreter's RNG implementation.
+
+    `random.Random(seed)` is only stable within a Python series, and the packets
+    are committed as worksheets -- a 3.11 machine drawing a different 10 pairs
+    than the 3.13 one would quietly invalidate whatever gets signed.
+    """
+    return hashlib.sha256(f"{seed}:{family}".encode("utf-8")).hexdigest()
+
+
 def select(pairs, pair_count, seed):
-    """One family per mechanism, then random fill -- deterministic for a given seed."""
-    rng = random.Random(seed)
+    """One family per mechanism, then hash-ordered fill -- deterministic for a given seed."""
     by_mechanism = defaultdict(list)
     for story_id, (a, _) in sorted(pairs.items()):
         by_mechanism[a["mechanism"]].append(story_id)
-    chosen = [rng.choice(by_mechanism[name]) for name in sorted(by_mechanism)]
-    rest = sorted(set(pairs) - set(chosen))
-    rng.shuffle(rest)
-    return chosen[:pair_count] + rest[: max(0, pair_count - len(chosen))]
+    chosen = [
+        min(by_mechanism[name], key=lambda family: draw_key(seed, family))
+        for name in sorted(by_mechanism)
+    ]
+    rest = sorted(set(pairs) - set(chosen), key=lambda family: draw_key(seed, family))
+    return (chosen + rest)[:pair_count]
 
 
 def flag_lines(a, b):
@@ -148,8 +158,8 @@ def render(path, records, pair_count, seed):
             f"- 数据 SHA256：`{hashlib.sha256(path.read_bytes()).hexdigest()}`",
             f"- 抽样：{len(chosen)} 对 / {len(chosen) * 2} 条，机制覆盖 {len(mechanisms)} 种"
             f"（仓库该批次共 {len(pairs)} 对 / {len(records)} 条）",
-            f"- 抽样规则：先按机制各取 1 对（机制名排序），不足再随机补齐；"
-            f"`random.Random({seed})`，与机器和运行次数无关",
+            f"- 抽样规则：先按机制各取 1 对（机制名排序），不足再按 `sha256(\"{seed}:家族名\")` 排序补齐；"
+            "与机器、Python 版本、运行次数都无关",
             "",
             *[block(pairs, story_id) for story_id in chosen],
         ]
