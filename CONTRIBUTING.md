@@ -1,5 +1,24 @@
 # 协作规范
 
+## 0. 新成员首次设置
+
+1. 仓库 Owner 在 **Settings → Collaborators → Add people** 邀请 A/C 的 GitHub 账号；成员接受邀请。
+2. 克隆仓库并安装开发依赖：
+
+   ```bash
+   git clone https://github.com/cookies060809/mwm-resumption.git
+   cd mwm-resumption
+   python -m venv .venv
+   source .venv/Scripts/activate    # Windows Git Bash
+   python -m pip install -r requirements-dev.txt
+   python scripts/validate_data.py
+   python -m pytest
+   ```
+
+3. 阅读顺序：根目录 `README.md` → `docs/research_plan/` → `docs/annotation/annotation_handbook_v0.1.md` → `docs/project/ROADMAP.md`。
+4. 首次改动前确认自己的角色与评审人；不要直接推送 `main`。
+5. 不提交 P1 原始数据、个人信息、密钥或未经实验支持的结果。
+
 ## 1. 角色与评审
 
 | 变更范围 | 主责 | 必须评审 |
