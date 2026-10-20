@@ -44,6 +44,7 @@
 | 合并枚举覆盖检查 | `p0_quality_report.py` 增加"同一 schema 批次合并"段落；`tests/` 新增 2 项断言（共 24 项） |
 | 手册 §1.4 未知档位判据 | 已写入 v1.0.1；v0.3 是这条判据第一次成批落地 |
 | A 是否读到 v0.3 | **不能**，A 仍只认 `p0-record/v0.1.0`；v0.3 复核完成前也不该送 |
+| 「A 只读 v0.1」这条 | 2026-10-21 起由 A 自己在 `A_ALGORITHM_DECISIONS.md` 记为"v0.2 已入库但尚未接入 A 适配器"，不再只是 B 的推测；接入后的验收归 A |
 | v0.3 与 v0.2 惯例对齐 | 已按 v0.2 实数据改齐：政策与机制 1:1、误解/未理解臂统一 `suspend_or_wait`、`V=UNKNOWN` 那对不再写 `indeterminate`、`BELIEVES_VALID` 可由 `goal_start` 取证 |
 | v0.3 需要你拍板的三点 | ① P01-W8-A「世界事实未定但仍有点标签」；② P01-S6 两臂动作同为 `do_not_resume`；③ 7 对里 4 对 A/B 事件条数不等。逐条写在 `label_quality_plan` §4 v0.3 小节 |
 
