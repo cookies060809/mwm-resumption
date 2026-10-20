@@ -11,6 +11,7 @@ from mwm_eval.local_baselines import make_local_baselines
 from mwm_eval.metrics import evaluate
 from mwm_eval.p0 import adapt_input, prepare_dataset
 from mwm_eval.schema import audit_groups, canonical_hash, validate_dataset
+from scripts.run_p0_evaluation import require_accepted_batch
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -27,6 +28,12 @@ class P0EvaluationTests(unittest.TestCase):
         for key in ("base_story_id", "person_id", "task_family"):
             self.assertFalse(any(audit_groups(self.records)[key]["pairwise_overlap"].values()))
         self.assertEqual(sum(g["resume_label"] == "unknown" for g in self.golds), 30)
+
+    def test_draft_candidate_batch_cannot_enter_formal_evaluation(self):
+        require_accepted_batch(self.source)
+        candidates = json.loads((ROOT / "data/p0/p0_samples_v0.3.json").read_text(encoding="utf-8"))
+        with self.assertRaisesRegex(ValueError, "Draft/candidate"):
+            require_accepted_batch(candidates)
 
     def test_own_actor_matches_target_without_family_id_in_observation(self):
         self.assertTrue(all(r["observation"]["target_person"] == "person" for r in self.records))

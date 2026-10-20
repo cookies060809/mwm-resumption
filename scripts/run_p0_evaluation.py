@@ -14,11 +14,17 @@ from mwm_eval.schema import file_hash
 from scripts.validate_data import validate_records
 
 
+def require_accepted_batch(source):
+    if any(record.get("annotation", {}).get("status") not in {"reviewed", "adjudicated"}
+           or record.get("annotation", {}).get("annotator_id") == "agent-draft" for record in source):
+        raise ValueError("Draft/candidate P0 is excluded from formal evaluation; source-owner review is required")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", type=Path, default=ROOT / "data/p0/p0_samples_v0.2.json")
     parser.add_argument("--output-dir", type=Path, default=ROOT / "results/p0_v02")
-    parser.add_argument("--seeds", default="0,1,2")
+    parser.add_argument("--seeds", help="Comma-separated override; default uses the team's fixed evaluation_seeds")
     parser.add_argument("--methods", default="B0,B1,B4,B5,B6,B7")
     parser.add_argument("--enable-external", action="store_true")
     parser.add_argument("--config", type=Path, default=ROOT / "configs/external.example.json")
@@ -28,6 +34,7 @@ def main():
     errors = validate_records(source)
     if errors:
         raise ValueError("B source validation failed: " + "; ".join(errors[:5]))
+    require_accepted_batch(source)
     records, golds = prepare_dataset(source)
     output = args.output_dir.resolve()
     output.mkdir(parents=True, exist_ok=True)
@@ -49,7 +56,14 @@ def main():
         required_group_isolation=["base_story_id", "person_id", "task_family"],
         bootstrap_cluster_key="task_family",
         dataset_provenance=provenance)
-    seeds = [int(s) for s in args.seeds.split(",")]
+    seed_config = ROOT / "configs/a_ec_jmf_reference.json"
+    convention = json.loads(seed_config.read_text(encoding="utf-8"))["evaluation_seeds"]
+    seeds = ([int(s) for s in args.seeds.split(",")] if args.seeds else
+             convention)
+    config["evaluation"]["seed_selection"] = {
+        "values": seeds, "matches_team_convention": seeds == convention,
+        "convention_source": "configs/a_ec_jmf_reference.json:evaluation_seeds",
+        "convention_sha256": file_hash(seed_config)}
     summary, status = run_experiment(inputs_path, labels_path, output, config,
                                     args.methods.split(","), seeds, suite=args.suite,
                                     enable_external=args.enable_external)

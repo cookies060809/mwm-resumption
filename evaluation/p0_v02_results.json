@@ -3,7 +3,24 @@
   "seeds": [
     0,
     1,
-    2
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
   ],
   "split_counts": {
     "train": 144,
@@ -46,9 +63,9 @@
     "mwm_eval/statistics.py": "f16c97c296cdd28879e45267cec1ce3aa4923654a4e665dc91066c8e85bef8b2",
     "run_evaluation.py": "498a5ed4e29ee4a123d10f38c6cdd91819a75e6ece33284faf6377cde5e65a03",
     "scripts/export_eval_format.py": "d629e5cbad3b19b5fe52a85178ce36ab391c6657f2adc150400dafd73e3f123e",
-    "scripts/run_p0_evaluation.py": "59e69de171eb76c9ba2fc0c2e5653ec75dc0788587bf7148b6f378ed87156b48",
+    "scripts/run_p0_evaluation.py": "53e420d53eb65d9129282e19e693ddff24cbdc25dccb9d9c0fbd3918293d35af",
     "tools/build_dashboard.py": "d9b618888c5893d823dc69f260ccde91dfc18acc5d7b1648f15f4d64725bc63b",
-    "tools/build_delivery.py": "1337d76d46dfcfd86f14a196fbbc24ae9ad14cc29456524ae3d4abf291b0a844",
+    "tools/build_delivery.py": "f41561dbb758a7db55f9b319ec0aaead4c4edcfdbf162ef83e0f011577a290f7",
     "tools/build_integration_fixtures.py": "c69148a190663d87aed023802c668d69e97890ebea16d78ef2fdecc005c87eff"
   },
   "methods": {
@@ -57,17 +74,17 @@
         "accuracy_all_eligible": {
           "mean": 0.42857142857142855,
           "sample_sd": 0.0,
-          "n_defined": 3
+          "n_defined": 20
         },
         "resume_f1": {
           "mean": 0.5555555555555556,
           "sample_sd": 0.0,
-          "n_defined": 3
+          "n_defined": 20
         },
         "step_accuracy": {
           "mean": 0.8333333333333334,
           "sample_sd": 0.0,
-          "n_defined": 3
+          "n_defined": 20
         }
       },
       "implementation": "RecencyBaseline",
@@ -965,17 +982,17 @@
         "accuracy_all_eligible": {
           "mean": 0.7142857142857143,
           "sample_sd": 0.0,
-          "n_defined": 3
+          "n_defined": 20
         },
         "resume_f1": {
           "mean": 0.6666666666666666,
           "sample_sd": 0.0,
-          "n_defined": 3
+          "n_defined": 20
         },
         "step_accuracy": {
           "mean": 0.6666666666666666,
           "sample_sd": 0.0,
-          "n_defined": 3
+          "n_defined": 20
         }
       },
       "implementation": "RecencyBaseline",
@@ -1873,17 +1890,17 @@
         "accuracy_all_eligible": {
           "mean": 0.7857142857142857,
           "sample_sd": 0.0,
-          "n_defined": 3
+          "n_defined": 20
         },
         "resume_f1": {
           "mean": 0.7692307692307693,
           "sample_sd": 0.0,
-          "n_defined": 3
+          "n_defined": 20
         },
         "step_accuracy": {
           "mean": 0.8333333333333334,
           "sample_sd": 0.0,
-          "n_defined": 3
+          "n_defined": 20
         }
       },
       "implementation": "PersistentMemoryBaseline",
@@ -2791,17 +2808,17 @@
         "accuracy_all_eligible": {
           "mean": 0.7142857142857143,
           "sample_sd": 0.0,
-          "n_defined": 3
+          "n_defined": 20
         },
         "resume_f1": {
           "mean": 0.7142857142857143,
           "sample_sd": 0.0,
-          "n_defined": 3
+          "n_defined": 20
         },
         "step_accuracy": {
           "mean": 0.8333333333333334,
           "sample_sd": 0.0,
-          "n_defined": 3
+          "n_defined": 20
         }
       },
       "implementation": "BDIRuleBaseline",
@@ -3711,17 +3728,17 @@
         "accuracy_all_eligible": {
           "mean": 0.6428571428571429,
           "sample_sd": 0.0,
-          "n_defined": 3
+          "n_defined": 20
         },
         "resume_f1": {
           "mean": 0.2857142857142857,
           "sample_sd": 0.0,
-          "n_defined": 3
+          "n_defined": 20
         },
         "step_accuracy": {
           "mean": 0.16666666666666666,
           "sample_sd": 0.0,
-          "n_defined": 3
+          "n_defined": 20
         }
       },
       "implementation": "ActivationLogisticBaseline",
@@ -4638,17 +4655,17 @@
         "accuracy_all_eligible": {
           "mean": 0.5714285714285714,
           "sample_sd": 0.0,
-          "n_defined": 3
+          "n_defined": 20
         },
         "resume_f1": {
           "mean": 0.0,
           "sample_sd": 0.0,
-          "n_defined": 3
+          "n_defined": 20
         },
         "step_accuracy": {
           "mean": 0.0,
           "sample_sd": 0.0,
-          "n_defined": 3
+          "n_defined": 20
         }
       },
       "implementation": "BayesianGoalHMMBaseline",
@@ -5551,8 +5568,8 @@
   },
   "reproducibility": {
     "matched": true,
-    "n_test_predictions": 864,
-    "prediction_sha256": "ba8a006e931aba32c9d40f2c9ed604fa5c4dca9ff85b3fc4f594862167b4dd36",
+    "n_test_predictions": 5760,
+    "prediction_sha256": "6114ef02dc8a18706bbd06356fec71d430528c726a146086bc92a3a6c0090ad2",
     "dataset_layer": "P0",
     "source_sha256": "fb58cf749086bab8d08a3074f97ce1cea8f6fd52b1ec844d3682b1c3e12f29ee",
     "scope": "same source, inputs, configuration and environment; timing excluded"
