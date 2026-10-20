@@ -986,19 +986,40 @@ BUILDERS = {
 }
 
 
+# Split at blueprint level, not family level: a task blueprint must never appear
+# in two splits, otherwise the model can memorise the task instead of the
+# mechanism (C's audit_groups reports task_family overlap as leakage).
+# The 8 blueprints reserved for the hand-written seeds are all in train, so each
+# mechanism still ends up with 9 train / 3 dev / 3 test families.
+SPLIT_BY_BLUEPRINT = {
+    "W1": "train",
+    "W2": "train",
+    "W3": "train",
+    "W4": "dev",
+    "W5": "train",
+    "S1": "test",
+    "S2": "train",
+    "S3": "dev",
+    "S4": "train",
+    "S5": "dev",
+    "D1": "train",
+    "D2": "test",
+    "D3": "train",
+    "D4": "test",
+    "D5": "train",
+}
+BLUEPRINT_BY_ID = {bp["id"]: bp for bp in BLUEPRINTS}
+
+
 def assign_splits(family_ids: list[str]) -> dict[str, str]:
-    """60/20/20 by base_story_id, stratified by mechanism (9/3/3 per mechanism)."""
-    by_mech: dict[str, list[str]] = {name: [] for name in MECHANISMS}
-    for family in family_ids:
-        mech = SEED_MECHANISM.get(family, None)
-        if mech is None:
-            mech = MECHANISMS[int(family[1:3]) - 1]
-        by_mech[mech].append(family)
+    """Blueprint-disjoint 60/20/20, stratified by mechanism (9/3/3 per mechanism)."""
     splits: dict[str, str] = {}
-    for mech, families in by_mech.items():
-        families = sorted(families)
-        for index, family in enumerate(families):
-            splits[family] = "train" if index < 9 else ("dev" if index < 12 else "test")
+    for family in family_ids:
+        if family in SEED_MECHANISM:
+            splits[family] = "train"
+            continue
+        blueprint = family.split("-", 1)[1]
+        splits[family] = SPLIT_BY_BLUEPRINT[blueprint]
     return splits
 
 

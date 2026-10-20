@@ -156,3 +156,66 @@ def test_v02_unknown_labels_carry_no_evidence() -> None:
         for factor, value in record["state_at_cutoff"].items():
             if value == "UNKNOWN":
                 assert record["state_evidence_by_factor"][factor] == []
+
+
+def test_v02_split_is_blueprint_disjoint() -> None:
+    """A task blueprint must not appear in two splits, otherwise the model can
+    memorise the task rather than the mechanism."""
+    records = load_v02()
+    blueprint_splits: dict[str, set[str]] = {}
+    for record in records:
+        family = record["base_story_id"]
+        blueprint = family.split("-", 1)[1] if "-" in family else f"seed_{family}"
+        blueprint_splits.setdefault(blueprint, set()).add(record["split"])
+    crossed = {key: value for key, value in blueprint_splits.items() if len(value) > 1}
+    assert crossed == {}, f"blueprints crossing splits: {crossed}"
+
+
+def test_export_matches_evaluation_protocol() -> None:
+    from scripts.export_eval_format import to_input, to_label
+
+    records = load_v02()
+    inputs = [to_input(record) for record in records]
+    labels = [to_label(record) for record in records]
+    assert len(inputs) == len(labels) == 240
+
+    resume = {}
+    for label in labels:
+        resume[label["resume_label"]] = resume.get(label["resume_label"], 0) + 1
+        assert label["dataset_layer"] == "P0"
+        assert label["window_complete"] is True
+        if label["resume_label"] != "resume":
+            assert label["resume_step"] is None
+    assert resume == {"resume": 90, "not_resume": 120, "unknown": 30}
+
+    for item in inputs:
+        assert item["purpose"] == "scripted_p0"
+        observation = item["observation"]
+        assert set(observation) == {
+            "target_person",
+            "goal_id",
+            "task_steps",
+            "task_graph",
+            "cutoff",
+            "horizon",
+            "events",
+        }
+        assert all(isinstance(event["time"], int) for event in observation["events"])
+        assert observation["events"][-1]["time"] <= observation["cutoff"]
+        for event in observation["events"]:
+            assert set(event["person_access_evidence"]) == {"status", "understood"}
+            assert event["person_access_evidence"]["understood"] in (True, False, None)
+
+    # Future-leak pairs have no point label but keep identical observations.
+    leak = {
+        record["base_story_id"]: to_input(record)
+        for record in records
+        if record["mechanism"] == "future_leak"
+    }
+    for family, item in leak.items():
+        pair = [r for r in records if r["base_story_id"] == family and r["mechanism"] == "future_leak"]
+        a, b = (to_input(record)["observation"] for record in sorted(pair, key=lambda r: r["variant"]))
+        assert json.dumps(a, sort_keys=True, ensure_ascii=False) == json.dumps(
+            b, sort_keys=True, ensure_ascii=False
+        )
+        assert item["observation"]["cutoff"] > 0

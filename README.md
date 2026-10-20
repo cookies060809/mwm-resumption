@@ -45,7 +45,7 @@
 - [ ] 技术方案 PDF、答辩 PPT、演示视频
 - [ ] 提交前合规与复现审查
 
-当前 P0 批次：120 个家族 × A/B = 240 条、1789 条事件；`work` 80 条、`collaboration_service` 84 条、`daily_life` 76 条；`split` 为 72/24/24；`annotation.status=reviewed`。另有 16 条 v0.1 冻结种子供 A 的现有适配器使用。
+当前 P0 批次：120 个家族 × A/B = 240 条、1831 条事件；`work` 80 条、`collaboration_service` 84 条、`daily_life` 76 条；`split` 为 72/24/24；`annotation.status=reviewed`。另有 16 条 v0.1 冻结种子供 A 的现有适配器使用。
 
 ## 仓库结构
 

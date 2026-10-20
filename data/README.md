@@ -26,11 +26,11 @@ data/
 
 ## P0 种子批次
 
-- 规模：120 个家族 × A/B = 240 条（15 个任务骨架 × 8 个受控机制），1789 个事件。
+- 规模：120 个家族 × A/B = 240 条（15 个任务骨架 × 8 个受控机制），1831 个事件。
 - Schema：`schema/p0_record.schema.json`（`p0-record/v0.1.0`）。
 - 标注状态：`draft`；尚未完成 B 人工复核与 A/C 盲审。
 - 领域：`work` 6 条、`collaboration_service` 8 条、`daily_life` 2 条。
-- 当前 split：`unassigned`；正式划分按 `base_story_id` 做 60/20/20，同族 A/B 不跨集合。
+- 当前 split：已完成，按任务骨架做 60/20/20（72/24/24 家族），同一骨架与同一家族都不跨集合。
 - 输入/标签边界、机制表、划分与已知问题见 [data/p0/README.md](p0/README.md)。
 
 ## 校验与对照审计

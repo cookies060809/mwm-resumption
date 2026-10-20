@@ -1,6 +1,6 @@
 # P0 受控诊断集
 
-> **当前规模：** `p0-record/v0.2.0`，15 个任务骨架 × 8 个受控机制 = **120 个故事家族 × A/B = 240 条**、1789 个事件；`annotation.status=reviewed`（B 已完成人工复核）。
+> **当前规模：** `p0-record/v0.2.0`，15 个任务骨架 × 8 个受控机制 = **120 个故事家族 × A/B = 240 条**、1831 个事件；`annotation.status=reviewed`（B 已完成人工复核）。
 > **性质：** P0 是人工脚本 + 明确规则的受控诊断数据，**不是真实人类行为证据**。P1 尚未采集。
 > **v0.1 种子：** `p0_samples.json` 保留 16 条冻结版本，供 A 的现有适配器与回归测试使用；v0.2 是新的正式批次。
 
@@ -16,6 +16,8 @@
 | [`../../scripts/build_p0_seed.py`](../../scripts/build_p0_seed.py) | 可复现构建 16 条 v0.1 种子 |
 | [`../../scripts/validate_data.py`](../../scripts/validate_data.py) | 两个批次的 Schema + 跨字段一致性校验 |
 | [`../../scripts/pair_diff_report.py`](../../scripts/pair_diff_report.py) | 逐字段 A/B 差异报告（`--full --pair P01-W2` 看单对） |
+| [`../../scripts/export_eval_format.py`](../../scripts/export_eval_format.py) | 转成 C 的 `inputs.jsonl` / `labels.jsonl`（协议 `c-evaluation-draft-1`） |
+| [`eval_v0.2/`](eval_v0.2/) | 已导出的评测格式：`inputs.jsonl`、`labels.jsonl`、`MAPPING.md` |
 | [`../../docs/annotation/annotation_handbook_v1.0.md`](../../docs/annotation/annotation_handbook_v1.0.md) | 标注手册 v1.0 |
 | [`../../docs/annotation/label_quality_plan_v0.1.md`](../../docs/annotation/label_quality_plan_v0.1.md) | 标注质量方案 |
 | [`../../docs/annotation/p0_pair_review_table.md`](../../docs/annotation/p0_pair_review_table.md) | 复核表与机器预检结果 |
@@ -57,13 +59,13 @@ design = record["p0_design"]                # 设计簿记，绝不是输入
 
 ## 4. 划分
 
-| split | 家族数 | 说明 |
+| split | 家族数 | 说明（骨架级隔离） |
 |---|---:|---|
 | train | 72 | 每个机制 9 个家族 |
 | dev | 24 | 每个机制 3 个家族 |
 | test | 24 | 每个机制 3 个家族 |
 
-按 `base_story_id` 分层，同族 A/B 必在同一 split；`split` 是家族级字段，校验器会检查同族一致性。校准集暂不单列，C 需要时从 dev 再切。
+按**任务骨架**分层：同一骨架不跨 split，避免模型记住任务而不是机制；同族 A/B 必在同一 split，`split` 是家族级字段。每机制仍为 9/3/3。校准集暂不单列，C 需要时从 dev 再切。
 
 ## 5. 校验
 
@@ -71,6 +73,7 @@ design = record["p0_design"]                # 设计簿记，绝不是输入
 python scripts/validate_data.py
 python scripts/pair_diff_report.py
 python scripts/pair_diff_report.py --full --pair P04
+python scripts/export_eval_format.py          # 生成 data/p0/eval_v0.2/*.jsonl
 ```
 
 当前结果：
@@ -131,17 +134,18 @@ P07 identity failures: 0
 
 ## 9. 交接页（给 A/C 的一页纸）
 
-数据文件 SHA256：`66952f810f6e046b733538491855b5c690a23ca4c49d3550de5fef1d09938214`（LF；`sha256sum data/p0/p0_samples_v0.2.json` 可复核）。
+数据文件 SHA256：`fb58cf749086bab8d08a3074f97ce1cea8f6fd52b1ec844d3682b1c3e12f29ee`（LF；`sha256sum data/p0/p0_samples_v0.2.json` 可复核）。
 
 ```text
 dataset: p0-v0.2.0
-n: 240 (120 A/B pairs, 120 families, 1789 events)
+n: 240 (120 A/B pairs, 120 families, 1831 events)
+eval_export: data/p0/eval_v0.2/{inputs,labels}.jsonl (validated with C's mwm_eval.schema)
 schema_pass: 240/240
 evidence_coverage: 240/240
 cutoff_no_future: 240/240
 pair_isolation: 120/120
 p07_input_identity: 15/15 PASS
-splits: train 72 / dev 24 / test 24 (family-level, stratified by mechanism 9/3/3)
+splits: train 72 / dev 24 / test 24 families (blueprint-disjoint; 9/3/3 per mechanism)
 domains: work 80 / collaboration_service 84 / daily_life 76 (records)
 human_audit: 240/240 (B, reviewed)
 second_reviewer: 0/8 (A/C, pending)

@@ -60,6 +60,16 @@ python scripts/p0_quality_report.py
 
 未使用的枚举取值不是装饰：v0.2 有 12 个，其中 11 个是 `UNCERTAIN` / `UNKNOWN` / `PROBABLE` 这类不确定性档位，第 12 个是 `split.calibration`（C 的交接协议要求四档划分，数据只落了三档）。批次可以达标 240 条而机制覆盖仍为空，这个检查就是用来暴露这件事的。检查范围覆盖记录级 `domain` / `split` / `mechanism`、六因子状态和事件级枚举。
 
+## `export_eval_format.py`
+
+把 P0 v0.2 转成 C 的评测协议（`c-evaluation-draft-1`）：`data/p0/eval_v0.2/inputs.jsonl`、`labels.jsonl`，并把映射规则写到同目录 `MAPPING.md`。
+
+```bash
+python scripts/export_eval_format.py
+```
+
+关键映射：`HH:MM` → 同日分钟、`task_dependencies` → `task_graph.edges`、`person_access` + `person_comprehension` → `{status, understood}`、`indeterminate` → `resume_label=unknown`、`purpose=scripted_p0`。输出经 C 的 `mwm_eval.schema.validate_dataset` 验证通过；`task_family` 在 split 之间零重叠（骨架级划分）。
+
 ## `build_p0_seed.py`
 
 可复现构建当前 16 条 P0 种子，输出 `data/p0/p0_samples.json`。
