@@ -13,6 +13,7 @@ Usage:
 from __future__ import annotations
 
 import json
+import re
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -56,6 +57,24 @@ def non_unknown(factor: str, value: Any) -> bool:
     if factor == "Q":
         return value not in ("UNKNOWN",)
     return value != "UNKNOWN"
+
+
+STEP_COUNT_RE = re.compile(r"还剩([一二两三四五六七八九十\d]+)步")
+CN_DIGITS = {"一": 1, "二": 2, "两": 2, "俩": 2, "三": 3, "四": 4, "五": 5, "六": 6, "七": 7, "八": 8, "九": 9}
+
+
+def stated_step_count(text: str) -> int | None:
+    """Parse the only remaining-steps phrasing the P0 scripts use (「还剩N步」)."""
+    match = STEP_COUNT_RE.search(text)
+    if not match:
+        return None
+    token = match.group(1)
+    if token.isdigit():
+        return int(token)
+    if "十" in token:
+        head, _, tail = token.partition("十")
+        return (CN_DIGITS[head] if head else 1) * 10 + (CN_DIGITS[tail] if tail else 0)
+    return CN_DIGITS[token]
 
 
 def check_record(record: dict[str, Any], errors: list[str]) -> None:
@@ -133,6 +152,22 @@ def check_record(record: dict[str, Any], errors: list[str]) -> None:
     for dependency in record.get("task_dependencies", []):
         if dependency.get("before") not in steps or dependency.get("after") not in steps:
             err(f"task dependency references unknown step: {dependency}")
+
+    # A spoken step count is an input the filter reads, so it must be derivable
+    # from the task graph; free-text numbers were how the v0.2 P01 arms drifted.
+    remaining = {len([s for s in record.get("task_steps", []) if s not in completed])}
+    if interrupting:
+        nested_done = set(interrupting.get("completed_steps_at_cutoff", []))
+        remaining.add(len([s for s in interrupting.get("steps", []) if s not in nested_done]))
+    for event in events:
+        if event.get("actor") != "person":
+            continue
+        stated = stated_step_count(event.get("description", ""))
+        if stated is not None and stated not in remaining:
+            err(
+                f"event {event.get('event_id')}: 自述还剩 {stated} 步，"
+                f"但任务图剩余步数是 {sorted(remaining)}"
+            )
 
     state = record.get("state_at_cutoff", {})
     evidence = record.get("state_evidence_by_factor", {})

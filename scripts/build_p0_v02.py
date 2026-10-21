@@ -537,7 +537,7 @@ def mech_contact_cancellation(bp: dict[str, Any], gid: str) -> dict[str, Any]:
             gid,
             None,
             "ACCESSED",
-            "人物说：还剩两步，回来接着弄。",
+            "人物说：还剩三步，回来接着弄。",
             obs="现场可闻",
             acc_ev="人物自述",
             source="person_report",

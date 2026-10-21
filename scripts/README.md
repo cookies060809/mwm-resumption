@@ -6,6 +6,7 @@
 
 - 使用 `jsonschema` 对 [`schema/p0_record.schema.json`](../schema/p0_record.schema.json) 与 [`schema/p0_record_v0.2.schema.json`](../schema/p0_record_v0.2.schema.json) 做 Draft-07 结构校验；
 - 跨字段检查：cutoff 顺序、证据链、逐因子证据并集、任务依赖、`Q` 与 `C` 一致性、动作/步骤对齐、资源/取消/完成事件与 `V/F` 一致、P07 输入一致性；
+- **人物自述里的剩余步数（「还剩N步」）必须等于任务图算出的客观剩余数**（含嵌套任务的剩余数，中文数字与阿拉伯数字都解析）。2026-10-21 加：A/C 盲审抓到 14 条 P01 B 臂整体少 1，而抽查工作表的四个复选项（单变量性 / §1.4 / Gate 5 / 结论）没有任何一项问"文案里的数字能不能由任务图算出来"——这类一致性交给机器，不加人工格子；
 - v0.2 追加：`split` 家族级一致、`person_comprehension` 与 `person_access` 一致、`MISUNDERSTOOD` 需非 `accurate` 解释、`indeterminate` 动作需 `undefined_target`；
 - 输出状态摘要、领域/机制/划分统计与错误列表。
 
