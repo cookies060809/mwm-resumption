@@ -1,5 +1,11 @@
 # 工程脚本
 
+## v0.3 完整发布与 A 接入检查
+
+`python scripts/build_p0_release.py` 生成 `data/p0/v0.3/`：254 条完整原生数据、150/52/52 分割、C 协议导出与带来源哈希的 manifest；`--check` 只检查产物是否最新。它保留 v0.2 和旧 v0.3 补充原稿的字节与签核。
+
+`python scripts/check_p0_release_a.py --a-ref origin/feat/a-p0-v02-ec-jmf` 从本机已有的 A Git 引用提取模型到工作区临时目录，不切分支，逐条执行 254 条训练样本转换与默认参数精确推理；返回实际 commit、数据哈希和失败列表。缺少该引用或新训练接口会显式报错。该命令不训练、评测或生成预测文件。说明见 [`data/p0/v0.3/README.md`](../data/p0/v0.3/README.md)。
+
 ## `validate_data.py`
 
 校验 P0 两个批次（v0.1 16 条、v0.2 240 条），按记录的 `schema_version` 自动选择 schema：

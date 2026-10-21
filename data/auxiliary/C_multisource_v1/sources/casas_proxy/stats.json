@@ -1,0 +1,70 @@
+{
+  "task": "activity_return_proxy_NOT_full_P1",
+  "seed": 42,
+  "source_files": 20,
+  "subjects": 20,
+  "qc": {
+    "raw_events": 7677,
+    "ambiguous_or_unlabelled_events": 163,
+    "normalized_dot_separated_times": 1
+  },
+  "split_method": "fixed-seed subject-level split stratified by any positive 60s activity return",
+  "switch_candidates": 190,
+  "splits": {
+    "train": {
+      "subjects": [
+        "p04",
+        "p13",
+        "p14",
+        "p15",
+        "p20",
+        "p23",
+        "p24",
+        "p26",
+        "p28",
+        "p29",
+        "p31",
+        "p32"
+      ],
+      "usable_60s": 84,
+      "positive_60s": 10,
+      "statuses_60s": {
+        "no_return_within_window": 74,
+        "excluded_ambiguous": 19,
+        "censored": 4,
+        "return": 10
+      }
+    },
+    "dev": {
+      "subjects": [
+        "p17",
+        "p18",
+        "p25",
+        "p27"
+      ],
+      "usable_60s": 33,
+      "positive_60s": 8,
+      "statuses_60s": {
+        "no_return_within_window": 25,
+        "excluded_ambiguous": 9,
+        "return": 8
+      }
+    },
+    "test": {
+      "subjects": [
+        "p19",
+        "p30",
+        "p33",
+        "p34"
+      ],
+      "usable_60s": 34,
+      "positive_60s": 7,
+      "statuses_60s": {
+        "no_return_within_window": 27,
+        "excluded_ambiguous": 6,
+        "return": 7,
+        "censored": 1
+      }
+    }
+  }
+}

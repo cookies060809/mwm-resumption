@@ -24,6 +24,11 @@ jobs:
       - name: Validate schemas and data
         run: python scripts/validate_data.py
 
+      - name: Validate the standalone P0 v0.3 release
+        run: |
+          python scripts/build_p0_release.py --check
+          python scripts/validate_data.py --file data/p0/v0.3/p0_samples.json
+
       - name: Check the P0 seeds rebuild byte-identically
         run: |
           python scripts/build_p0_seed.py

@@ -1,5 +1,7 @@
 # ECR-MWM / EC-JMF
 
+> **P0 v0.3 完整数据入口（2026-10-21）：** [data/p0/v0.3/README.md](data/p0/v0.3/README.md)，254 条 / 127 家族，train/dev/test = **150/52/52**。旧 `p0_samples_v0.3.json` 是 14 条补充原稿；A/C 使用完整发布版 `data/p0/v0.3/p0_samples.json`。运行 `python scripts/build_p0_release.py --check` 可验证交付一致性。
+
 **面向任务中断与恢复预测的认知可达性约束动态心智世界模型**
 
 *Epistemically Constrained Dynamic Mental World Modeling for Task Interruption and Resumption Prediction*
