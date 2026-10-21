@@ -189,10 +189,12 @@
     "p1_observed_first_step": null,
     "p1_censoring_status": "not_collected",
     "annotation": {
-      "annotator_id": "agent-draft",
-      "status": "draft",
-      "source_confidence": "medium",
-      "annotated_at": "2026-10-21"
+      "annotator_id": "B",
+      "status": "reviewed",
+      "source_confidence": "high",
+      "annotated_at": "2026-10-21",
+      "reviewed_at": "2026-10-21",
+      "second_reviewer_id": null
     },
     "notes": "P01-W6-A：撤销通知投递结果不明 → A=UNCERTAIN（证据=通知事件本身）；人物无陈述无行动 → B=UNKNOWN（无任何 B 证据）。",
     "interruption": {
@@ -394,10 +396,12 @@
     "p1_observed_first_step": null,
     "p1_censoring_status": "not_collected",
     "annotation": {
-      "annotator_id": "agent-draft",
-      "status": "draft",
-      "source_confidence": "medium",
-      "annotated_at": "2026-10-21"
+      "annotator_id": "B",
+      "status": "reviewed",
+      "source_confidence": "high",
+      "annotated_at": "2026-10-21",
+      "reviewed_at": "2026-10-21",
+      "second_reviewer_id": null
     },
     "notes": "P01-W6-B：与 A 臂只差 e05 的投递可确认性（person_access / certainty，以及由此带出的 comprehension 档），其余事件与状态完全同构。",
     "interruption": {
@@ -623,10 +627,12 @@
     "p1_observed_first_step": null,
     "p1_censoring_status": "not_collected",
     "annotation": {
-      "annotator_id": "agent-draft",
-      "status": "draft",
-      "source_confidence": "medium",
-      "annotated_at": "2026-10-21"
+      "annotator_id": "B",
+      "status": "reviewed",
+      "source_confidence": "high",
+      "annotated_at": "2026-10-21",
+      "reviewed_at": "2026-10-21",
+      "second_reviewer_id": null
     },
     "notes": "P01-S6-A：两条矛盾通知均 ACCESSED，人物明确表示未调和 → B=UNRESOLVED（有证据，非标注者未知）；主管转述属 third_party_report → certainty=PROBABLE。两臂期望动作同为 do_not_resume：本对操控的是信念是否调和这一状态维度，动作标签刻意保持不变。",
     "interruption": {
@@ -829,10 +835,12 @@
     "p1_observed_first_step": null,
     "p1_censoring_status": "not_collected",
     "annotation": {
-      "annotator_id": "agent-draft",
-      "status": "draft",
-      "source_confidence": "medium",
-      "annotated_at": "2026-10-21"
+      "annotator_id": "B",
+      "status": "reviewed",
+      "source_confidence": "high",
+      "annotated_at": "2026-10-21",
+      "reviewed_at": "2026-10-21",
+      "second_reviewer_id": null
     },
     "notes": "P01-S6-B：去掉矛盾转述后，同一条取消通知形成稳定的 BELIEVES_INVALID，把 UNRESOLVED 这一档隔离出来。",
     "interruption": {
@@ -1038,10 +1046,12 @@
     "p1_observed_first_step": null,
     "p1_censoring_status": "not_collected",
     "annotation": {
-      "annotator_id": "agent-draft",
-      "status": "draft",
-      "source_confidence": "medium",
-      "annotated_at": "2026-10-21"
+      "annotator_id": "B",
+      "status": "reviewed",
+      "source_confidence": "high",
+      "annotated_at": "2026-10-21",
+      "reviewed_at": "2026-10-21",
+      "second_reviewer_id": null
     },
     "notes": "P05-D6-A：cutoff 前没有任何 resource_available / resource_missing 事件，F 无证据 → F=UNKNOWN（不是“B 没想”，而是脚本刻意不暴露设备状态）。A=ACCESSED 只指人物接触到自己这侧的进度通道，不代表收到烘干机状态。",
     "interruption": {
@@ -1271,10 +1281,12 @@
     "p1_observed_first_step": null,
     "p1_censoring_status": "not_collected",
     "annotation": {
-      "annotator_id": "agent-draft",
-      "status": "draft",
-      "source_confidence": "medium",
-      "annotated_at": "2026-10-21"
+      "annotator_id": "B",
+      "status": "reviewed",
+      "source_confidence": "high",
+      "annotated_at": "2026-10-21",
+      "reviewed_at": "2026-10-21",
+      "second_reviewer_id": null
     },
     "notes": "P05-D6-B：同一蓝图多一条 resource_missing，F=BLOCKED，与 A 臂隔离“可观察性”这一因子。",
     "interruption": {
@@ -1502,10 +1514,12 @@
     "p1_observed_first_step": null,
     "p1_censoring_status": "not_collected",
     "annotation": {
-      "annotator_id": "agent-draft",
-      "status": "draft",
-      "source_confidence": "medium",
-      "annotated_at": "2026-10-21"
+      "annotator_id": "B",
+      "status": "reviewed",
+      "source_confidence": "high",
+      "annotated_at": "2026-10-21",
+      "reviewed_at": "2026-10-21",
+      "second_reviewer_id": null
     },
     "notes": "P08-W7-A：V=CANCELLED 且人物理解到位 → 目标被放弃，C=ABANDONED；按 §1.4，C=ABANDONED/COMPLETED 时进度不再适用，故 Q=NOT_APPLICABLE，并用 e02/e04/e05 作为“进度已不适用”的证据。与 B 臂只差 e04 的 comprehension。",
     "interruption": {
@@ -1732,10 +1746,12 @@
     "p1_observed_first_step": null,
     "p1_censoring_status": "not_collected",
     "annotation": {
-      "annotator_id": "agent-draft",
-      "status": "draft",
-      "source_confidence": "medium",
-      "annotated_at": "2026-10-21"
+      "annotator_id": "B",
+      "status": "reviewed",
+      "source_confidence": "high",
+      "annotated_at": "2026-10-21",
+      "reviewed_at": "2026-10-21",
+      "second_reviewer_id": null
     },
     "notes": "P08-W7-B：person_access=ACCESSED 但 person_comprehension=NOT_UNDERSTOOD → 接触不等于理解；人物仍把对调当作有效目标，cutoff 时保持暂停（与 v0.2 的 15 个误解臂同为 suspend_or_wait）。",
     "interruption": {
@@ -1969,10 +1985,12 @@
     "p1_observed_first_step": null,
     "p1_censoring_status": "not_collected",
     "annotation": {
-      "annotator_id": "agent-draft",
-      "status": "draft",
-      "source_confidence": "medium",
-      "annotated_at": "2026-10-21"
+      "annotator_id": "B",
+      "status": "reviewed",
+      "source_confidence": "high",
+      "annotated_at": "2026-10-21",
+      "reviewed_at": "2026-10-21",
+      "second_reviewer_id": null
     },
     "notes": "P08-S7-A：接收且有正确复述 → comprehension=UNDERSTOOD；按 v0.2 的 comprehension 惯例，理解到位的一臂 C=ABANDONED、Q=NOT_APPLICABLE、do_not_resume。",
     "interruption": {
@@ -2178,10 +2196,12 @@
     "p1_observed_first_step": null,
     "p1_censoring_status": "not_collected",
     "annotation": {
-      "annotator_id": "agent-draft",
-      "status": "draft",
-      "source_confidence": "medium",
-      "annotated_at": "2026-10-21"
+      "annotator_id": "B",
+      "status": "reviewed",
+      "source_confidence": "high",
+      "annotated_at": "2026-10-21",
+      "reviewed_at": "2026-10-21",
+      "second_reviewer_id": null
     },
     "notes": "P08-S7-B：person_access=ACCESSED 但理解无通道可核查 → person_comprehension=UNCERTAIN，B 只能 UNKNOWN（缺的证据是人物对改派通知的任何陈述）。Q 不跟着写 UNKNOWN：人物自己完成过 unpack_device、在 mount_filter 被打断，步骤线索还在。本臂比 A 臂少 1 个事件——设计要点就是“通知之后什么都不发生”，不补中性事件凑条数。",
     "interruption": {
@@ -2436,10 +2456,12 @@
     "p1_observed_first_step": null,
     "p1_censoring_status": "not_collected",
     "annotation": {
-      "annotator_id": "agent-draft",
-      "status": "draft",
-      "source_confidence": "medium",
-      "annotated_at": "2026-10-21"
+      "annotator_id": "B",
+      "status": "reviewed",
+      "source_confidence": "high",
+      "annotated_at": "2026-10-21",
+      "reviewed_at": "2026-10-21",
+      "second_reviewer_id": null
     },
     "notes": "P02-D7-A：明确承诺 + 保护材料的持续行动 → C=ACTIVE（v0.2 的 240 条里 C 从未取过 ACTIVE）。",
     "interruption": {
@@ -2643,10 +2665,12 @@
     "p1_observed_first_step": null,
     "p1_censoring_status": "not_collected",
     "annotation": {
-      "annotator_id": "agent-draft",
-      "status": "draft",
-      "source_confidence": "medium",
-      "annotated_at": "2026-10-21"
+      "annotator_id": "B",
+      "status": "reviewed",
+      "source_confidence": "high",
+      "annotated_at": "2026-10-21",
+      "reviewed_at": "2026-10-21",
+      "second_reviewer_id": null
     },
     "notes": "P02-D7-B：既无承诺陈述也无持续行动，也没有放弃或完成的信号 → C=UNKNOWN，校验强制该因子的证据列表为空；“暂停不等于放弃”，所以不写 SUSPENDED。B 仍取 BELIEVES_VALID，证据是 e01 目标激活（沿用 v0.2 惯例：人物开始做该目标本身就是信念证据），“哦”一声不改变它。信念有效不等于承诺仍在，两个因子各自取证。Q 仍是 assemble_frame：搬板材这一步是人物自己做完的，步骤线索并没有消失。",
     "interruption": {
@@ -2847,10 +2871,12 @@
     "p1_observed_first_step": null,
     "p1_censoring_status": "not_collected",
     "annotation": {
-      "annotator_id": "agent-draft",
-      "status": "draft",
-      "source_confidence": "medium",
-      "annotated_at": "2026-10-21"
+      "annotator_id": "B",
+      "status": "reviewed",
+      "source_confidence": "high",
+      "annotated_at": "2026-10-21",
+      "reviewed_at": "2026-10-21",
+      "second_reviewer_id": null
     },
     "notes": "P01-W8-A：脚本未固定世界事实——没有任何 task_cancelled / task_completed_by_other 事件，只有一条 certainty=UNCERTAIN 的转述，不足以判定 V，因此 V=UNKNOWN 且 V 证据为空。V 未定 ≠ 标签未定：政策看的是“有没有已知取消”，答案是没有，所以期望动作仍是恢复 build_summary，而不是 indeterminate（indeterminate 只用于输入不可区分的家族）。V 未定也无法断言人物理解错，故该转述 comprehension=UNCERTAIN 而非 MISUNDERSTOOD。",
     "interruption": {
@@ -3053,10 +3079,12 @@
     "p1_observed_first_step": null,
     "p1_censoring_status": "not_collected",
     "annotation": {
-      "annotator_id": "agent-draft",
-      "status": "draft",
-      "source_confidence": "medium",
-      "annotated_at": "2026-10-21"
+      "annotator_id": "B",
+      "status": "reviewed",
+      "source_confidence": "high",
+      "annotated_at": "2026-10-21",
+      "reviewed_at": "2026-10-21",
+      "second_reviewer_id": null
     },
     "notes": "P01-W8-B：同一蓝图补上后台确认 → V 从 UNKNOWN 变 CANCELLED，人物因 interpretation=defer 仍 BELIEVES_VALID，隔离“世界事实是否可判定”这一因子。",
     "interruption": {
