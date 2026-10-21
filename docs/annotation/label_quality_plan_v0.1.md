@@ -293,7 +293,10 @@ known_issues: ...
 - [x] **抽查 B 的自审结论。** [`p0_spot_audit_v0.2_seed20261021.md`](p0_spot_audit_v0.2_seed20261021.md)（10 对 / 20 条，机制各 1 对 + `sha256("20261021:家族名")` 排序补齐，39 个复选框）已由 B 于 2026-10-21 全部勾为通过。**这仍然只是 B 的自审**，不是第二双眼睛；对外表述只能是"B 复核 + B 抽查签核"，A/C 盲审见下一项。要换样本用 `python scripts/audit_packet.py --seed <新值> --out <新文件>`，旧签核不复用。
 - [x] **复核 v0.3 的 7 对不确定性批次并升到 `reviewed`（2026-10-21 完成）。** 11 个"声明过但从未出现"的档位（`A.UNCERTAIN`、`person_access.UNCERTAIN`、`person_comprehension.{NOT_UNDERSTOOD,UNCERTAIN}`、`certainty.{PROBABLE,UNCERTAIN}`、`V/F.UNKNOWN`、`B.UNRESOLVED`、`C.{ACTIVE,UNKNOWN}`）已由 `scripts/build_p0_uncertainty.py` 覆盖。全批 7 对的签核表 [`p0_spot_audit_v0.3_all7.md`](p0_spot_audit_v0.3_all7.md) 的 28 个复选框已全部勾为通过，上面那三点也逐条认可，批次升 `reviewed`（`annotator_id=B`、`reviewed_at=2026-10-21`）。这是 A 点名的缺口，现已关闭，下一步换成 A/C 盲审。
 - [ ] **和 C 定 `split.calibration`。** C 的交接协议要四档，v0.2 只给了 train/dev/test；要么按家族重划出一档 calibration，要么由 C 改协议。锁版本前必须三方确认，B 不单方面改字段。
-- [ ] A/C 盲审 8 条（A、C 各 4 条，每机制抽 1 条），只给事件与任务图，记录分歧。
+- [ ] A/C 盲审 8 条（A、C 各 4 条，每机制抽 1 条），只给事件与任务图，记录分歧。**首批 4 条已回条**（`P03-W1-A` / `P06-W1-B` / `P08-W1-B` / `P01-D1-B`，其中 3 条核心区分一致；回条署名与剩余条数待与各人确认），抓出下面两项，其中 1 项已修、1 项待 A 表态。**这就是自审与盲审的差别：39 格的 B 自审全通过，仍漏了落在已签样本内的一处缺陷。**
+- [x] **修掉盲审第 ① 项：P01 B 臂自述步数与任务图不符（2026-10-21）。** 含步数的人物自述 14 条全部错 1——模板把 v0.1 三步故事的"还剩两步"硬编码进了 4 步骨架（`scripts/build_p0_v02.py`）。已改为"三步"、重建 v0.2 与 `eval_v0.2/inputs.jsonl`（只有 14 句 `description` 变化，SHA256 `fb58cf74…` → `3ca55cc5…`），并给 `validate_data.py` 加"自述步数必须等于客观剩余步数"的跨字段检查 + 正负例测试。
+- [ ] **盲审第 ② 项经实测不成立，但暴露了手册缺条款（已补）。** 三批次 252 条 `F=READY` 无一空证据，28 条含"出故障"字样的 READY 记录里故障主体都是打断任务本身（`actor=manager`），不挂原目标步骤、也不计为 F 证据；17 条 `BLOCKED` 各有专门的 `resource_missing` 事件。已在手册 §2.3 写下 P0 的 `READY` 可判定口径，A/C 按字面读不会再问同一个问题。
+- [ ] **盲审第 ③ 项待 A 表态：16 条 `B=UNKNOWN` 与手册 §2.5 冲突。** 19 条 `B=UNKNOWN` 中 16 条（v0.2 的 P01-B + 14 个 `contact_cancellation` B 臂 + v0.1 的 P01-B）在取消事件之后仍有人物陈述或 `return_to_task` 行动未计入 B 证据，而 §2.5 第 1 条承认"明确行动"、第 2 条把"继续"表达判为 `BELIEVES_VALID`；同批 215 条 `BELIEVES_VALID` 正是这样标的。另 3 条（v0.3 的 P01-W6-A/B、P08-S7-B）关键事件后人物无任何事件，`UNKNOWN` 合法。详见手册 §11.1 第 14 条。**动的是 A 的信念维监督信号且含 v0.1 冻结基线，B 不单方面改。**
 - [ ] 根据分歧改手册/事件，不强行说服。
 - [x] `annotation.status` 从 `draft` 改为 `reviewed`（v0.2 已改，B 自审；v0.1 的 16 条保持 `draft`，作为 A 适配器的冻结基线）。
 - [x] 随数据给 A / C 一页质量报告（`python scripts/p0_quality_report.py`，实算，不手填）。

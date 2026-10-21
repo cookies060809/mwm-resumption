@@ -7,7 +7,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from scripts.validate_data import check_record, load_records, validate_all  # noqa: E402
+from scripts.validate_data import (  # noqa: E402
+    check_record,
+    load_records,
+    stated_step_count,
+    validate_all,
+)
+
 
 V02_PATH = ROOT / "data" / "p0" / "p0_samples_v0.2.json"
 V03_PATH = ROOT / "data" / "p0" / "p0_samples_v0.3.json"
@@ -155,6 +161,36 @@ def test_completed_steps_replay_over_every_batch() -> None:
             assert record["completed_steps_at_cutoff"] == list(record["task_steps"])
         else:
             assert set(record["completed_steps_at_cutoff"]) == completed & steps
+
+
+def test_spoken_step_counts_match_the_task_graph() -> None:
+    """A/C's blind review caught the v0.2 P01 arms saying「还剩两步」while the graph
+    left three steps. The number is model input, so pin the reading instead of
+    re-reading prose at every review."""
+    stated = [
+        (
+            record["sample_id"],
+            stated_step_count(event["description"]),
+            len([s for s in record["task_steps"] if s not in set(record["completed_steps_at_cutoff"])]),
+        )
+        for record in load_records() + load_v02() + load_v03()
+        for event in record["observed_events"]
+        if event["actor"] == "person" and stated_step_count(event["description"]) is not None
+    ]
+    assert len(stated) == 14
+    assert all(count == remaining for _, count, remaining in stated), stated
+    assert {count for _, count, _ in stated} == {3}
+    assert stated_step_count("还剩十二步") == 12
+
+
+def test_a_wrong_spoken_step_count_is_rejected() -> None:
+    record = copy.deepcopy(next(r for r in load_v02() if r["sample_id"] == "P01-D1-B"))
+    for event in record["observed_events"]:
+        if "还剩" in event["description"]:
+            event["description"] = event["description"].replace("三步", "两步")
+    errors: list[str] = []
+    check_record(record, errors)
+    assert any("剩余步数" in message for message in errors), errors
 
 
 def test_v02_unknown_labels_carry_no_evidence() -> None:

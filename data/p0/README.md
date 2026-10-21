@@ -102,6 +102,7 @@ P07 identity failures: 0
 - `indeterminate` 动作只能出现在 `p0_design.undefined_target=true` 且 `undefined_reason` 明确的记录；
 - 15 个 `future_leak` 家族截断前逐字段相同（排除 `sample_id`/`variant`/`notes`）；
 - `UNKNOWN` 不携带正证据；非 `UNKNOWN` 至少一条证据；平铺证据等于逐因子证据并集；
+- 人物自述里的剩余步数（「还剩N步」）必须等于任务图算出的客观剩余步数（含嵌套任务的剩余数）；2026-10-21 新增，起因是 A/C 盲审抓到 P01 B 臂整体错 1；
 - `completed_steps_at_cutoff` 必须能由事件重放出来（A 的诊断侧同样会检查）。
 
 ## 6. 当前质量状态
@@ -114,6 +115,7 @@ P07 identity failures: 0
 | A/B 对照隔离 | 120/120（逐字段 diff，事件条数已对齐）；v0.3：7/7 无意外漂移，但 4 对条数刻意不等（操控变量就是一条证据事件） |
 | P07 输入一致性 | 15/15 PASS |
 | 枚举覆盖（v0.2 + v0.3 合并） | 仅剩 `split.calibration` 未使用 |
+| 自述步数一致性 | 三批次含步数的人物自述 14 条，全部等于任务图剩余步数（2026-10-21 修正后由校验强制） |
 | B 人工复核 | v0.2：240/240，`status=reviewed`；v0.3：14/14，`status=reviewed`（2026-10-21） |
 | A/C 盲审 | 未完成（每机制抽 1 条，共 8 条） |
 | P1 双人标注一致性 | 尚未采集，N/A |
@@ -129,7 +131,8 @@ P07 identity failures: 0
 7. **时间仍是 `HH:MM`**，不含日期；P1 需要 ISO 8601 与删失字段。
 8. **`F` 没有 `NOT_APPLICABLE`。** 目标已 `FULFILLED/CANCELLED` 时，有明确资源证据才标 `READY/BLOCKED`，否则 `UNKNOWN`。
 9. **P06 的 T2 会被 A 遮蔽。** `replace_part` 属嵌套任务，`scripted_targets` 判 `t2_mask=false`，只作审计。
-10. **扩量不要再改本文件。** 任何字段变化都要新增 schema 版本与新数据文件，并同步通知 A 更新哈希与回归预期。
+10. **扩量不要再改本文件。** 任何字段变化都要新增 schema 版本与新数据文件，并同步通知 A 更新哈希与回归预期。批次内的**取值/文案修正**（不动字段、不动标签语义）可以就地重建，但必须三件事同时做：更新本节 SHA256 并写明旧哈希、通知 A/C 重跑、在已签核的抽查包上追加带日期的勘误行而不是重新生成（重生成会抹掉人的复选框，`audit_packet.py` 已拒绝）。
+11. **`contact_cancellation` B 臂的 `B=UNKNOWN` 待 A 表态。** 手册 §11.1 第 14 条：19 条 `B=UNKNOWN` 里 16 条（v0.2 的 P01-B + 14 个 B 臂 + v0.1 的 P01-B）在取消事件之后仍有人物陈述/返回行动未计入 B 证据，与 §2.5 第 1–2 条判定顺序冲突；另 3 条（v0.3 的 P01-W6-A/B、P08-S7-B）实测关键事件后人物无任何事件，`UNKNOWN` 合法。改标会动 A 的信念维监督信号且含 v0.1 冻结基线，**B 不单方面改，A 点头前这批标签保持原样**。
 
 ## 8. B 复核清单（已完成）
 
@@ -146,7 +149,9 @@ P07 identity failures: 0
 
 ## 9. 交接页（给 A/C 的一页纸）
 
-数据文件 SHA256：`fb58cf749086bab8d08a3074f97ce1cea8f6fd52b1ec844d3682b1c3e12f29ee`（LF；`sha256sum data/p0/p0_samples_v0.2.json` 可复核）。
+数据文件 SHA256：`3ca55cc51d50b8f38eed48053d78b8232b0708b4cfd71e1eeb6f6275321729ab`（LF；`sha256sum data/p0/p0_samples_v0.2.json` 可复核）。
+
+> **2026-10-21 勘误：** 本批次 SHA256 原为 `fb58cf749086bab8d08a3074f97ce1cea8f6fd52b1ec844d3682b1c3e12f29ee`（已签核的抽查包与 `docs/internal/HANDOFF_2026-10-20_P0_v0.2.md` 记的是这一版；A/C 若已按旧哈希留档，需自行更新）。A/C 盲审回条指出 P01 B 臂自述"还剩两步"与任务图的剩余三步不符；实测 14 条含步数的人物自述全部错 1（模板硬编码了 v0.1 的三步故事），已在 `scripts/build_p0_v02.py` 改正并重新生成。**改动只有这 14 句 `description`，六因子标签、事件条数、`p0_expected`、划分全部未变**（`git diff` 可核）；`eval_v0.2/inputs.jsonl` 同步重导，`labels.jsonl` 无变化。`validate_data.py` 新增"人物自述步数必须等于客观剩余步数"的跨字段检查，防止再犯。
 
 ```text
 dataset: p0-v0.2.0
