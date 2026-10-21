@@ -141,34 +141,52 @@ def git_commit():
 def write_readme(report,path):
     def cell(item):
         return f"{item['mean']:.4f} ± {item['sample_sd']:.4f}" if item['mean'] is not None else 'undefined'
+    config=report['config'];counts=report['data']['primary']['counts']
     lines=['# A 神经 EC-JMF：P0 正式受控诊断','',
-           '该结果由训练入口自动生成。仅为脚本 P0，不是真实人物预测性能、心理真值或创新性证明。','',
-           f"训练源码提交：`{report['code_commit']}`。PyTorch `{report['environment']['torch']}`，CPU。",
-           '主批 v0.2：原 train/dev/test 划分，20 个固定种子；每变体相同40轮、全批AdamW和dev选模规则。',
-           '以下为 test 跨种子均值 ± 样本标准差，表示训练随机性，不是人类总体置信区间。','',
+           '数字由训练入口自动生成。仅为脚本P0，不是真实人物预测性能、心理真值或创新性证明。','',
+           f"协议：`{report['protocol']}`；数据：`{config['data']}`。",
+           f"训练源码提交：`{report['code_commit']}`；PyTorch `{report['environment']['torch']}`，CPU。",
+           f"train/dev/test：{counts['train']}/{counts['dev']}/{counts['test']}；每变体20个种子、{config['epochs']}轮全批AdamW，统一dev选模。",
+           '所有140次均从随机初始化训练，先完成全部dev选择，再统一评价test；未加载旧模型继续训练。',
+           '以下为test跨种子均值 ± 样本标准差，仅表示训练随机性，不是人类总体置信区间。','',
            '|变体|T1 F1|AUROC|AP|Brier↓|T2 top1|T3六因子macro-F1均值|BCQ macro-F1均值|',
            '|---|---|---|---|---|---|---|---|']
-    for variant in report['config']['variants']:
+    for variant in config['variants']:
         stats=report['variants'][variant]['summary']
         lines.append('|'+variant+'|'+'|'.join(cell(stats[k]) for k in
                      ('t1_f1','t1_auroc','t1_ap','t1_brier','t2_top1','t3_macro_f1','bcq_macro_f1'))+'|')
-    lines += ['', '完整逐因子/逐机制指标、n、零支持、每seed选中epoch、重载误差、配对seed差和v0.3补充诊断均在同目录 `report.json`。',
+    a0=report['variants']['A0']['runs'][0]['test']
+    lines += ['',f"每seed有效T1={a0['t1']['n']}、T2={a0['t2']['n']}；T3逐因子有效数："+
+              '、'.join(f"{f}={a0['t3'][f]['n']}" for f in 'VFABCQ')+'。',
+              '', '## 结构零支持（跨种子均值）','',
+              '|变体|V|F|A|B|C|Q|','|---|---|---|---|---|---|---|']
+    for variant in config['variants']:
+        metrics=report['variants'][variant]['test']['t3']
+        lines.append('|'+variant+'|'+'|'.join(f"{metrics[f]['zero_support']['mean']:.2f}" for f in 'VFABCQ')+'|')
+    epochs=[r['selected_epoch'] for v in report['variants'].values() for r in v['runs']]
+    lines += ['',f"完成{report['completed_runs']}次，失败{report['failed_runs']}次；选中epoch范围{min(epochs)}–{max(epochs)}。不据此宣称预算最优。",
+              '完整逐因子/逐机制指标、有效n、零支持、每seed选中epoch、重载误差及配对seed差均在同目录 `report.json`。',
               '', '## 从头复现','', '```powershell',
               'python -m pip install -r requirements-dev.txt -r requirements-neural.txt',
-              'python -m models.ecr_mwm.neural_training --config configs/a_neural_p0.json',
-              'python -m models.ecr_mwm.neural_training --predict results/p0/a_neural_v1/a0_seed0.pt --data data/p0/p0_samples_v0.2.json',
+              f"python -m models.ecr_mwm.neural_training --config {report['config_path']}",
+              f"python -m models.ecr_mwm.neural_training --predict {config['output']}/a0_seed0.pt --data {config['data']}",
               '```','',
-              '本次实际解释器为 `D:/myProgram/Anaconda3/python.exe`（已有PyTorch），未向仓库安装依赖目录。',
-              '第一条训练命令完整执行140次训练，先全部完成dev选择，再统一查看test。每次均真实save/load到内存并校验；仅保留预指定A0 seed0的最终选中模型，未挑最佳seed。',
+              '实际解释器为 `D:/myProgram/Anaconda3/python.exe`（已有PyTorch），未向仓库安装依赖目录。',
+              '每次均真实save/load到内存并校验T1/T2/T3；仅保留预指定A0 seed0的最终选中模型，不按test挑选seed。',
               '预测命令只向stdout输出T1/T2/T3及新模型自身的逐事件证据轨迹，不需要监督标签。','',
-              '## 协议与适用范围','',
-              '固定T1阈值0.5、ECE10等宽箱；T2仅恢复为true且首步属于原目标、未客观完成的样本；T3仅非UNKNOWN且cutoff证据有效，逐因子计数。Q按图内位置池化。T2缺失计错；无双类别的AUROC为null。',
-              'A1故意取消接触/理解门控；A2独立BCQ后验；A3仅保留最近5事件的人物记忆但重放所有世界事实；A4移除事件语义软对齐及信息等价JS；A5去步骤训练损失但仍评测；A6固定接触/理解/采信等结构转移门控，保留公共可学习世界先验及行为头。',
-              '网络学习结构化类别与相对步骤，不读取自由文本或身份。U是已给结构化证据，不是从文本识别理解的成绩。F初始分布是观察者学习先验，不宣称实际资源已知；未解析文本、不可达标签仍会产生零支持。',
-              '各模型声明参数总数相同，但实际非零梯度参数数因消融不同，见first_epoch_audit；未宣称有效参数或运行时间完全相等。严格信息等价JS在相同输入对上可由结构保证为零；A4实际可训练差异主要来自非零事件软对齐，不能说已验证完整研究计划的全部认识损失。',
-              'v0.3未参与训练或选模，单独报14条冻结模型补充诊断；与主批任务/模板相关，不称独立自然分布泛化。B的UNKNOWN争议未改标，正式仲裁和P1仍待完成。',
-              '正式P1效果、校准、跨人物泛化与MENTIS公平比较均未完成；本轮未改C模块，也未把A内部指标声明为团队公共协议。',
-              '按本轮显式要求集中保存一份JSON汇总、一份复现说明和一个最终模型，不保存140份日志、预测文件或中间检查点。']
+              '## 预先固定的协议与边界','',
+              'T1阈值0.5、ECE10等宽箱，indeterminate/null不作负例；T2仅恢复为true且首步属于原目标、未客观完成；T3仅非UNKNOWN且有cutoff有效证据，逐因子计数。Q按图内位置池化。T2缺失计错，零支持标签不丢弃；无双类别AUROC为null。',
+              '训练state NLL概率下限1e-8，评价NLL下限1e-12，沿用旧流程；饱和损失不能修复结构零支持。',
+              'A1取消接触/理解门控；A2独立BCQ；A3仅保留最近5事件人物记忆并完整重放世界；A4移除事件软对齐及严格等价JS；A5去步骤训练损失但仍评价；A6固定结构门控而保留公共可学习世界先验/行为头。',
+              '世界事实、人物可得信息、理解、信念、承诺和进度仍由原结构核区分；仅A1故意作为信息门控负对照。网络不读取自由文本或身份，U为给定结构化证据。',
+              '参数总数相同；first_epoch_audit.nonzero_gradient_parameters统计具有非零梯度的参数张量所含元素总数，不是逐元素非零梯度计数。未宣称消融有效参数量完全相等。',
+              '严格等价JS可由结构保证为零；A4实际可训练差异主要是事件软对齐，不代表研究计划全部认识损失。',
+              'UNKNOWN争议保留掩码；有限结构支持、自由文本解析和误解表示仍有覆盖限制。B仲裁、C公共接口/MENTIS、公平评测及P1校准/泛化尚未完成。']
+    if config.get('test_exposure'): lines += ['',config['test_exposure']]
+    lines += ['']+config.get('limitations',[])
+    if report['data']['supplement']:
+        lines += ['',f"独立补充：{report['data']['supplement']['n']}条，仅冻结模型诊断，未参与训练或选模。"]
+    lines += ['', '仅保存一份JSON汇总、一份复现说明和一个最终模型；不保存140份日志或中间检查点。']
     path.write_text('\n'.join(lines)+'\n',encoding='utf8')
 
 
@@ -176,8 +194,12 @@ def run(config_path):
     config=json.loads(config_path.read_text(encoding='utf8'))
     if config['evaluation_seeds']!=list(range(20)): raise ValueError('FIXED_EVALUATION_SEEDS_REQUIRED')
     if config['variants']!=[f'A{i}' for i in range(7)]: raise ValueError('ALL_ABLATIONS_REQUIRED')
-    data=ROOT/config['data'];supplement=ROOT/config['supplement']
+    data=ROOT/config['data'];supplement=ROOT/config['supplement'] if config.get('supplement') else None
     examples=load_records(data);parts={s:[e for e in examples if e['split']==s] for s in ('train','dev','test')}
+    if config.get('expected_counts') and {s:len(e) for s,e in parts.items()}!=config['expected_counts']:
+        raise ValueError('DATA_SPLIT_COUNTS_CHANGED')
+    if config.get('expected_data_sha256') and sha(data)!=config['expected_data_sha256']:
+        raise ValueError('DATA_RELEASE_CHANGED')
     seed_everything(config['seed'],config['threads']);start=perf_counter()
     selected={};batches={}
     for variant in config['variants']:
@@ -192,17 +214,17 @@ def run(config_path):
     training_seconds=perf_counter()-start
     print('All 140 training/dev selections frozen; starting single locked test pass.',flush=True)
     output=ROOT/config['output'];output.mkdir(parents=True,exist_ok=True)
-    supplemental=load_records(supplement)
-    report={'protocol':config['protocol'],'config':config,'code_commit':git_commit(),
+    supplemental=load_records(supplement) if supplement else None
+    report={'protocol':config['protocol'],'config':config,'config_path':config_path.relative_to(ROOT).as_posix(),'code_commit':git_commit(),
             'data':{'primary':{'path':config['data'],'sha256':sha(data),'counts':{s:len(e) for s,e in parts.items()}},
-                    'supplement':{'path':config['supplement'],'sha256':sha(supplement),'n':len(supplemental)}},
+                    'supplement':{'path':config['supplement'],'sha256':sha(supplement),'n':len(supplemental)} if supplement else None},
             'environment':{'python':sys.version,'torch':str(torch.__version__),'platform':platform.platform(),
                            'device':'cpu','threads':config['threads'],'tokens':0},
             'training_seconds':training_seconds,'completed_runs':140,'failed_runs':0,'variants':{},'paired_seed_differences':{},
             'limitations':['scripted P0 only','structured inputs; no text understanding learning',
                            'UNKNOWN masks preserve B disputes','no calibration/P1/MENTIS conclusions']}
     for variant in config['variants']:
-        test=Batch(parts['test'],variant);transfer=Batch(supplemental,variant)
+        test=Batch(parts['test'],variant);transfer=Batch(supplemental,variant) if supplement else None
         rows=[]
         slices={m:[i for i,e in enumerate(parts['test']) if e['mechanism']==m] for m in sorted({e['mechanism'] for e in parts['test']})}
         mechanism_metrics={m:[] for m in slices}
@@ -211,13 +233,13 @@ def run(config_path):
             metadata=deepcopy(metadata)
             predictions=model.predict(test)
             metadata['test']=evaluate(predictions,[e['target'] for e in test.examples])
-            metadata['supplement']=score(model,transfer)
+            if transfer is not None: metadata['supplement']=score(model,transfer)
             for mechanism,indices in slices.items():
                 mechanism_metrics[mechanism].append(evaluate([predictions[i] for i in indices],
                                                             [test.examples[i]['target'] for i in indices]))
             metadata['summary']=summary_values(metadata['test']);rows.append(metadata)
         report['variants'][variant]={'runs':rows,'test':aggregate([r['test'] for r in rows]),
-                                    'supplement':aggregate([r['supplement'] for r in rows]),
+                                    'supplement':aggregate([r['supplement'] for r in rows]) if supplement else None,
                                     'summary':aggregate([r['summary'] for r in rows]),
                                     'by_mechanism':{m:aggregate(values) for m,values in mechanism_metrics.items()}}
         print(variant,'locked test',report['variants'][variant]['summary'],flush=True)
