@@ -26,6 +26,7 @@
 | [annotation/label_quality_plan_v0.1.md](annotation/label_quality_plan_v0.1.md) | P0 质量门、P1 一致性指标、噪声上限与交接模板 | B | v0.1 |
 | [annotation/p0_pair_review_table.md](annotation/p0_pair_review_table.md) | P01–P08 复核表与机器预检结果（v0.2 的 120 对按同一方法审计） | B | v1.0 |
 | [data/data_card.md](data/data_card.md) | 数据集说明、P0 v0.2（120 家族/240 条）、划分与限制 | B | v0.3 |
+| [data/external_datasets.md](data/external_datasets.md) | 外部数据集核查：HoloAssist / InteRead / Assembly101 / Ego4D Goal-Step / RFM-HRI，含派生规则与实测数字 | B | v0.1 |
 | [literature/competitor_matrix.md](literature/competitor_matrix.md) | 直接竞争工作与创新边界索引 | B | 初始索引 |
 
 ## 写作与核查原则

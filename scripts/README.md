@@ -100,6 +100,19 @@ python scripts/export_eval_format.py
 
 关键映射：`HH:MM` → 同日分钟、`task_dependencies` → `task_graph.edges`、`person_access` + `person_comprehension` → `{status, understood}`、`indeterminate` → `resume_label=unknown`、`purpose=scripted_p0`。输出经 C 的 `mwm_eval.schema.validate_dataset` 验证通过；`task_family` 在 split 之间零重叠（骨架级划分）。
 
+## `probe_ext_holoassist.py`
+
+外部数据可行性探查（**不进主实验，只回答能不能用**）。读 HoloAssist 的 `data-annotation-trainval-v1_1.json`（117 MB，CDLA-Permissive-2.0），输出四组判断依据，并可选导出 A 因子对照样本。
+
+```bash
+python scripts/probe_ext_holoassist.py --anno /path/to/anno.json
+python scripts/probe_ext_holoassist.py --anno anno.json --export pairs.jsonl --per-group 1135
+```
+
+实测结论（2026-10-21）：T1 正负比 77:1 **不可用**；T2 覆盖 54.5%；A 因子清洗后 3,944 vs 1,135。详见 [`docs/data/external_datasets.md`](../docs/data/external_datasets.md)。
+
+注意字段字面量：官方 README 写 `corrected by performer`，实际是 `Wrong Action, corrected by student`；按文档匹配会得到 0 条。
+
 ## `build_p0_seed.py`
 
 可复现构建当前 16 条 P0 种子，输出 `data/p0/p0_samples.json`。
