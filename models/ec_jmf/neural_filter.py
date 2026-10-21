@@ -16,6 +16,7 @@ GATES = ('access_uncertain', 'understanding_uncertain', 'accept_message',
 def gate_names(semantic_contract):
     if semantic_contract == 'legacy-v1': return GATES
     if semantic_contract == 'b-p0-v03/v2': return GATES + ('recommit_goal',)
+    if semantic_contract == 'b-p0-v03/v3': return GATES + ('reengage_goal',)
     raise ValueError('UNKNOWN_SEMANTIC_CONTRACT')
 
 

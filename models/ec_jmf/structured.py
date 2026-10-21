@@ -14,6 +14,15 @@ def sigmoid(value):
     return 1 / (1 + exp(-max(-40.0, min(40.0, value))))
 
 
+def resolve_person_event_goal(event, graphs, target, semantic_contract):
+    """Only explicit event targets identify a goal; retain null scope in traces.
+
+    A single modeled goal does not prove an unlinked message refers to it.
+    """
+    goal = event['world']['goal_id']
+    return goal if goal in graphs else None
+
+
 @dataclass(frozen=True)
 class Mechanisms:
     access_gate: bool = True
@@ -91,7 +100,7 @@ class StructuredModel:
     """
     def __init__(self, adapted, parameters=None, mechanisms=Mechanisms(),
                  person_graphs=None, max_goals=8, max_depth=4, semantic_contract="legacy-v1"):
-        if semantic_contract not in ("legacy-v1", "b-p0-v03/v2"):
+        if semantic_contract not in ("legacy-v1", "b-p0-v03/v2", "b-p0-v03/v3"):
             raise ValueError("UNKNOWN_SEMANTIC_CONTRACT")
         self.semantic_contract = semantic_contract
         self.graphs = adapted["observer_graphs"]
@@ -113,6 +122,8 @@ class StructuredModel:
                            "action_validity": 0.0, "world_uncertain": 0.0, "recall_next": 0.0}
         if self.semantic_contract == "b-p0-v03/v2":
             self.parameters["recommit_goal"] = 0.0
+        elif self.semantic_contract == "b-p0-v03/v3":
+            self.parameters["reengage_goal"] = 0.0
         if parameters:
             if set(parameters) - set(self.parameters):
                 raise ValueError("UNKNOWN_TRANSITION_PARAMETER")
@@ -197,7 +208,7 @@ class StructuredModel:
                 values["commitment"] = "SUSPENDED"
         elif interpretation == "complete" or kind == "completion_by_other":
             # B P0: confirmed fulfillment is distinct from cancellation.
-            completed_belief = ("BELIEVES_VALID" if self.semantic_contract == "b-p0-v03/v2"
+            completed_belief = ("BELIEVES_VALID" if self.semantic_contract in ("b-p0-v03/v2", "b-p0-v03/v3")
                                 and kind == "completion_by_other" else "BELIEVES_INVALID")
             values.update(belief=completed_belief,
                           person_done=frozenset(self.graphs[goal.goal_id]["steps"]),
@@ -207,7 +218,9 @@ class StructuredModel:
         elif kind == "cancellation":
             values["belief"] = "BELIEVES_INVALID"
         elif kind == "commitment":
-            values.update(commitment="SUSPENDED", waiting=False, remembered=True)
+            phase = (goal.commitment if self.semantic_contract == "b-p0-v03/v3"
+                     and goal.commitment in ("ACTIVE", "SUSPENDED") else "SUSPENDED")
+            values.update(commitment=phase, waiting=False, remembered=True)
         elif kind == "abandonment":
             values["commitment"] = "ABANDONED"
         accepted = changed(goal, event_id, **values)
@@ -216,6 +229,10 @@ class StructuredModel:
             p = self.chance("invalid_abandon")
             outcomes = [(changed(accepted, event_id, commitment="ABANDONED"), p),
                         (accepted, 1-p)]
+        elif (self.semantic_contract == "b-p0-v03/v3" and kind == "commitment"
+              and goal.commitment not in ("ACTIVE", "SUSPENDED")):
+            p = self.chance("reengage_goal")
+            outcomes = [(changed(accepted, event_id, commitment="ACTIVE"), p), (accepted, 1-p)]
         else:
             outcomes = [(accepted, 1.0)]
         # Understanding is distinct from adopting the message as a belief.
@@ -240,18 +257,33 @@ class StructuredModel:
         elif kind == "goal_abandoned":
             values["commitment"] = "ABANDONED"
         elif kind == "commitment_expressed":
-            values.update(commitment="SUSPENDED", waiting=False)
+            phase = (goal.commitment if self.semantic_contract == "b-p0-v03/v3"
+                     and goal.commitment in ("ACTIVE", "SUSPENDED") else "SUSPENDED")
+            values.update(commitment=phase, waiting=False)
+        elif (self.semantic_contract == "b-p0-v03/v3" and kind == "interruption_started"
+              and goal.commitment == "ACTIVE"):
+            # Own physical interruption is evidence even when message U is N/A.
+            values["commitment"] = "SUSPENDED"
         # Unparsed statements are evidence in the trace, never keyword rules.
         updated = changed(goal, event_id, **values)
         outcomes = [(updated, 1.0)]
-        if (self.semantic_contract == "b-p0-v03/v2" and
+        if (self.semantic_contract in ("b-p0-v03/v2", "b-p0-v03/v3") and
                 kind in ("step_started", "step_attempted") and
                 goal.commitment in ("ABANDONED", "COMPLETED")):
             # A local action is not certain renewed commitment to the whole goal.
             # Both interpretations remain possible; no label or story ID is read.
-            p = self.chance("recommit_goal")
+            p = self.chance("recommit_goal" if self.semantic_contract == "b-p0-v03/v2" else "reengage_goal")
             retained = changed(updated, event_id, commitment=goal.commitment, q="NOT_APPLICABLE")
             outcomes = [(retained, 1-p), (updated, p)]
+        elif (self.semantic_contract == "b-p0-v03/v3" and kind == "commitment_expressed"
+              and goal.commitment not in ("ACTIVE", "SUSPENDED")):
+            p = self.chance("reengage_goal")
+            outcomes = [(changed(updated, event_id, commitment="ACTIVE"), p), (updated, 1-p)]
+        elif (self.semantic_contract == "b-p0-v03/v3" and kind in ("return_to_task", "person_action")
+              and goal.commitment == "SUSPENDED" and not goal.waiting):
+            # Returning/preparing can support activity; it does not prove it.
+            p = self.chance("reengage_goal")
+            outcomes = [(updated, 1-p), (changed(updated, event_id, commitment="ACTIVE"), p)]
         if kind in ("goal_start", "step_started", "step_attempted") and goal.belief == "UNKNOWN":
             p = self.chance("action_validity")
             return [(changed(state, event_id, belief="BELIEVES_VALID"), w*p)
@@ -259,7 +291,7 @@ class StructuredModel:
         return outcomes
 
     def transition(self, state, event):
-        goal_id = event["world"]["goal_id"]
+        goal_id = resolve_person_event_goal(event, self.graphs, self.target, self.semantic_contract)
         if goal_id not in self.graphs:
             return [(state, 1.0)]
         prior = state.goal(goal_id)

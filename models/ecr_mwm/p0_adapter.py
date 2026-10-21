@@ -7,6 +7,7 @@ from copy import deepcopy
 import re
 
 from models.ec_jmf.constraints import validate_graph
+from models.ec_jmf.structured import resolve_person_event_goal
 
 SCHEMA_VERSION = "p0-record/v0.1.0"
 SCHEMA_V02 = "p0-record/v0.2.0"
@@ -113,18 +114,20 @@ def adapt_record(record):
             "observer_graphs": graphs, "events": mapped}
 
 
-def person_inputs(adapted):
+def person_inputs(adapted, semantic_contract="legacy-v1"):
     """No world payload, private event type/source, or observer task graph."""
     result = []
     for event in adapted["events"]:
         accessible = event["delivery"]["access_evidence"] != "NOT_ACCESSED"
+        physical = (semantic_contract == "b-p0-v03/v3" and event["person"] and
+                    event["person"]["event_type"] in ("interruption_started", "interruption_ended"))
         result.append({"event_id": event["event_id"], "time_minutes": event["time_minutes"],
                        "delivery": deepcopy(event["delivery"]),
                        "semantic": deepcopy(event["semantic"]) if accessible else {"kind": "none"},
-                       "semantic_goal_id": (event["world"]["goal_id"] if accessible and
+                       "semantic_goal_id": (resolve_person_event_goal(event, adapted["observer_graphs"], adapted["goal_id"], semantic_contract) if accessible and
                                             event["semantic"]["kind"] != "none" else None),
                        "interruption_phase": (event["world"]["event_type"] if accessible and
-                                              event["semantic"]["kind"] == "interruption" else None),
+                                              (event["semantic"]["kind"] == "interruption" or physical) else None),
                        "person": deepcopy(event["person"])})
     return result
 

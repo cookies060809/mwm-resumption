@@ -1,5 +1,5 @@
 {
-  "protocol": "a-neural-p0-v03/v2",
+  "protocol": "a-neural-p0-v03/v3",
   "data": "data/p0/v0.3/p0_samples.json",
   "supplement": null,
   "seed": 0,
@@ -57,7 +57,7 @@
   "supplement_policy": "none: the full release already contains the 14 uncertainty records exactly once",
   "device": "cpu",
   "threads": 1,
-  "output": "results/p0/a_neural_v03_v2",
+  "output": "results/p0/a_neural_v03_v3",
   "report_slices": [
     "overall",
     "mechanism"
@@ -77,8 +77,18 @@
     "Only six additional train records and four additional dev/test records; no human performance or statistical sufficiency claim.",
     "P04: understood and adopted completion_by_other is BELIEVES_VALID under B P0 convention; COMPLETED/Q distinguish completion from cancellation.",
     "P02: an isolated started/attempted step after terminal commitment is uncertain recommitment, represented by a learned gate; original event wording still needs B adjudication.",
-    "Only P02/P04 semantic conflicts are revised; physical interruption, null-goal scopes, critical-event A and text interpretation coverage remain limited.",
-    "This is a post-diagnostic semantic revision, not a fresh blind test; masks, data and training budget are unchanged."
+    "This is a post-diagnostic semantic revision, not a fresh blind test; masks, data and training budget are unchanged.",
+    "Own physical interruptions do not require message comprehension; commitment and activity phase are distinct; ambiguous return/preparation retains both active and suspended hypotheses.",
+    "B generator notes define P05-D6 A as own progress-channel access and UNKNOWN F as unobserved dryer state; no universal focal-A selector or next-step resource map is provided as model input.",
+    "Record-level A is still an input-salience proxy, not a verified exact B focal-event mapping; F retains an evidence-conditioned prior rather than hard READY from any completed predecessor.",
+    "Null-goal messages are retained with unassigned scope in evidence traces; no target is inferred from a single modeled goal. B must supply an input-side message association before exact goal-level semantic updates are reliable.",
+    "T3.A and the six-factor aggregate are raw compatibility diagnostics because focal-event input scope is missing; BCQ metrics retain their declared meaning.",
+    "T2 top1 evaluates the conditional head; it does not include T1 threshold decisions or claim C end-to-end output accuracy."
   ],
-  "semantic_contract": "b-p0-v03/v2"
+  "semantic_contract": "b-p0-v03/v3",
+  "evaluation_scope": {
+    "T3.A": "unconfirmed focal-event alignment; raw proxy diagnostic only",
+    "T3.six_factor_macro": "includes unaligned A proxy; not a confirmed B-contract aggregate",
+    "T2.top1": "argmax of conditional step distribution on eligible gold-resume cases, not C end-to-end emitted-step accuracy"
+  }
 }

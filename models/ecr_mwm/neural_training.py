@@ -152,12 +152,14 @@ def write_readme(report,path):
            f"train/dev/test：{counts['train']}/{counts['dev']}/{counts['test']}；每变体20个种子、{config['epochs']}轮全批AdamW，统一dev选模。",
            '所有140次均从随机初始化训练，先完成全部dev选择，再统一评价test；未加载旧模型继续训练。',
            '以下为test跨种子均值 ± 样本标准差，仅表示训练随机性，不是人类总体置信区间。','',
-           '|变体|T1 F1|AUROC|AP|Brier↓|T2 top1|T3六因子macro-F1均值|BCQ macro-F1均值|',
+           '|变体|T1 F1|AUROC|AP|Brier↓|T2条件top1|T3六因子原始对照值|BCQ macro-F1均值|',
            '|---|---|---|---|---|---|---|---|']
     for variant in config['variants']:
         stats=report['variants'][variant]['summary']
         lines.append('|'+variant+'|'+'|'.join(cell(stats[k]) for k in
                      ('t1_f1','t1_auroc','t1_ap','t1_brier','t2_top1','t3_macro_f1','bcq_macro_f1'))+'|')
+    if config.get('evaluation_scope'):
+        lines += ['', '本轮T3.A焦点映射未完全确认；六因子值包含该代理，仅作原始对照，不是已对齐B口径的完整成绩。T2是条件分布评分，不是C的端到端输出步骤准确率。']
     a0=report['variants']['A0']['runs'][0]['test']
     lines += ['',f"每seed有效T1={a0['t1']['n']}、T2={a0['t2']['n']}；T3逐因子有效数："+
               '、'.join(f"{f}={a0['t3'][f]['n']}" for f in 'VFABCQ')+'。',

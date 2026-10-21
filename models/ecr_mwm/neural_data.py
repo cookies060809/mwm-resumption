@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 
 from models.ecr_mwm.p0_adapter import SCHEMA_V02, adapt_record, scripted_targets
+from models.ec_jmf.structured import resolve_person_event_goal
 
 
 EVENT_TYPES = (
@@ -99,7 +100,7 @@ def _role(goal, target, graphs):
     return 0 if goal == target else 1 if goal in graphs else 2
 
 
-def event_features(adapted, leak=False):
+def event_features(adapted, leak=False, semantic_contract="legacy-v1"):
     """Return world/person event vectors and possible person-visibility flags.
 
     No descriptions, IDs, free-text values or supervision enter the vectors.
@@ -130,10 +131,13 @@ def event_features(adapted, leak=False):
         has_semantic = semantic["kind"] != "none"
         # For external information goal role is usable only with available content.
         person_position = position if own else MAX_STEPS
-        person_role = role if own or has_semantic else 2
+        semantic_goal = resolve_person_event_goal(event, graphs, target, semantic_contract)
+        person_role = _role(semantic_goal, target, graphs) if own or has_semantic else 2
         phase = (1 if world["event_type"] == "interruption_started" else
                  2 if world["event_type"] == "interruption_ended" else 0)
-        if not (has_semantic and semantic["kind"] == "interruption"):
+        physical = (semantic_contract == "b-p0-v03/v3" and own and
+                    own["event_type"] in ("interruption_started", "interruption_ended"))
+        if not (physical or (has_semantic and semantic["kind"] == "interruption")):
             phase = 0
         person_vectors.append(
             _onehot(own["event_type"] if own else None, EVENT_TYPES)
