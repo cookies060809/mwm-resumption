@@ -173,12 +173,27 @@ def main() -> int:
     parser.add_argument("--records", type=int, default=20)
     parser.add_argument("--seed", type=int, default=20261021)
     parser.add_argument("--out", type=Path, default=None)
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="overwrite the output even if it already carries human ticks",
+    )
     args = parser.parse_args()
 
     path = args.file.resolve()
     text = render(path, vd.load_json(path), max(1, args.records // 2), args.seed)
     if args.out:
         out = args.out if args.out.is_absolute() else ROOT / args.out
+        if out.exists() and not args.force:
+            signed = out.read_text(encoding="utf-8").count("- [x]")
+            if signed:
+                print(
+                    f"REFUSED: {out.relative_to(ROOT).as_posix()} holds {signed} human "
+                    "ticks; a regenerated sheet would silently erase the sign-off. "
+                    "Pass --force only if you mean to re-audit.",
+                    file=sys.stderr,
+                )
+                return 1
         out.parent.mkdir(parents=True, exist_ok=True)
         with out.open("w", encoding="utf-8", newline="\n") as handle:
             handle.write(text + "\n")

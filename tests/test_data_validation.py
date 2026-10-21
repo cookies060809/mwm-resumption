@@ -7,7 +7,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from scripts.validate_data import check_record, load_records, validate_all  # noqa: E402
+from scripts.validate_data import (  # noqa: E402
+    check_record,
+    load_records,
+    stated_step_count,
+    validate_all,
+)
+
 
 V02_PATH = ROOT / "data" / "p0" / "p0_samples_v0.2.json"
 V03_PATH = ROOT / "data" / "p0" / "p0_samples_v0.3.json"
@@ -157,6 +163,36 @@ def test_completed_steps_replay_over_every_batch() -> None:
             assert set(record["completed_steps_at_cutoff"]) == completed & steps
 
 
+def test_spoken_step_counts_match_the_task_graph() -> None:
+    """A/C's blind review caught the v0.2 P01 arms saying「还剩两步」while the graph
+    left three steps. The number is model input, so pin the reading instead of
+    re-reading prose at every review."""
+    stated = [
+        (
+            record["sample_id"],
+            stated_step_count(event["description"]),
+            len([s for s in record["task_steps"] if s not in set(record["completed_steps_at_cutoff"])]),
+        )
+        for record in load_records() + load_v02() + load_v03()
+        for event in record["observed_events"]
+        if event["actor"] == "person" and stated_step_count(event["description"]) is not None
+    ]
+    assert len(stated) == 14
+    assert all(count == remaining for _, count, remaining in stated), stated
+    assert {count for _, count, _ in stated} == {3}
+    assert stated_step_count("还剩十二步") == 12
+
+
+def test_a_wrong_spoken_step_count_is_rejected() -> None:
+    record = copy.deepcopy(next(r for r in load_v02() if r["sample_id"] == "P01-D1-B"))
+    for event in record["observed_events"]:
+        if "还剩" in event["description"]:
+            event["description"] = event["description"].replace("三步", "两步")
+    errors: list[str] = []
+    check_record(record, errors)
+    assert any("剩余步数" in message for message in errors), errors
+
+
 def test_v02_unknown_labels_carry_no_evidence() -> None:
     for record in load_v02():
         for factor, value in record["state_at_cutoff"].items():
@@ -178,14 +214,17 @@ def test_v02_split_is_blueprint_disjoint() -> None:
     assert crossed == {}, f"blueprints crossing splits: {crossed}"
 
 
-def test_v03_batch_is_draft_candidate_work() -> None:
+def test_v03_batch_is_signed_by_b() -> None:
     records = load_v03()
     assert len(records) == 14
     assert len({record["base_story_id"] for record in records}) == 7
     assert all(record["schema_version"] == "p0-record/v0.2.0" for record in records)
-    # B has not signed this batch yet, so it must not look like accepted data.
-    assert all(record["annotation"]["status"] == "draft" for record in records)
-    assert all(record["annotation"]["annotator_id"] == "agent-draft" for record in records)
+    # B ticked p0_spot_audit_v0.3_all7.md on 2026-10-21, so the batch may now carry
+    # the sign-off. second_reviewer_id stays null until A/C do their blind review.
+    assert all(record["annotation"]["status"] == "reviewed" for record in records)
+    assert all(record["annotation"]["annotator_id"] == "B" for record in records)
+    assert all(record["annotation"]["reviewed_at"] == "2026-10-21" for record in records)
+    assert all(record["annotation"]["second_reviewer_id"] is None for record in records)
 
 
 def test_v03_closes_the_uncertainty_enum_gaps() -> None:
@@ -288,15 +327,44 @@ def test_audit_packet_sample_is_pinned() -> None:
         assert text.count("### ") == count, name
 
 
-def test_spot_audit_packets_are_unsigned() -> None:
-    """A committed packet that already carries ticks would fake a review nobody did.
-    The box counts are also quoted in data/p0/README.md, so a sampler change must
-    fail here rather than leave a stale number in the handoff page."""
+def test_spot_audit_packets_carry_bs_signoff() -> None:
+    """B read both worksheets pair by pair on 2026-10-21 and the ticks are the only
+    record of that, so a regenerated (blank) or half-ticked sheet must fail here.
+    The box counts are also quoted in data/p0/README.md, so a sampler change has to
+    be reconciled with the signed sheet rather than silently re-drawn."""
     packets = {
-        "p0_spot_audit_v0.2_seed20261021.md": 39,
-        "p0_spot_audit_v0.3_all7.md": 28,
+        "p0_spot_audit_v0.2_seed20261021.md": (39, 10),
+        "p0_spot_audit_v0.3_all7.md": (28, 7),
     }
-    for name, boxes in packets.items():
+    for name, (boxes, pairs) in packets.items():
         text = (ROOT / "docs" / "annotation" / name).read_text(encoding="utf-8")
-        assert text.count("- [ ]") == boxes, name
-        assert "- [x]" not in text, name
+        assert text.count("- [x]") == boxes, name
+        assert "- [ ]" not in text, name
+        assert text.count("：**通过**（B · 2026-10-21）") == pairs, name
+        assert "签核：B 于 2026-10-21" in text, name
+
+
+def test_audit_packet_refuses_to_clobber_a_signed_sheet() -> None:
+    """Re-running the generator over a signed sheet would erase the sign-off without
+    a word, which is the one way this instrument can silently produce fake review
+    records. The refusal is the guard, so keep it armed."""
+    from scripts.audit_packet import main as packet_main
+
+    argv = sys.argv
+    try:
+        sys.argv = [
+            "audit_packet.py",
+            "--file",
+            "data/p0/p0_samples_v0.3.json",
+            "--records",
+            "14",
+            "--out",
+            "docs/annotation/p0_spot_audit_v0.3_all7.md",
+        ]
+        assert packet_main() == 1
+    finally:
+        sys.argv = argv
+    text = (ROOT / "docs" / "annotation" / "p0_spot_audit_v0.3_all7.md").read_text(
+        encoding="utf-8"
+    )
+    assert text.count("- [x]") == 28

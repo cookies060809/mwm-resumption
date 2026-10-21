@@ -10,8 +10,11 @@ gap: `validate_data.check_record` forces UNKNOWN to carry no evidence and forces
 UNCERTAIN/UNRESOLVED/ACTIVE to carry at least one, so a lazy label fails
 validation rather than silently shipping. See handbook section 1.4.
 
-Status is `draft` and annotator_id is `agent-draft` on purpose. These scenarios
-still need B's own audit before A may consume them or C may export them.
+Drafting was done by an agent (commit c27f3cd) and B ticked both spot-audit
+worksheets on 2026-10-21, so the batch now carries B's sign-off exactly like
+v0.2 does: `annotator_id` names the person accountable for the labels, not the
+keyboard. `second_reviewer_id` stays null because the A/C blind review is a
+separate worksheet and has not happened yet.
 
 Usage: python scripts/build_p0_uncertainty.py
 """
@@ -27,7 +30,8 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "data" / "p0" / "p0_samples_v0.3.json"
 
 ANNOTATED_AT = "2026-10-21"
-ANNOTATOR = "agent-draft"
+ANNOTATOR = "B"
+REVIEWED_AT = "2026-10-21"
 SEMANTIC_NONE = {"kind": "none", "value": None, "interpretation": "none"}
 
 
@@ -164,13 +168,13 @@ def build_family(
             "p1_observed_resume": None,
             "p1_observed_first_step": None,
             "p1_censoring_status": "not_collected",
-            # Mirrors the v0.1 draft convention: `reviewed_at` is a string in the
-            # v0.2 schema, so an unreviewed record omits it rather than writing null.
             "annotation": {
                 "annotator_id": ANNOTATOR,
-                "status": "draft",
-                "source_confidence": "medium",
+                "status": "reviewed",
+                "source_confidence": "high",
                 "annotated_at": ANNOTATED_AT,
+                "reviewed_at": REVIEWED_AT,
+                "second_reviewer_id": None,
             },
             "notes": spec["notes"],
         }
