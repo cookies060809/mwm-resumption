@@ -34,23 +34,24 @@ def seed_everything(seed,threads=1):
 
 
 def loss_terms(output,batch):
-    state=[];resume=[];step=[]
-    for row,example in enumerate(batch.examples):
-        target=example['target']
-        for factor,label in target['states'].items():
-            if factor=='Q' and label in target['steps']: label=f"k{target['steps'].index(label)}"
-            column=OFFSETS[factor][0]+LABELS[factor].index(label)
-            state.append(-output['factors'][row,column].clamp_min(1e-8).log())
-        if target['resume'] is not None:
-            p=output['p'][row].clamp(1e-7,1-1e-7)
-            resume.append(F.binary_cross_entropy(p,torch.tensor(float(target['resume']))))
-        if target['step'] is not None:
-            column=target['steps'].index(target['step'])
-            step.append(-output['q'][row,column].clamp_min(1e-8).log())
+    # Compile supervision indices once; never expose them to the model forward.
+    if not hasattr(batch,'loss_indices'):
+        sr,sc,rr,ry,qr,qc=[],[],[],[],[],[]
+        for row,example in enumerate(batch.examples):
+            target=example['target']
+            for factor,label in target['states'].items():
+                if factor=='Q' and label in target['steps']: label=f"k{target['steps'].index(label)}"
+                sr.append(row);sc.append(OFFSETS[factor][0]+LABELS[factor].index(label))
+            if target['resume'] is not None: rr.append(row);ry.append(float(target['resume']))
+            if target['step'] is not None: qr.append(row);qc.append(target['steps'].index(target['step']))
+        batch.loss_indices=(torch.tensor(sr,dtype=torch.long),torch.tensor(sc,dtype=torch.long),
+                            torch.tensor(rr,dtype=torch.long),torch.tensor(ry,dtype=torch.float32),
+                            torch.tensor(qr,dtype=torch.long),torch.tensor(qc,dtype=torch.long))
+    sr,sc,rr,ry,qr,qc=batch.loss_indices
     zero=output['p'].sum()*0
-    return {'state':torch.stack(state).mean() if state else zero,
-            'resume':torch.stack(resume).mean() if resume else zero,
-            'step':torch.stack(step).mean() if step else zero,
+    return {'state':-output['factors'][sr,sc].clamp_min(1e-8).log().mean() if len(sr) else zero,
+            'resume':F.binary_cross_entropy(output['p'][rr].clamp(1e-7,1-1e-7),ry) if len(rr) else zero,
+            'step':-output['q'][qr,qc].clamp_min(1e-8).log().mean() if len(qr) else zero,
             'event_consistency':output['consistency'], 'invariance':output['invariance']}
 
 
