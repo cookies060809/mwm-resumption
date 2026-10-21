@@ -1,0 +1,38 @@
+{
+  "V": [
+    "VALID",
+    "CANCELLED",
+    "FULFILLED",
+    "UNKNOWN"
+  ],
+  "F": [
+    "READY",
+    "BLOCKED",
+    "UNKNOWN"
+  ],
+  "A": [
+    "ACCESSED",
+    "NOT_ACCESSED",
+    "UNCERTAIN"
+  ],
+  "B": [
+    "BELIEVES_VALID",
+    "BELIEVES_INVALID",
+    "UNRESOLVED",
+    "UNKNOWN"
+  ],
+  "C": [
+    "ACTIVE",
+    "SUSPENDED",
+    "ABANDONED",
+    "COMPLETED",
+    "UNKNOWN"
+  ],
+  "Q": [
+    "verify_record",
+    "write_record",
+    "submit_record",
+    "NOT_APPLICABLE",
+    "UNKNOWN"
+  ]
+}
