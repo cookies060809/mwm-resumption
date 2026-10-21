@@ -54,3 +54,17 @@ jobs:
         run: |
           python scripts/run_p0_evaluation.py --profile integrated --seeds 0 --suite core
           python scripts/check_p0_reproducibility.py --results-dir results/p0_integrated
+
+  neural-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install neural CPU dependencies
+        run: |
+          python -m pip install -r requirements-dev.txt
+          python -m pip install -r requirements-neural.txt --index-url https://download.pytorch.org/whl/cpu
+      - name: Check actual neural training and C output isolation
+        run: python -m pytest tests/test_neural_c_integration.py

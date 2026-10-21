@@ -69,6 +69,8 @@ results/**/metrics.json
 
 # Local engineering environment and generated bundles
 .dev-deps/
+.neural-deps/
+results/c_neural*/
 delivery/
 configs/*.local.json
 docs/personal/
