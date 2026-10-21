@@ -1,0 +1,301 @@
+{
+  "scope": "Source-separated auxiliary bundle admission audit; no auxiliary model training performed",
+  "source_commit": "c767008",
+  "bundle_release": "1.0.1",
+  "bundle_stats_sha256": "1085f2d7d7333c67898677750c4ad7b007d98b72a9ccaf9ba936c5bcbd827b38",
+  "checks": {
+    "verify_bundle": "passed",
+    "upstream_tomi_hashes": "all matched",
+    "native_A_direct_read": "rejected: KeyError schema_version; separate adapter required"
+  },
+  "source_counts_and_supervision": {
+    "tomi_auxiliary": {
+      "train": {
+        "samples": 5994,
+        "groups": 999,
+        "direct_state_supervision": {
+          "V": 0,
+          "F": 0,
+          "A": 1998,
+          "B": 0,
+          "C": 0,
+          "Q": 0
+        },
+        "label_counts": {
+          "V": {},
+          "F": {},
+          "A": {
+            "ACCESSED": 1440,
+            "NOT_ACCESSED": 558
+          },
+          "B": {},
+          "C": {},
+          "Q": {}
+        }
+      },
+      "dev": {
+        "samples": 5994,
+        "groups": 999,
+        "direct_state_supervision": {
+          "V": 0,
+          "F": 0,
+          "A": 1998,
+          "B": 0,
+          "C": 0,
+          "Q": 0
+        },
+        "label_counts": {
+          "V": {},
+          "F": {},
+          "A": {
+            "ACCESSED": 1450,
+            "NOT_ACCESSED": 548
+          },
+          "B": {},
+          "C": {},
+          "Q": {}
+        }
+      },
+      "test": {
+        "samples": 5994,
+        "groups": 999,
+        "direct_state_supervision": {
+          "V": 0,
+          "F": 0,
+          "A": 1998,
+          "B": 0,
+          "C": 0,
+          "Q": 0
+        },
+        "label_counts": {
+          "V": {},
+          "F": {},
+          "A": {
+            "ACCESSED": 1454,
+            "NOT_ACCESSED": 544
+          },
+          "B": {},
+          "C": {},
+          "Q": {}
+        }
+      }
+    },
+    "casas_real_proxy": {
+      "train": {
+        "samples": 84,
+        "groups": 12,
+        "direct_state_supervision": {
+          "V": 0,
+          "F": 0,
+          "A": 0,
+          "B": 0,
+          "C": 0,
+          "Q": 0
+        },
+        "label_counts": {
+          "V": {},
+          "F": {},
+          "A": {},
+          "B": {},
+          "C": {},
+          "Q": {}
+        }
+      },
+      "dev": {
+        "samples": 33,
+        "groups": 4,
+        "direct_state_supervision": {
+          "V": 0,
+          "F": 0,
+          "A": 0,
+          "B": 0,
+          "C": 0,
+          "Q": 0
+        },
+        "label_counts": {
+          "V": {},
+          "F": {},
+          "A": {},
+          "B": {},
+          "C": {},
+          "Q": {}
+        }
+      },
+      "test": {
+        "samples": 34,
+        "groups": 4,
+        "direct_state_supervision": {
+          "V": 0,
+          "F": 0,
+          "A": 0,
+          "B": 0,
+          "C": 0,
+          "Q": 0
+        },
+        "label_counts": {
+          "V": {},
+          "F": {},
+          "A": {},
+          "B": {},
+          "C": {},
+          "Q": {}
+        }
+      }
+    },
+    "p0_NEW_controlled_augmentation": {
+      "train": {
+        "samples": 936,
+        "groups": 72,
+        "direct_state_supervision": {
+          "V": 936,
+          "F": 936,
+          "A": 936,
+          "B": 864,
+          "C": 864,
+          "Q": 864
+        },
+        "label_counts": {
+          "V": {
+            "CANCELLED": 288,
+            "FULFILLED": 144,
+            "VALID": 504
+          },
+          "F": {
+            "READY": 864,
+            "BLOCKED": 72
+          },
+          "A": {
+            "NOT_ACCESSED": 144,
+            "ACCESSED": 720,
+            "UNCERTAIN": 72
+          },
+          "B": {
+            "BELIEVES_VALID": 792,
+            "BELIEVES_INVALID": 72
+          },
+          "C": {
+            "SUSPENDED": 576,
+            "ABANDONED": 144,
+            "COMPLETED": 72,
+            "ACTIVE": 72
+          },
+          "Q": {
+            "write_record": 504,
+            "NOT_APPLICABLE": 216,
+            "submit_record": 72,
+            "verify_record": 72
+          }
+        }
+      },
+      "dev": {
+        "samples": 312,
+        "groups": 24,
+        "direct_state_supervision": {
+          "V": 312,
+          "F": 312,
+          "A": 312,
+          "B": 288,
+          "C": 288,
+          "Q": 288
+        },
+        "label_counts": {
+          "V": {
+            "CANCELLED": 96,
+            "FULFILLED": 48,
+            "VALID": 168
+          },
+          "F": {
+            "READY": 288,
+            "BLOCKED": 24
+          },
+          "A": {
+            "NOT_ACCESSED": 48,
+            "ACCESSED": 240,
+            "UNCERTAIN": 24
+          },
+          "B": {
+            "BELIEVES_VALID": 264,
+            "BELIEVES_INVALID": 24
+          },
+          "C": {
+            "SUSPENDED": 192,
+            "ABANDONED": 48,
+            "COMPLETED": 24,
+            "ACTIVE": 24
+          },
+          "Q": {
+            "write_record": 168,
+            "NOT_APPLICABLE": 72,
+            "submit_record": 24,
+            "verify_record": 24
+          }
+        }
+      },
+      "test": {
+        "samples": 312,
+        "groups": 24,
+        "direct_state_supervision": {
+          "V": 312,
+          "F": 312,
+          "A": 312,
+          "B": 288,
+          "C": 288,
+          "Q": 288
+        },
+        "label_counts": {
+          "V": {
+            "CANCELLED": 96,
+            "FULFILLED": 48,
+            "VALID": 168
+          },
+          "F": {
+            "READY": 288,
+            "BLOCKED": 24
+          },
+          "A": {
+            "NOT_ACCESSED": 48,
+            "ACCESSED": 240,
+            "UNCERTAIN": 24
+          },
+          "B": {
+            "BELIEVES_VALID": 264,
+            "BELIEVES_INVALID": 24
+          },
+          "C": {
+            "SUSPENDED": 192,
+            "ABANDONED": 48,
+            "COMPLETED": 24,
+            "ACTIVE": 24
+          },
+          "Q": {
+            "write_record": 168,
+            "NOT_APPLICABLE": 72,
+            "submit_record": 24,
+            "verify_record": 24
+          }
+        }
+      }
+    }
+  },
+  "v03_native_training": {
+    "results": "evaluation/p0_release_v03_results.json",
+    "data": "data/p0/v0.3/p0_samples.json",
+    "train": 150,
+    "dev": 52,
+    "test": 52,
+    "calibration": 0,
+    "seed": 0,
+    "state_epochs": 1,
+    "joint_epochs": 1,
+    "source_sha256": "93ca37e93442495039950c0f8c4c618fee4b8b178cfc52c3269b33cb9f0f7739"
+  },
+  "limits": [
+    "Auxiliary bundle labels are unreviewed scripted/rule-derived supervision or original task QA; not real-human six-factor gold.",
+    "Missing state targets must remain masked; do not train missing labels as UNKNOWN.",
+    "ToMi QA is not goal-validity belief B; CASAS 60-second return is not the formal task-resumption target.",
+    "New auxiliary events require explicit semantic translation for A; do not copy state targets into input or bypass source review.",
+    "Source package can support future adapter/auxiliary-head work, but this run trains only the native standalone v0.3 release.",
+    "A1-A6 remain single-seed smoke diagnostics; known A2/A3/A4 implementation limits still apply.",
+    "Existing v0.2/14-record results remain separate historical runs; do not append v0.3 release to its sources."
+  ]
+}

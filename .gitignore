@@ -60,6 +60,7 @@ results/p0_v02/
 results/p0_v02_repro/
 results/p0_integrated*/
 results/p0_ablations/
+results/p0_release_v03*/
 results/a_model_audit/
 results/p1_audit/
 data/external/raw/

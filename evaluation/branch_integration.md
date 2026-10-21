@@ -83,3 +83,23 @@ A2 只移除指定耦合，不是完整独立 BCQ；A3 是最近五事件而不�
 B 新审计将 HoloAssist 限定为错误纠正/步骤恢复的候选来源，不作 T1 主评测；C 的 26 条候选继续是未审记录，不自动进入 P1。RFM-HRI 的公开代码仓库确实可读，C 已缓存固定 commit 并审计 25 个样本；这更新了 B 文档“无下载入口”的可用性判断，但没有补出人物恢复或当时 B/C/Q 真值。RFM 不进本轮训练和主评测，原始转录、问卷和参与者 ID 不入 Git。
 
 本轮仍是脚本 P0 参考实验。测试只有三个任务骨架，重复种子不增加独立人物数；A 因子“最近显著事件”与 B“关键对照事件”的汇总语义尚需共同确认。状态分数仅作映射诊断，不支持真实心理状态或泛化结论。
+
+## 2026-10-21 新训练包接入核验
+
+已将 main 的 `68b635e`（完整 P0 v0.3）与 `c767008`（多源辅助训练包 v1.0.1）合入 Bill。旧 `data/p0/p0_samples_v0.3.json` 仍只有 14 条；新完整入口是 `data/p0/v0.3/p0_samples.json`，包含旧 240 条与补充 14 条各一次，划分为 150/52/52，校准 0。不要将完整发布版再与来源拼接。
+
+完整 v0.3 已在 seed=0 实际完成 A 的 state/joint 各一轮训练、八方法测试和检查点/预测复现（416 条预测）。T1 有效分母 46：B10 为 26/46（56.5%），B4 为 36/46（78.3%）；这与旧 42 条有效测试的历史结果分开报告。A1–A6 完成单种子诊断，仍不是完整消融或真人效果验证。训练损失下降仅表明参数更新发生，不代表算法已优于对照。
+
+六种机制诊断的 312 条预测与训练检查点也已复现，匿名汇总见 [p0_release_v03_ablation_smoke_results.json](p0_release_v03_ablation_smoke_results.json)。合入后全部 164 项 pytest 通过。
+
+多源包的完整性/掩码/证据引用/分组检查通过，ToMi 来源文件哈希匹配。其三类训练数据分别是：新受控 P0 936 条、ToMi QA 5994 条、CASAS 活动返回代理 84 条。新 P0 的 B/C/Q 等标签是确定性脚本产生的诊断监督；ToMi 没有目标有效性 B 金标；CASAS 的六变量监督全为 0。它们均不补出真实六变量 P1。
+
+辅助包采用 `input/state_targets/state_loss_mask/auxiliary_targets` 格式，A 原生训练器要求 `schema_version/annotation` 及类型化事件。本轮实际直接读取被拒绝（`KeyError: schema_version`），没有绕过审核或把标签塞入输入；需要单独进行事件语义映射、监督掩码与辅助任务头的适配。本轮实际训练仅使用原生完整 v0.3，不能写成“辅助包已训练完成”。检查汇总见 [auxiliary_training_audit.json](auxiliary_training_audit.json)，完整 v0.3 结果见 [p0_release_v03_results.json](p0_release_v03_results.json)。新增逐条输出与检查点只保留本地；CI 增加辅助包校验。
+
+```bash
+python scripts/run_p0_evaluation.py --profile integrated --data data/p0/v0.3/p0_samples.json --seeds 0 --suite core --output-dir results/p0_release_v03
+python scripts/check_p0_reproducibility.py --results-dir results/p0_release_v03
+python scripts/run_p0_evaluation.py --profile integrated --data data/p0/v0.3/p0_samples.json --methods A1,A2,A3,A4,A5,A6 --seeds 0 --suite core --output-dir results/p0_release_v03_ablations
+python scripts/check_p0_reproducibility.py --results-dir results/p0_release_v03_ablations
+python data/auxiliary/C_multisource_v1/verify_bundle.py
+```

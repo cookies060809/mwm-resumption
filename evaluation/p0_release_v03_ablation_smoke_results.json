@@ -1,0 +1,6063 @@
+{
+  "scope": "scripted P0 diagnostic results; A structured reference model when explicitly enabled; not real human validation",
+  "seeds": [
+    0
+  ],
+  "split_counts": {
+    "train": 150,
+    "dev": 52,
+    "calibration": 0,
+    "test": 52
+  },
+  "dataset_provenance": {
+    "adapter": "c-p0-v02-adapter/1.1.0",
+    "source_schema": "p0-record/v0.2.0",
+    "source_sha256": "93ca37e93442495039950c0f8c4c618fee4b8b178cfc52c3269b33cb9f0f7739",
+    "source_scope": "B-reviewed scripted P0, not real human behavior",
+    "source_records": 254,
+    "source_pairs": 127,
+    "source_modified": false,
+    "split_modified": false,
+    "run_profile": "integrated",
+    "source_path": "data/p0/v0.3/p0_samples.json",
+    "configuration_path": "configs/p0_integrated.json",
+    "semantic_mapping": "typed message content; access and understanding kept separate",
+    "known_limits": [
+      "no independent calibration split",
+      "template-based P0",
+      "nested observer graph is not presumed person knowledge",
+      "A/C human blind review not completed"
+    ]
+  },
+  "inputs_sha256": "7708f4dcd6e98de23229480750de70d7cb1cb65f855a1c5ad68e49481e6ff750",
+  "labels_sha256": "885accc28fd2818a1452b14072d142959afa05910ed9d6e8fb45adb13d394329",
+  "code_sha256": {
+    "integration/a_input_adapter.py": "cbb9e8a686663ebff167e9e6b58bc5cd09d96147a97922aed493188f9ff6d8d0",
+    "integration/a_model.py": "d4d90577308daf003bd590ed80d0b4aa5194805edc9af3080794635b26f9b8f4",
+    "integration/a_output_adapter.py": "26013577a5e13903a49759150ba19d3afd3baca8e37018e0a23f8be6df7acd5b",
+    "integration/mentis_adapter.py": "02c82fee45a1911c95386688eee1dbaaea2a84839cd711bde6dfc7711cc1b52b",
+    "models/__init__.py": "5928e6773222dba9195019ff16883b6c3cdde84466a15e5033891f7bc1554979",
+    "models/ec_jmf/__init__.py": "d3a836af837b25bd6f97d17ff1b3bbb681eaa83e1e30f0c6612ad53928f3e410",
+    "models/ec_jmf/constraints.py": "ac20d03afd2b0b2bc4ead76e4ef096d5013ca781d921cbc036949ee0bbd25f89",
+    "models/ec_jmf/core.py": "d62d4afde24527d515fdf2938d0a88942e29f4bc853c6b2d4f29f927a42ba328",
+    "models/ec_jmf/structured.py": "e1c4726a9001f56f60e6eed4c1db2091d298b078564d917314dca86d13d430bf",
+    "models/ecr_mwm/__init__.py": "4e29ca307904cbfe2c31f6df310e5b1e9cb33b1ec0720a094e2f6f98e3860147",
+    "models/ecr_mwm/p0_adapter.py": "97124292333d9af1596145cbfee5b8381ebf5e809082e788720713a3f8d437d2",
+    "models/ecr_mwm/p0_diagnostics.py": "264dc5b80d347cf5ed97fdd49fec2e308fd1abf7e1d626ff5223eedad12f70c8",
+    "models/ecr_mwm/structured.py": "eaef2dc49e2f3a7019ff8e0a1ccf64047a18b599df0ee499fe1c97e9eac2584f",
+    "models/ecr_mwm/training.py": "1b769a50ad8e204c8066086d4ff7c1fbc5ddf7d847bb2c50a8c744b9036626db",
+    "mwm_eval/__init__.py": "5c870bb14600dfd96b0e4ba64c7cbeb2f9100c13141060631bf9ac7f2e244437",
+    "mwm_eval/calibration.py": "52eb8518f47d6f5a30e20598a615681cbdd0e7b2d18560969f8acd7f41d11f7e",
+    "mwm_eval/engine.py": "0f2eead767f14dd4049fcf7fe863309fbb5e4fb4218970588e107d8d6a614248",
+    "mwm_eval/external.py": "99a5ad66a66285722f48b010df549a305d6ebfcd7ed77920c0ad61f62868862a",
+    "mwm_eval/holoassist_candidates.py": "bb1d93e9ac99356b840009286f1750e0b8389ca3298c0678c9cbd86d1dfbcd3f",
+    "mwm_eval/local_baselines.py": "0ca9a167037044a9aa1f6f59f4c7ae32cfe3ef3e0cd92ffb4d0f92c4f919ce2f",
+    "mwm_eval/metrics.py": "b1769bc9a7a81588499a5f327b5bee883d98486f639ad5646ff0e4711214a83c",
+    "mwm_eval/p0.py": "48b3bce6dfbd126cb6a83dde4c6c784f34680c69c0493076cc1da6025bf08dd9",
+    "mwm_eval/pair_checks.py": "bd18caef7aa09d0f3e29d4e9717a050b29a1d1c76f41913af0fe6b92a9289508",
+    "mwm_eval/schema.py": "70ddfd11fa64537b8dd309c37d208ded4ef0f5c9cc5880c8e4b326241163fd80",
+    "mwm_eval/statistics.py": "f16c97c296cdd28879e45267cec1ce3aa4923654a4e665dc91066c8e85bef8b2",
+    "run_evaluation.py": "498a5ed4e29ee4a123d10f38c6cdd91819a75e6ece33284faf6377cde5e65a03",
+    "scripts/export_eval_format.py": "d629e5cbad3b19b5fe52a85178ce36ab391c6657f2adc150400dafd73e3f123e",
+    "scripts/run_p0_evaluation.py": "972799822b22a05957965bccef915e4b848d06c39c10d513a25e8f0740280609",
+    "scripts/validate_data.py": "16f6e4bcc642d4426cd94ceb77b9f49f64bda667d8b6b8ca232d32076ba60950",
+    "tools/build_dashboard.py": "d9b618888c5893d823dc69f260ccde91dfc18acc5d7b1648f15f4d64725bc63b",
+    "tools/build_delivery.py": "1c272cc49d3809101e686448d250e365dfa0e7f0da27de24ee0e2abd3e6ccf4c",
+    "tools/build_integration_fixtures.py": "c69148a190663d87aed023802c668d69e97890ebea16d78ef2fdecc005c87eff"
+  },
+  "methods": {
+    "A1": {
+      "aggregate": {
+        "accuracy_all_eligible": {
+          "mean": 0.5652173913043478,
+          "sample_sd": null,
+          "n_defined": 1
+        },
+        "resume_f1": {
+          "mean": 0.6666666666666666,
+          "sample_sd": null,
+          "n_defined": 1
+        },
+        "step_accuracy": {
+          "mean": 1.0,
+          "sample_sd": null,
+          "n_defined": 1
+        }
+      },
+      "implementation": "A StructuredModel + exact reference trainer",
+      "strict_reproduction": false,
+      "limitations": "Finite exact reference; no neural text encoder, P1, LLM, MENTIS or calibrated probabilities. A factor uses latest salient event, not B key-event gold. A2 is coupling removal, not independent BCQ.",
+      "training": {
+        "train_n": 150,
+        "layer": "P0",
+        "seed": 0,
+        "variant": "A1",
+        "trained": true,
+        "train_inputs_sha256": "40e9f108b9e2cfd29e0e095e5019a7e6d7cc2ee62895125dca70439404161e77",
+        "train_targets_sha256": "64e44c07b56c1820a59c505810d8e5b05b810b684ecd18406fc9f4629112571e",
+        "certified_identical_input_pairs": 9,
+        "pair_scope": "identical input views and same reference priors; no inferred hidden-world pairs",
+        "parameters_sha256": "bd2a14e8dd4bea965483c31b91ff2236283e4e2167705130ec922c3ffd893fd6"
+      },
+      "first_seed_checkpoint": [
+        {
+          "path": "checkpoints/A1/seed_0.json",
+          "sha256": "d572ed9a7fdfba9f9bb16eb18c99899c73656d16d49232d52ec4d764ec142573"
+        }
+      ],
+      "first_seed": {
+        "counts": {
+          "n_planned": 52,
+          "n_success": 52,
+          "n_error": 0,
+          "n_unavailable": 0,
+          "n_eligible_t1": 46,
+          "n_excluded": {
+            "censored": 0,
+            "unknown": 6
+          },
+          "censored_fraction": 0.0,
+          "n_failure": 0
+        },
+        "t1": {
+          "n_eligible": 46,
+          "n_success": 46,
+          "n_failure": 0,
+          "coverage": 1.0,
+          "n_positive": 20,
+          "n_negative": 26,
+          "accuracy": 0.5652173913043478,
+          "resume_precision": 0.5,
+          "resume_recall": 1.0,
+          "resume_f1": 0.6666666666666666,
+          "balanced_accuracy": 0.6153846153846154,
+          "confusion_valid_predictions": {
+            "tp": 20,
+            "fp": 20,
+            "fn": 0,
+            "tn": 6
+          },
+          "failed_by_true_label": {
+            "resume": 0,
+            "not_resume": 0
+          },
+          "classification_scope": "all_eligible",
+          "decision_rule": "predictor hard labels; not replaced using p_resume",
+          "balanced_accuracy_requirement": "both gold classes present",
+          "probability": {
+            "scope": "valid_probability_subset",
+            "n_eligible": 46,
+            "n_probability": 46,
+            "n_missing_probability": 0,
+            "coverage": 1.0,
+            "n_positive": 20,
+            "n_negative": 26,
+            "auroc": 0.8605769230769231,
+            "average_precision": 0.7828571428571428,
+            "auprc_definition": "non-interpolated average precision; equal scores grouped",
+            "brier": 0.19609458405004365,
+            "ece": 0.19211526937372422,
+            "ece_bins": 10,
+            "ece_definition": "positive-class probability ECE with fixed equal-width bins",
+            "bin_statistics": [
+              {
+                "bin_index": 0,
+                "n": 6,
+                "mean_probability": 0.0,
+                "positive_fraction": 0.0
+              },
+              {
+                "bin_index": 5,
+                "n": 18,
+                "mean_probability": 0.5576209271844541,
+                "positive_fraction": 0.16666666666666666
+              },
+              {
+                "bin_index": 6,
+                "n": 1,
+                "mean_probability": 0.6312377779170816,
+                "positive_fraction": 0.0
+              },
+              {
+                "bin_index": 8,
+                "n": 15,
+                "mean_probability": 0.8415101673405727,
+                "positive_fraction": 0.8
+              },
+              {
+                "bin_index": 9,
+                "n": 6,
+                "mean_probability": 0.9243725689742446,
+                "positive_fraction": 0.8333333333333334
+              }
+            ],
+            "diagnostic_threshold": 0.5,
+            "threshold_accuracy": 0.5652173913043478
+          }
+        },
+        "t2": {
+          "n_eligible": 20,
+          "n_top1_correct": 20,
+          "n_with_conditional_distribution": 20,
+          "n_top3_correct": 20,
+          "n_missing_step": 0,
+          "top1_accuracy": 1.0,
+          "top3_accuracy": 1.0,
+          "conditional_distribution_coverage": 1.0,
+          "scope": "gold_resume_with_identifiable_gold_step; missing predictions count as incorrect",
+          "top3_scope": "all_T2_eligible; missing distribution counts as incorrect; null if none available",
+          "top1_source": "explicit resume_step; not unconditional joint probability"
+        },
+        "states": {
+          "V": {
+            "n_eligible": 51,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "macro_f1_labels": [
+              "CANCELLED",
+              "FULFILLED",
+              "VALID"
+            ],
+            "balanced_accuracy_labels": [
+              "CANCELLED",
+              "FULFILLED",
+              "VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "CANCELLED": {
+                "CANCELLED": 13
+              },
+              "FULFILLED": {
+                "FULFILLED": 6
+              },
+              "VALID": {
+                "VALID": 32
+              }
+            }
+          },
+          "F": {
+            "n_eligible": 52,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.15384615384615385,
+            "macro_f1": 0.3950617283950617,
+            "balanced_accuracy": 0.5510204081632653,
+            "macro_f1_labels": [
+              "BLOCKED",
+              "READY",
+              "UNKNOWN"
+            ],
+            "balanced_accuracy_labels": [
+              "BLOCKED",
+              "READY"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "BLOCKED": {
+                "BLOCKED": 3
+              },
+              "READY": {
+                "UNKNOWN": 44,
+                "READY": 5
+              }
+            }
+          },
+          "A": {
+            "n_eligible": 52,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "macro_f1_labels": [
+              "ACCESSED",
+              "NOT_ACCESSED"
+            ],
+            "balanced_accuracy_labels": [
+              "ACCESSED",
+              "NOT_ACCESSED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "ACCESSED": {
+                "ACCESSED": 46
+              },
+              "NOT_ACCESSED": {
+                "NOT_ACCESSED": 6
+              }
+            }
+          },
+          "B": {
+            "n_eligible": 49,
+            "n_excluded_unknown_or_missing": 3,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.7959183673469388,
+            "macro_f1": 0.7069377990430622,
+            "balanced_accuracy": 0.8837209302325582,
+            "macro_f1_labels": [
+              "BELIEVES_INVALID",
+              "BELIEVES_VALID"
+            ],
+            "balanced_accuracy_labels": [
+              "BELIEVES_INVALID",
+              "BELIEVES_VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "BELIEVES_INVALID": {
+                "BELIEVES_INVALID": 6
+              },
+              "BELIEVES_VALID": {
+                "BELIEVES_VALID": 33,
+                "BELIEVES_INVALID": 10
+              }
+            }
+          },
+          "C": {
+            "n_eligible": 51,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.7058823529411765,
+            "macro_f1": 0.37037037037037035,
+            "balanced_accuracy": 0.46710526315789475,
+            "macro_f1_labels": [
+              "ABANDONED",
+              "ACTIVE",
+              "COMPLETED",
+              "SUSPENDED"
+            ],
+            "balanced_accuracy_labels": [
+              "ABANDONED",
+              "ACTIVE",
+              "COMPLETED",
+              "SUSPENDED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "ABANDONED": {
+                "SUSPENDED": 9
+              },
+              "ACTIVE": {
+                "SUSPENDED": 1
+              },
+              "COMPLETED": {
+                "COMPLETED": 3
+              },
+              "SUSPENDED": {
+                "SUSPENDED": 33,
+                "ACTIVE": 2,
+                "COMPLETED": 3
+              }
+            }
+          },
+          "Q": {
+            "n_eligible": 52,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.75,
+            "macro_f1": 0.831384015594542,
+            "balanced_accuracy": 0.8308080808080809,
+            "macro_f1_labels": [
+              "NOT_APPLICABLE",
+              "assemble_frame",
+              "build_summary",
+              "check_policy",
+              "confirm_visit",
+              "create_return",
+              "do_exercise",
+              "submit_request",
+              "take_quiz"
+            ],
+            "balanced_accuracy_labels": [
+              "NOT_APPLICABLE",
+              "assemble_frame",
+              "build_summary",
+              "check_policy",
+              "confirm_visit",
+              "create_return",
+              "do_exercise",
+              "submit_request",
+              "take_quiz"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "NOT_APPLICABLE": {
+                "submit_request": 3,
+                "do_exercise": 3,
+                "check_policy": 3,
+                "NOT_APPLICABLE": 3
+              },
+              "assemble_frame": {
+                "assemble_frame": 2
+              },
+              "build_summary": {
+                "build_summary": 1,
+                "NOT_APPLICABLE": 1
+              },
+              "check_policy": {
+                "check_policy": 10,
+                "NOT_APPLICABLE": 1
+              },
+              "confirm_visit": {
+                "confirm_visit": 1
+              },
+              "create_return": {
+                "create_return": 1
+              },
+              "do_exercise": {
+                "do_exercise": 10,
+                "NOT_APPLICABLE": 1
+              },
+              "submit_request": {
+                "submit_request": 10,
+                "NOT_APPLICABLE": 1
+              },
+              "take_quiz": {
+                "take_quiz": 1
+              }
+            }
+          }
+        },
+        "mechanism_pairs": {
+          "contact_cancellation": {
+            "T1:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 4,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            }
+          },
+          "long_term_commitment": {
+            "T1:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 4,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.25,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 4,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 4,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.25,
+              "coverage": 1.0
+            }
+          },
+          "resume_position": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "T2:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "other_completion": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            }
+          },
+          "resource_availability": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "nested_interruption": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "future_leak": {
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "hard_decision:equal": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "p_resume:equal": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "state_probs:equal": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "conditional_step_probs:equal": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "comprehension": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            }
+          }
+        }
+      }
+    },
+    "A2": {
+      "aggregate": {
+        "accuracy_all_eligible": {
+          "mean": 0.5652173913043478,
+          "sample_sd": null,
+          "n_defined": 1
+        },
+        "resume_f1": {
+          "mean": 0.6666666666666666,
+          "sample_sd": null,
+          "n_defined": 1
+        },
+        "step_accuracy": {
+          "mean": 1.0,
+          "sample_sd": null,
+          "n_defined": 1
+        }
+      },
+      "implementation": "A StructuredModel + exact reference trainer",
+      "strict_reproduction": false,
+      "limitations": "Finite exact reference; no neural text encoder, P1, LLM, MENTIS or calibrated probabilities. A factor uses latest salient event, not B key-event gold. A2 is coupling removal, not independent BCQ.",
+      "training": {
+        "train_n": 150,
+        "layer": "P0",
+        "seed": 0,
+        "variant": "A2",
+        "trained": true,
+        "train_inputs_sha256": "40e9f108b9e2cfd29e0e095e5019a7e6d7cc2ee62895125dca70439404161e77",
+        "train_targets_sha256": "64e44c07b56c1820a59c505810d8e5b05b810b684ecd18406fc9f4629112571e",
+        "certified_identical_input_pairs": 9,
+        "pair_scope": "identical input views and same reference priors; no inferred hidden-world pairs",
+        "parameters_sha256": "328c5bb7229758e807da2dbb4a0d068c7bdec5fe6697c1ce84dd61d03ea81cd0"
+      },
+      "first_seed_checkpoint": [
+        {
+          "path": "checkpoints/A2/seed_0.json",
+          "sha256": "af00e4d441604e72c4b240c42ec36b1556f9282eb128644cca1f33b63cf37f63"
+        }
+      ],
+      "first_seed": {
+        "counts": {
+          "n_planned": 52,
+          "n_success": 52,
+          "n_error": 0,
+          "n_unavailable": 0,
+          "n_eligible_t1": 46,
+          "n_excluded": {
+            "censored": 0,
+            "unknown": 6
+          },
+          "censored_fraction": 0.0,
+          "n_failure": 0
+        },
+        "t1": {
+          "n_eligible": 46,
+          "n_success": 46,
+          "n_failure": 0,
+          "coverage": 1.0,
+          "n_positive": 20,
+          "n_negative": 26,
+          "accuracy": 0.5652173913043478,
+          "resume_precision": 0.5,
+          "resume_recall": 1.0,
+          "resume_f1": 0.6666666666666666,
+          "balanced_accuracy": 0.6153846153846154,
+          "confusion_valid_predictions": {
+            "tp": 20,
+            "fp": 20,
+            "fn": 0,
+            "tn": 6
+          },
+          "failed_by_true_label": {
+            "resume": 0,
+            "not_resume": 0
+          },
+          "classification_scope": "all_eligible",
+          "decision_rule": "predictor hard labels; not replaced using p_resume",
+          "balanced_accuracy_requirement": "both gold classes present",
+          "probability": {
+            "scope": "valid_probability_subset",
+            "n_eligible": 46,
+            "n_probability": 46,
+            "n_missing_probability": 0,
+            "coverage": 1.0,
+            "n_positive": 20,
+            "n_negative": 26,
+            "auroc": 0.9442307692307692,
+            "average_precision": 0.8574999999999999,
+            "auprc_definition": "non-interpolated average precision; equal scores grouped",
+            "brier": 0.21311416409873504,
+            "ece": 0.23146506383796003,
+            "ece_bins": 10,
+            "ece_definition": "positive-class probability ECE with fixed equal-width bins",
+            "bin_statistics": [
+              {
+                "bin_index": 0,
+                "n": 6,
+                "mean_probability": 0.0,
+                "positive_fraction": 0.0
+              },
+              {
+                "bin_index": 5,
+                "n": 6,
+                "mean_probability": 0.5537076951434363,
+                "positive_fraction": 0.0
+              },
+              {
+                "bin_index": 6,
+                "n": 9,
+                "mean_probability": 0.6578938670535859,
+                "positive_fraction": 0.0
+              },
+              {
+                "bin_index": 7,
+                "n": 1,
+                "mean_probability": 0.7891415972127324,
+                "positive_fraction": 0.0
+              },
+              {
+                "bin_index": 8,
+                "n": 18,
+                "mean_probability": 0.8377199904760056,
+                "positive_fraction": 0.8333333333333334
+              },
+              {
+                "bin_index": 9,
+                "n": 6,
+                "mean_probability": 0.9226667560704064,
+                "positive_fraction": 0.8333333333333334
+              }
+            ],
+            "diagnostic_threshold": 0.5,
+            "threshold_accuracy": 0.5652173913043478
+          }
+        },
+        "t2": {
+          "n_eligible": 20,
+          "n_top1_correct": 20,
+          "n_with_conditional_distribution": 20,
+          "n_top3_correct": 20,
+          "n_missing_step": 0,
+          "top1_accuracy": 1.0,
+          "top3_accuracy": 1.0,
+          "conditional_distribution_coverage": 1.0,
+          "scope": "gold_resume_with_identifiable_gold_step; missing predictions count as incorrect",
+          "top3_scope": "all_T2_eligible; missing distribution counts as incorrect; null if none available",
+          "top1_source": "explicit resume_step; not unconditional joint probability"
+        },
+        "states": {
+          "V": {
+            "n_eligible": 51,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "macro_f1_labels": [
+              "CANCELLED",
+              "FULFILLED",
+              "VALID"
+            ],
+            "balanced_accuracy_labels": [
+              "CANCELLED",
+              "FULFILLED",
+              "VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "CANCELLED": {
+                "CANCELLED": 13
+              },
+              "FULFILLED": {
+                "FULFILLED": 6
+              },
+              "VALID": {
+                "VALID": 32
+              }
+            }
+          },
+          "F": {
+            "n_eligible": 52,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.15384615384615385,
+            "macro_f1": 0.3950617283950617,
+            "balanced_accuracy": 0.5510204081632653,
+            "macro_f1_labels": [
+              "BLOCKED",
+              "READY",
+              "UNKNOWN"
+            ],
+            "balanced_accuracy_labels": [
+              "BLOCKED",
+              "READY"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "BLOCKED": {
+                "BLOCKED": 3
+              },
+              "READY": {
+                "UNKNOWN": 44,
+                "READY": 5
+              }
+            }
+          },
+          "A": {
+            "n_eligible": 52,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "macro_f1_labels": [
+              "ACCESSED",
+              "NOT_ACCESSED"
+            ],
+            "balanced_accuracy_labels": [
+              "ACCESSED",
+              "NOT_ACCESSED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "ACCESSED": {
+                "ACCESSED": 46
+              },
+              "NOT_ACCESSED": {
+                "NOT_ACCESSED": 6
+              }
+            }
+          },
+          "B": {
+            "n_eligible": 49,
+            "n_excluded_unknown_or_missing": 3,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.9387755102040817,
+            "macro_f1": 0.8819277108433735,
+            "balanced_accuracy": 0.9651162790697674,
+            "macro_f1_labels": [
+              "BELIEVES_INVALID",
+              "BELIEVES_VALID"
+            ],
+            "balanced_accuracy_labels": [
+              "BELIEVES_INVALID",
+              "BELIEVES_VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "BELIEVES_INVALID": {
+                "BELIEVES_INVALID": 6
+              },
+              "BELIEVES_VALID": {
+                "BELIEVES_VALID": 40,
+                "BELIEVES_INVALID": 3
+              }
+            }
+          },
+          "C": {
+            "n_eligible": 51,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.7058823529411765,
+            "macro_f1": 0.20689655172413793,
+            "balanced_accuracy": 0.23684210526315788,
+            "macro_f1_labels": [
+              "ABANDONED",
+              "ACTIVE",
+              "COMPLETED",
+              "SUSPENDED"
+            ],
+            "balanced_accuracy_labels": [
+              "ABANDONED",
+              "ACTIVE",
+              "COMPLETED",
+              "SUSPENDED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "ABANDONED": {
+                "SUSPENDED": 9
+              },
+              "ACTIVE": {
+                "SUSPENDED": 1
+              },
+              "COMPLETED": {
+                "SUSPENDED": 3
+              },
+              "SUSPENDED": {
+                "SUSPENDED": 36,
+                "ACTIVE": 2
+              }
+            }
+          },
+          "Q": {
+            "n_eligible": 52,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.7692307692307693,
+            "macro_f1": 0.764,
+            "balanced_accuracy": 0.8888888888888888,
+            "macro_f1_labels": [
+              "NOT_APPLICABLE",
+              "UNKNOWN",
+              "assemble_frame",
+              "build_summary",
+              "check_policy",
+              "confirm_visit",
+              "create_return",
+              "do_exercise",
+              "submit_request",
+              "take_quiz"
+            ],
+            "balanced_accuracy_labels": [
+              "NOT_APPLICABLE",
+              "assemble_frame",
+              "build_summary",
+              "check_policy",
+              "confirm_visit",
+              "create_return",
+              "do_exercise",
+              "submit_request",
+              "take_quiz"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "NOT_APPLICABLE": {
+                "submit_request": 3,
+                "do_exercise": 3,
+                "check_policy": 3,
+                "UNKNOWN": 3
+              },
+              "assemble_frame": {
+                "assemble_frame": 2
+              },
+              "build_summary": {
+                "build_summary": 2
+              },
+              "check_policy": {
+                "check_policy": 11
+              },
+              "confirm_visit": {
+                "confirm_visit": 1
+              },
+              "create_return": {
+                "create_return": 1
+              },
+              "do_exercise": {
+                "do_exercise": 11
+              },
+              "submit_request": {
+                "submit_request": 11
+              },
+              "take_quiz": {
+                "take_quiz": 1
+              }
+            }
+          }
+        },
+        "mechanism_pairs": {
+          "contact_cancellation": {
+            "T1:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 4,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.25,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "long_term_commitment": {
+            "T1:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 4,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.25,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 4,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 4,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.25,
+              "coverage": 1.0
+            }
+          },
+          "resume_position": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "T2:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "other_completion": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            }
+          },
+          "resource_availability": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "nested_interruption": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "future_leak": {
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "hard_decision:equal": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "p_resume:equal": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "state_probs:equal": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "conditional_step_probs:equal": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "comprehension": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            }
+          }
+        }
+      }
+    },
+    "A3": {
+      "aggregate": {
+        "accuracy_all_eligible": {
+          "mean": 0.6304347826086957,
+          "sample_sd": null,
+          "n_defined": 1
+        },
+        "resume_f1": {
+          "mean": 0.7017543859649122,
+          "sample_sd": null,
+          "n_defined": 1
+        },
+        "step_accuracy": {
+          "mean": 0.5,
+          "sample_sd": null,
+          "n_defined": 1
+        }
+      },
+      "implementation": "A StructuredModel + exact reference trainer",
+      "strict_reproduction": false,
+      "limitations": "Finite exact reference; no neural text encoder, P1, LLM, MENTIS or calibrated probabilities. A factor uses latest salient event, not B key-event gold. A2 is coupling removal, not independent BCQ.",
+      "training": {
+        "train_n": 150,
+        "layer": "P0",
+        "seed": 0,
+        "variant": "A3",
+        "trained": true,
+        "train_inputs_sha256": "40e9f108b9e2cfd29e0e095e5019a7e6d7cc2ee62895125dca70439404161e77",
+        "train_targets_sha256": "64e44c07b56c1820a59c505810d8e5b05b810b684ecd18406fc9f4629112571e",
+        "certified_identical_input_pairs": 9,
+        "pair_scope": "identical input views and same reference priors; no inferred hidden-world pairs",
+        "parameters_sha256": "bffe10d9477173b1b7c42505ff66665e799daea94c8bd320f4fd3ed429017c8b"
+      },
+      "first_seed_checkpoint": [
+        {
+          "path": "checkpoints/A3/seed_0.json",
+          "sha256": "1de58dd1570452ceca1837965956586d3b052170797859b5589b13a3926141a1"
+        }
+      ],
+      "first_seed": {
+        "counts": {
+          "n_planned": 52,
+          "n_success": 52,
+          "n_error": 0,
+          "n_unavailable": 0,
+          "n_eligible_t1": 46,
+          "n_excluded": {
+            "censored": 0,
+            "unknown": 6
+          },
+          "censored_fraction": 0.0,
+          "n_failure": 0
+        },
+        "t1": {
+          "n_eligible": 46,
+          "n_success": 46,
+          "n_failure": 0,
+          "coverage": 1.0,
+          "n_positive": 20,
+          "n_negative": 26,
+          "accuracy": 0.6304347826086957,
+          "resume_precision": 0.5405405405405406,
+          "resume_recall": 1.0,
+          "resume_f1": 0.7017543859649122,
+          "balanced_accuracy": 0.6730769230769231,
+          "confusion_valid_predictions": {
+            "tp": 20,
+            "fp": 17,
+            "fn": 0,
+            "tn": 9
+          },
+          "failed_by_true_label": {
+            "resume": 0,
+            "not_resume": 0
+          },
+          "classification_scope": "all_eligible",
+          "decision_rule": "predictor hard labels; not replaced using p_resume",
+          "balanced_accuracy_requirement": "both gold classes present",
+          "probability": {
+            "scope": "valid_probability_subset",
+            "n_eligible": 46,
+            "n_probability": 46,
+            "n_missing_probability": 0,
+            "coverage": 1.0,
+            "n_positive": 20,
+            "n_negative": 26,
+            "auroc": 0.9096153846153846,
+            "average_precision": 0.8033333333333332,
+            "auprc_definition": "non-interpolated average precision; equal scores grouped",
+            "brier": 0.1832566401164307,
+            "ece": 0.24928764652262367,
+            "ece_bins": 10,
+            "ece_definition": "positive-class probability ECE with fixed equal-width bins",
+            "bin_statistics": [
+              {
+                "bin_index": 0,
+                "n": 6,
+                "mean_probability": 0.0,
+                "positive_fraction": 0.0
+              },
+              {
+                "bin_index": 4,
+                "n": 3,
+                "mean_probability": 0.4462301497996973,
+                "positive_fraction": 0.0
+              },
+              {
+                "bin_index": 5,
+                "n": 9,
+                "mean_probability": 0.53054038478498,
+                "positive_fraction": 0.0
+              },
+              {
+                "bin_index": 6,
+                "n": 4,
+                "mean_probability": 0.6502320789372491,
+                "positive_fraction": 0.0
+              },
+              {
+                "bin_index": 7,
+                "n": 6,
+                "mean_probability": 0.7525585885016518,
+                "positive_fraction": 1.0
+              },
+              {
+                "bin_index": 8,
+                "n": 13,
+                "mean_probability": 0.8215595278701865,
+                "positive_fraction": 0.7692307692307693
+              },
+              {
+                "bin_index": 9,
+                "n": 5,
+                "mean_probability": 0.9175654361050537,
+                "positive_fraction": 0.8
+              }
+            ],
+            "diagnostic_threshold": 0.5,
+            "threshold_accuracy": 0.6304347826086957
+          }
+        },
+        "t2": {
+          "n_eligible": 20,
+          "n_top1_correct": 10,
+          "n_with_conditional_distribution": 20,
+          "n_top3_correct": 20,
+          "n_missing_step": 0,
+          "top1_accuracy": 0.5,
+          "top3_accuracy": 1.0,
+          "conditional_distribution_coverage": 1.0,
+          "scope": "gold_resume_with_identifiable_gold_step; missing predictions count as incorrect",
+          "top3_scope": "all_T2_eligible; missing distribution counts as incorrect; null if none available",
+          "top1_source": "explicit resume_step; not unconditional joint probability"
+        },
+        "states": {
+          "V": {
+            "n_eligible": 51,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.39215686274509803,
+            "macro_f1": 0.5151515151515151,
+            "balanced_accuracy": 0.6770833333333334,
+            "macro_f1_labels": [
+              "CANCELLED",
+              "FULFILLED",
+              "UNKNOWN",
+              "VALID"
+            ],
+            "balanced_accuracy_labels": [
+              "CANCELLED",
+              "FULFILLED",
+              "VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "CANCELLED": {
+                "CANCELLED": 13
+              },
+              "FULFILLED": {
+                "FULFILLED": 6
+              },
+              "VALID": {
+                "UNKNOWN": 31,
+                "VALID": 1
+              }
+            }
+          },
+          "F": {
+            "n_eligible": 52,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.15384615384615385,
+            "macro_f1": 0.3950617283950617,
+            "balanced_accuracy": 0.5510204081632653,
+            "macro_f1_labels": [
+              "BLOCKED",
+              "READY",
+              "UNKNOWN"
+            ],
+            "balanced_accuracy_labels": [
+              "BLOCKED",
+              "READY"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "BLOCKED": {
+                "BLOCKED": 3
+              },
+              "READY": {
+                "UNKNOWN": 44,
+                "READY": 5
+              }
+            }
+          },
+          "A": {
+            "n_eligible": 52,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.8846153846153846,
+            "macro_f1": 0.6434108527131782,
+            "balanced_accuracy": 0.9347826086956521,
+            "macro_f1_labels": [
+              "ACCESSED",
+              "NOT_ACCESSED",
+              "UNCERTAIN"
+            ],
+            "balanced_accuracy_labels": [
+              "ACCESSED",
+              "NOT_ACCESSED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "ACCESSED": {
+                "ACCESSED": 40,
+                "UNCERTAIN": 6
+              },
+              "NOT_ACCESSED": {
+                "NOT_ACCESSED": 6
+              }
+            }
+          },
+          "B": {
+            "n_eligible": 49,
+            "n_excluded_unknown_or_missing": 3,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.7346938775510204,
+            "macro_f1": 0.5406392694063927,
+            "balanced_accuracy": 0.8488372093023255,
+            "macro_f1_labels": [
+              "BELIEVES_INVALID",
+              "BELIEVES_VALID",
+              "UNKNOWN"
+            ],
+            "balanced_accuracy_labels": [
+              "BELIEVES_INVALID",
+              "BELIEVES_VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "BELIEVES_INVALID": {
+                "BELIEVES_INVALID": 6
+              },
+              "BELIEVES_VALID": {
+                "BELIEVES_VALID": 30,
+                "UNKNOWN": 10,
+                "BELIEVES_INVALID": 3
+              }
+            }
+          },
+          "C": {
+            "n_eligible": 51,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.5490196078431373,
+            "macro_f1": 0.3492537313432836,
+            "balanced_accuracy": 0.4144736842105263,
+            "macro_f1_labels": [
+              "ABANDONED",
+              "ACTIVE",
+              "COMPLETED",
+              "SUSPENDED",
+              "UNKNOWN"
+            ],
+            "balanced_accuracy_labels": [
+              "ABANDONED",
+              "ACTIVE",
+              "COMPLETED",
+              "SUSPENDED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "ABANDONED": {
+                "UNKNOWN": 6,
+                "SUSPENDED": 3
+              },
+              "ACTIVE": {
+                "SUSPENDED": 1
+              },
+              "COMPLETED": {
+                "COMPLETED": 3
+              },
+              "SUSPENDED": {
+                "UNKNOWN": 12,
+                "ACTIVE": 1,
+                "SUSPENDED": 25
+              }
+            }
+          },
+          "Q": {
+            "n_eligible": 52,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.5192307692307693,
+            "macro_f1": 0.7066666666666667,
+            "balanced_accuracy": 0.7095959595959597,
+            "macro_f1_labels": [
+              "NOT_APPLICABLE",
+              "UNKNOWN",
+              "assemble_frame",
+              "build_summary",
+              "check_policy",
+              "confirm_visit",
+              "create_return",
+              "do_exercise",
+              "submit_request",
+              "take_quiz"
+            ],
+            "balanced_accuracy_labels": [
+              "NOT_APPLICABLE",
+              "assemble_frame",
+              "build_summary",
+              "check_policy",
+              "confirm_visit",
+              "create_return",
+              "do_exercise",
+              "submit_request",
+              "take_quiz"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "NOT_APPLICABLE": {
+                "UNKNOWN": 6,
+                "submit_request": 1,
+                "do_exercise": 1,
+                "check_policy": 1,
+                "NOT_APPLICABLE": 3
+              },
+              "assemble_frame": {
+                "UNKNOWN": 1,
+                "assemble_frame": 1
+              },
+              "build_summary": {
+                "build_summary": 2
+              },
+              "check_policy": {
+                "UNKNOWN": 5,
+                "check_policy": 6
+              },
+              "confirm_visit": {
+                "confirm_visit": 1
+              },
+              "create_return": {
+                "create_return": 1
+              },
+              "do_exercise": {
+                "UNKNOWN": 5,
+                "do_exercise": 6
+              },
+              "submit_request": {
+                "UNKNOWN": 5,
+                "submit_request": 6
+              },
+              "take_quiz": {
+                "take_quiz": 1
+              }
+            }
+          }
+        },
+        "mechanism_pairs": {
+          "contact_cancellation": {
+            "T1:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 4,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.25,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "long_term_commitment": {
+            "T1:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.25,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 4,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.75,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            }
+          },
+          "resume_position": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "T2:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "other_completion": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            }
+          },
+          "resource_availability": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "nested_interruption": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            }
+          },
+          "future_leak": {
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "hard_decision:equal": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "p_resume:equal": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "state_probs:equal": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "conditional_step_probs:equal": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "comprehension": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            }
+          }
+        }
+      }
+    },
+    "A4": {
+      "aggregate": {
+        "accuracy_all_eligible": {
+          "mean": 0.5652173913043478,
+          "sample_sd": null,
+          "n_defined": 1
+        },
+        "resume_f1": {
+          "mean": 0.6666666666666666,
+          "sample_sd": null,
+          "n_defined": 1
+        },
+        "step_accuracy": {
+          "mean": 1.0,
+          "sample_sd": null,
+          "n_defined": 1
+        }
+      },
+      "implementation": "A StructuredModel + exact reference trainer",
+      "strict_reproduction": false,
+      "limitations": "Finite exact reference; no neural text encoder, P1, LLM, MENTIS or calibrated probabilities. A factor uses latest salient event, not B key-event gold. A2 is coupling removal, not independent BCQ.",
+      "training": {
+        "train_n": 150,
+        "layer": "P0",
+        "seed": 0,
+        "variant": "A4",
+        "trained": true,
+        "train_inputs_sha256": "40e9f108b9e2cfd29e0e095e5019a7e6d7cc2ee62895125dca70439404161e77",
+        "train_targets_sha256": "64e44c07b56c1820a59c505810d8e5b05b810b684ecd18406fc9f4629112571e",
+        "certified_identical_input_pairs": 9,
+        "pair_scope": "identical input views and same reference priors; no inferred hidden-world pairs",
+        "parameters_sha256": "3894069db5592faede3e37b7d69c1207a4c6c0e032a1dd81cd8fb217ddb6415f"
+      },
+      "first_seed_checkpoint": [
+        {
+          "path": "checkpoints/A4/seed_0.json",
+          "sha256": "8d792ab8cfd5badeba69eb99b8266b632e08e5aa5cd2d6ad9999a3032d5d5c3c"
+        }
+      ],
+      "first_seed": {
+        "counts": {
+          "n_planned": 52,
+          "n_success": 52,
+          "n_error": 0,
+          "n_unavailable": 0,
+          "n_eligible_t1": 46,
+          "n_excluded": {
+            "censored": 0,
+            "unknown": 6
+          },
+          "censored_fraction": 0.0,
+          "n_failure": 0
+        },
+        "t1": {
+          "n_eligible": 46,
+          "n_success": 46,
+          "n_failure": 0,
+          "coverage": 1.0,
+          "n_positive": 20,
+          "n_negative": 26,
+          "accuracy": 0.5652173913043478,
+          "resume_precision": 0.5,
+          "resume_recall": 1.0,
+          "resume_f1": 0.6666666666666666,
+          "balanced_accuracy": 0.6153846153846154,
+          "confusion_valid_predictions": {
+            "tp": 20,
+            "fp": 20,
+            "fn": 0,
+            "tn": 6
+          },
+          "failed_by_true_label": {
+            "resume": 0,
+            "not_resume": 0
+          },
+          "classification_scope": "all_eligible",
+          "decision_rule": "predictor hard labels; not replaced using p_resume",
+          "balanced_accuracy_requirement": "both gold classes present",
+          "probability": {
+            "scope": "valid_probability_subset",
+            "n_eligible": 46,
+            "n_probability": 46,
+            "n_missing_probability": 0,
+            "coverage": 1.0,
+            "n_positive": 20,
+            "n_negative": 26,
+            "auroc": 0.926923076923077,
+            "average_precision": 0.8275,
+            "auprc_definition": "non-interpolated average precision; equal scores grouped",
+            "brier": 0.19386919056307977,
+            "ece": 0.2169251335515113,
+            "ece_bins": 10,
+            "ece_definition": "positive-class probability ECE with fixed equal-width bins",
+            "bin_statistics": [
+              {
+                "bin_index": 0,
+                "n": 6,
+                "mean_probability": 0.0,
+                "positive_fraction": 0.0
+              },
+              {
+                "bin_index": 5,
+                "n": 12,
+                "mean_probability": 0.5558701700315346,
+                "positive_fraction": 0.0
+              },
+              {
+                "bin_index": 6,
+                "n": 4,
+                "mean_probability": 0.6640755657035146,
+                "positive_fraction": 0.0
+              },
+              {
+                "bin_index": 8,
+                "n": 18,
+                "mean_probability": 0.8394589633999788,
+                "positive_fraction": 0.8333333333333334
+              },
+              {
+                "bin_index": 9,
+                "n": 6,
+                "mean_probability": 0.9235917498295714,
+                "positive_fraction": 0.8333333333333334
+              }
+            ],
+            "diagnostic_threshold": 0.5,
+            "threshold_accuracy": 0.5652173913043478
+          }
+        },
+        "t2": {
+          "n_eligible": 20,
+          "n_top1_correct": 20,
+          "n_with_conditional_distribution": 20,
+          "n_top3_correct": 20,
+          "n_missing_step": 0,
+          "top1_accuracy": 1.0,
+          "top3_accuracy": 1.0,
+          "conditional_distribution_coverage": 1.0,
+          "scope": "gold_resume_with_identifiable_gold_step; missing predictions count as incorrect",
+          "top3_scope": "all_T2_eligible; missing distribution counts as incorrect; null if none available",
+          "top1_source": "explicit resume_step; not unconditional joint probability"
+        },
+        "states": {
+          "V": {
+            "n_eligible": 51,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "macro_f1_labels": [
+              "CANCELLED",
+              "FULFILLED",
+              "VALID"
+            ],
+            "balanced_accuracy_labels": [
+              "CANCELLED",
+              "FULFILLED",
+              "VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "CANCELLED": {
+                "CANCELLED": 13
+              },
+              "FULFILLED": {
+                "FULFILLED": 6
+              },
+              "VALID": {
+                "VALID": 32
+              }
+            }
+          },
+          "F": {
+            "n_eligible": 52,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.15384615384615385,
+            "macro_f1": 0.3950617283950617,
+            "balanced_accuracy": 0.5510204081632653,
+            "macro_f1_labels": [
+              "BLOCKED",
+              "READY",
+              "UNKNOWN"
+            ],
+            "balanced_accuracy_labels": [
+              "BLOCKED",
+              "READY"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "BLOCKED": {
+                "BLOCKED": 3
+              },
+              "READY": {
+                "UNKNOWN": 44,
+                "READY": 5
+              }
+            }
+          },
+          "A": {
+            "n_eligible": 52,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "macro_f1_labels": [
+              "ACCESSED",
+              "NOT_ACCESSED"
+            ],
+            "balanced_accuracy_labels": [
+              "ACCESSED",
+              "NOT_ACCESSED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "ACCESSED": {
+                "ACCESSED": 46
+              },
+              "NOT_ACCESSED": {
+                "NOT_ACCESSED": 6
+              }
+            }
+          },
+          "B": {
+            "n_eligible": 49,
+            "n_excluded_unknown_or_missing": 3,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.9387755102040817,
+            "macro_f1": 0.8819277108433735,
+            "balanced_accuracy": 0.9651162790697674,
+            "macro_f1_labels": [
+              "BELIEVES_INVALID",
+              "BELIEVES_VALID"
+            ],
+            "balanced_accuracy_labels": [
+              "BELIEVES_INVALID",
+              "BELIEVES_VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "BELIEVES_INVALID": {
+                "BELIEVES_INVALID": 6
+              },
+              "BELIEVES_VALID": {
+                "BELIEVES_VALID": 40,
+                "BELIEVES_INVALID": 3
+              }
+            }
+          },
+          "C": {
+            "n_eligible": 51,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.7843137254901961,
+            "macro_f1": 0.4676470588235294,
+            "balanced_accuracy": 0.493421052631579,
+            "macro_f1_labels": [
+              "ABANDONED",
+              "ACTIVE",
+              "COMPLETED",
+              "SUSPENDED"
+            ],
+            "balanced_accuracy_labels": [
+              "ABANDONED",
+              "ACTIVE",
+              "COMPLETED",
+              "SUSPENDED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "ABANDONED": {
+                "SUSPENDED": 9
+              },
+              "ACTIVE": {
+                "SUSPENDED": 1
+              },
+              "COMPLETED": {
+                "COMPLETED": 3
+              },
+              "SUSPENDED": {
+                "SUSPENDED": 37,
+                "ACTIVE": 1
+              }
+            }
+          },
+          "Q": {
+            "n_eligible": 52,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.8269230769230769,
+            "macro_f1": 0.8933333333333332,
+            "balanced_accuracy": 0.9166666666666666,
+            "macro_f1_labels": [
+              "NOT_APPLICABLE",
+              "assemble_frame",
+              "build_summary",
+              "check_policy",
+              "confirm_visit",
+              "create_return",
+              "do_exercise",
+              "submit_request",
+              "take_quiz"
+            ],
+            "balanced_accuracy_labels": [
+              "NOT_APPLICABLE",
+              "assemble_frame",
+              "build_summary",
+              "check_policy",
+              "confirm_visit",
+              "create_return",
+              "do_exercise",
+              "submit_request",
+              "take_quiz"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "NOT_APPLICABLE": {
+                "submit_request": 3,
+                "do_exercise": 3,
+                "check_policy": 3,
+                "NOT_APPLICABLE": 3
+              },
+              "assemble_frame": {
+                "assemble_frame": 2
+              },
+              "build_summary": {
+                "build_summary": 2
+              },
+              "check_policy": {
+                "check_policy": 11
+              },
+              "confirm_visit": {
+                "confirm_visit": 1
+              },
+              "create_return": {
+                "create_return": 1
+              },
+              "do_exercise": {
+                "do_exercise": 11
+              },
+              "submit_request": {
+                "submit_request": 11
+              },
+              "take_quiz": {
+                "take_quiz": 1
+              }
+            }
+          }
+        },
+        "mechanism_pairs": {
+          "contact_cancellation": {
+            "T1:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 4,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.25,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "long_term_commitment": {
+            "T1:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 4,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.25,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 4,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 4,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.25,
+              "coverage": 1.0
+            }
+          },
+          "resume_position": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "T2:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "other_completion": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "resource_availability": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "nested_interruption": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "future_leak": {
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "hard_decision:equal": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "p_resume:equal": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "state_probs:equal": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "conditional_step_probs:equal": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "comprehension": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            }
+          }
+        }
+      }
+    },
+    "A5": {
+      "aggregate": {
+        "accuracy_all_eligible": {
+          "mean": 0.5652173913043478,
+          "sample_sd": null,
+          "n_defined": 1
+        },
+        "resume_f1": {
+          "mean": 0.6666666666666666,
+          "sample_sd": null,
+          "n_defined": 1
+        },
+        "step_accuracy": {
+          "mean": 1.0,
+          "sample_sd": null,
+          "n_defined": 1
+        }
+      },
+      "implementation": "A StructuredModel + exact reference trainer",
+      "strict_reproduction": false,
+      "limitations": "Finite exact reference; no neural text encoder, P1, LLM, MENTIS or calibrated probabilities. A factor uses latest salient event, not B key-event gold. A2 is coupling removal, not independent BCQ.",
+      "training": {
+        "train_n": 150,
+        "layer": "P0",
+        "seed": 0,
+        "variant": "A5",
+        "trained": true,
+        "train_inputs_sha256": "40e9f108b9e2cfd29e0e095e5019a7e6d7cc2ee62895125dca70439404161e77",
+        "train_targets_sha256": "64e44c07b56c1820a59c505810d8e5b05b810b684ecd18406fc9f4629112571e",
+        "certified_identical_input_pairs": 9,
+        "pair_scope": "identical input views and same reference priors; no inferred hidden-world pairs",
+        "parameters_sha256": "ef4830f8cbe940da417cb5f7f08860ee982e0a970fa630a2ffbd2977e3fdf973"
+      },
+      "first_seed_checkpoint": [
+        {
+          "path": "checkpoints/A5/seed_0.json",
+          "sha256": "5f6d060248ecda580ca764b09e38fcf49b008e7407f671f1b03fc796e3512814"
+        }
+      ],
+      "first_seed": {
+        "counts": {
+          "n_planned": 52,
+          "n_success": 52,
+          "n_error": 0,
+          "n_unavailable": 0,
+          "n_eligible_t1": 46,
+          "n_excluded": {
+            "censored": 0,
+            "unknown": 6
+          },
+          "censored_fraction": 0.0,
+          "n_failure": 0
+        },
+        "t1": {
+          "n_eligible": 46,
+          "n_success": 46,
+          "n_failure": 0,
+          "coverage": 1.0,
+          "n_positive": 20,
+          "n_negative": 26,
+          "accuracy": 0.5652173913043478,
+          "resume_precision": 0.5,
+          "resume_recall": 1.0,
+          "resume_f1": 0.6666666666666666,
+          "balanced_accuracy": 0.6153846153846154,
+          "confusion_valid_predictions": {
+            "tp": 20,
+            "fp": 20,
+            "fn": 0,
+            "tn": 6
+          },
+          "failed_by_true_label": {
+            "resume": 0,
+            "not_resume": 0
+          },
+          "classification_scope": "all_eligible",
+          "decision_rule": "predictor hard labels; not replaced using p_resume",
+          "balanced_accuracy_requirement": "both gold classes present",
+          "probability": {
+            "scope": "valid_probability_subset",
+            "n_eligible": 46,
+            "n_probability": 46,
+            "n_missing_probability": 0,
+            "coverage": 1.0,
+            "n_positive": 20,
+            "n_negative": 26,
+            "auroc": 0.926923076923077,
+            "average_precision": 0.8275,
+            "auprc_definition": "non-interpolated average precision; equal scores grouped",
+            "brier": 0.19386919056308255,
+            "ece": 0.2169251335515194,
+            "ece_bins": 10,
+            "ece_definition": "positive-class probability ECE with fixed equal-width bins",
+            "bin_statistics": [
+              {
+                "bin_index": 0,
+                "n": 6,
+                "mean_probability": 0.0,
+                "positive_fraction": 0.0
+              },
+              {
+                "bin_index": 5,
+                "n": 12,
+                "mean_probability": 0.5558701700315595,
+                "positive_fraction": 0.0
+              },
+              {
+                "bin_index": 6,
+                "n": 4,
+                "mean_probability": 0.66407556570347,
+                "positive_fraction": 0.0
+              },
+              {
+                "bin_index": 8,
+                "n": 18,
+                "mean_probability": 0.8394589633999929,
+                "positive_fraction": 0.8333333333333334
+              },
+              {
+                "bin_index": 9,
+                "n": 6,
+                "mean_probability": 0.9235917498295714,
+                "positive_fraction": 0.8333333333333334
+              }
+            ],
+            "diagnostic_threshold": 0.5,
+            "threshold_accuracy": 0.5652173913043478
+          }
+        },
+        "t2": {
+          "n_eligible": 20,
+          "n_top1_correct": 20,
+          "n_with_conditional_distribution": 20,
+          "n_top3_correct": 20,
+          "n_missing_step": 0,
+          "top1_accuracy": 1.0,
+          "top3_accuracy": 1.0,
+          "conditional_distribution_coverage": 1.0,
+          "scope": "gold_resume_with_identifiable_gold_step; missing predictions count as incorrect",
+          "top3_scope": "all_T2_eligible; missing distribution counts as incorrect; null if none available",
+          "top1_source": "explicit resume_step; not unconditional joint probability"
+        },
+        "states": {
+          "V": {
+            "n_eligible": 51,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "macro_f1_labels": [
+              "CANCELLED",
+              "FULFILLED",
+              "VALID"
+            ],
+            "balanced_accuracy_labels": [
+              "CANCELLED",
+              "FULFILLED",
+              "VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "CANCELLED": {
+                "CANCELLED": 13
+              },
+              "FULFILLED": {
+                "FULFILLED": 6
+              },
+              "VALID": {
+                "VALID": 32
+              }
+            }
+          },
+          "F": {
+            "n_eligible": 52,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.15384615384615385,
+            "macro_f1": 0.3950617283950617,
+            "balanced_accuracy": 0.5510204081632653,
+            "macro_f1_labels": [
+              "BLOCKED",
+              "READY",
+              "UNKNOWN"
+            ],
+            "balanced_accuracy_labels": [
+              "BLOCKED",
+              "READY"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "BLOCKED": {
+                "BLOCKED": 3
+              },
+              "READY": {
+                "UNKNOWN": 44,
+                "READY": 5
+              }
+            }
+          },
+          "A": {
+            "n_eligible": 52,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "macro_f1_labels": [
+              "ACCESSED",
+              "NOT_ACCESSED"
+            ],
+            "balanced_accuracy_labels": [
+              "ACCESSED",
+              "NOT_ACCESSED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "ACCESSED": {
+                "ACCESSED": 46
+              },
+              "NOT_ACCESSED": {
+                "NOT_ACCESSED": 6
+              }
+            }
+          },
+          "B": {
+            "n_eligible": 49,
+            "n_excluded_unknown_or_missing": 3,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.9387755102040817,
+            "macro_f1": 0.8819277108433735,
+            "balanced_accuracy": 0.9651162790697674,
+            "macro_f1_labels": [
+              "BELIEVES_INVALID",
+              "BELIEVES_VALID"
+            ],
+            "balanced_accuracy_labels": [
+              "BELIEVES_INVALID",
+              "BELIEVES_VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "BELIEVES_INVALID": {
+                "BELIEVES_INVALID": 6
+              },
+              "BELIEVES_VALID": {
+                "BELIEVES_VALID": 40,
+                "BELIEVES_INVALID": 3
+              }
+            }
+          },
+          "C": {
+            "n_eligible": 51,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.7843137254901961,
+            "macro_f1": 0.4676470588235294,
+            "balanced_accuracy": 0.493421052631579,
+            "macro_f1_labels": [
+              "ABANDONED",
+              "ACTIVE",
+              "COMPLETED",
+              "SUSPENDED"
+            ],
+            "balanced_accuracy_labels": [
+              "ABANDONED",
+              "ACTIVE",
+              "COMPLETED",
+              "SUSPENDED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "ABANDONED": {
+                "SUSPENDED": 9
+              },
+              "ACTIVE": {
+                "SUSPENDED": 1
+              },
+              "COMPLETED": {
+                "COMPLETED": 3
+              },
+              "SUSPENDED": {
+                "SUSPENDED": 37,
+                "ACTIVE": 1
+              }
+            }
+          },
+          "Q": {
+            "n_eligible": 52,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.8269230769230769,
+            "macro_f1": 0.8933333333333332,
+            "balanced_accuracy": 0.9166666666666666,
+            "macro_f1_labels": [
+              "NOT_APPLICABLE",
+              "assemble_frame",
+              "build_summary",
+              "check_policy",
+              "confirm_visit",
+              "create_return",
+              "do_exercise",
+              "submit_request",
+              "take_quiz"
+            ],
+            "balanced_accuracy_labels": [
+              "NOT_APPLICABLE",
+              "assemble_frame",
+              "build_summary",
+              "check_policy",
+              "confirm_visit",
+              "create_return",
+              "do_exercise",
+              "submit_request",
+              "take_quiz"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "NOT_APPLICABLE": {
+                "submit_request": 3,
+                "do_exercise": 3,
+                "check_policy": 3,
+                "NOT_APPLICABLE": 3
+              },
+              "assemble_frame": {
+                "assemble_frame": 2
+              },
+              "build_summary": {
+                "build_summary": 2
+              },
+              "check_policy": {
+                "check_policy": 11
+              },
+              "confirm_visit": {
+                "confirm_visit": 1
+              },
+              "create_return": {
+                "create_return": 1
+              },
+              "do_exercise": {
+                "do_exercise": 11
+              },
+              "submit_request": {
+                "submit_request": 11
+              },
+              "take_quiz": {
+                "take_quiz": 1
+              }
+            }
+          }
+        },
+        "mechanism_pairs": {
+          "contact_cancellation": {
+            "T1:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 4,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.25,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "long_term_commitment": {
+            "T1:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 4,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.25,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 4,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 4,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.25,
+              "coverage": 1.0
+            }
+          },
+          "resume_position": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "T2:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "other_completion": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "resource_availability": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "nested_interruption": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "future_leak": {
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "hard_decision:equal": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "p_resume:equal": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "state_probs:equal": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "conditional_step_probs:equal": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "comprehension": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            }
+          }
+        }
+      }
+    },
+    "A6": {
+      "aggregate": {
+        "accuracy_all_eligible": {
+          "mean": 0.6956521739130435,
+          "sample_sd": null,
+          "n_defined": 1
+        },
+        "resume_f1": {
+          "mean": 0.7407407407407407,
+          "sample_sd": null,
+          "n_defined": 1
+        },
+        "step_accuracy": {
+          "mean": 1.0,
+          "sample_sd": null,
+          "n_defined": 1
+        }
+      },
+      "implementation": "A StructuredModel + exact reference trainer",
+      "strict_reproduction": false,
+      "limitations": "Finite exact reference; no neural text encoder, P1, LLM, MENTIS or calibrated probabilities. A factor uses latest salient event, not B key-event gold. A2 is coupling removal, not independent BCQ.",
+      "training": {
+        "train_n": 150,
+        "layer": "P0",
+        "seed": 0,
+        "variant": "A6",
+        "trained": true,
+        "train_inputs_sha256": "40e9f108b9e2cfd29e0e095e5019a7e6d7cc2ee62895125dca70439404161e77",
+        "train_targets_sha256": "64e44c07b56c1820a59c505810d8e5b05b810b684ecd18406fc9f4629112571e",
+        "certified_identical_input_pairs": 9,
+        "pair_scope": "identical input views and same reference priors; no inferred hidden-world pairs",
+        "parameters_sha256": "d64b2044b4bc9e02767a88cce7c331226c0cae60e27c6d120bfd39b2740fbabd"
+      },
+      "first_seed_checkpoint": [
+        {
+          "path": "checkpoints/A6/seed_0.json",
+          "sha256": "fcbaeaf701838ef05a1c4a718e8f944d13d037ae8a23398ee7dfe0db1a3063b9"
+        }
+      ],
+      "first_seed": {
+        "counts": {
+          "n_planned": 52,
+          "n_success": 52,
+          "n_error": 0,
+          "n_unavailable": 0,
+          "n_eligible_t1": 46,
+          "n_excluded": {
+            "censored": 0,
+            "unknown": 6
+          },
+          "censored_fraction": 0.0,
+          "n_failure": 0
+        },
+        "t1": {
+          "n_eligible": 46,
+          "n_success": 46,
+          "n_failure": 0,
+          "coverage": 1.0,
+          "n_positive": 20,
+          "n_negative": 26,
+          "accuracy": 0.6956521739130435,
+          "resume_precision": 0.5882352941176471,
+          "resume_recall": 1.0,
+          "resume_f1": 0.7407407407407407,
+          "balanced_accuracy": 0.7307692307692308,
+          "confusion_valid_predictions": {
+            "tp": 20,
+            "fp": 14,
+            "fn": 0,
+            "tn": 12
+          },
+          "failed_by_true_label": {
+            "resume": 0,
+            "not_resume": 0
+          },
+          "classification_scope": "all_eligible",
+          "decision_rule": "predictor hard labels; not replaced using p_resume",
+          "balanced_accuracy_requirement": "both gold classes present",
+          "probability": {
+            "scope": "valid_probability_subset",
+            "n_eligible": 46,
+            "n_probability": 46,
+            "n_missing_probability": 0,
+            "coverage": 1.0,
+            "n_positive": 20,
+            "n_negative": 26,
+            "auroc": 0.9182692307692307,
+            "average_precision": 0.8167857142857143,
+            "auprc_definition": "non-interpolated average precision; equal scores grouped",
+            "brier": 0.17296870823132074,
+            "ece": 0.19794050278449493,
+            "ece_bins": 10,
+            "ece_definition": "positive-class probability ECE with fixed equal-width bins",
+            "bin_statistics": [
+              {
+                "bin_index": 0,
+                "n": 6,
+                "mean_probability": 0.0,
+                "positive_fraction": 0.0
+              },
+              {
+                "bin_index": 4,
+                "n": 6,
+                "mean_probability": 0.4530170013884994,
+                "positive_fraction": 0.0
+              },
+              {
+                "bin_index": 5,
+                "n": 10,
+                "mean_probability": 0.5723455152238094,
+                "positive_fraction": 0.0
+              },
+              {
+                "bin_index": 8,
+                "n": 18,
+                "mean_probability": 0.8400250262877343,
+                "positive_fraction": 0.8333333333333334
+              },
+              {
+                "bin_index": 9,
+                "n": 6,
+                "mean_probability": 0.9238759157230767,
+                "positive_fraction": 0.8333333333333334
+              }
+            ],
+            "diagnostic_threshold": 0.5,
+            "threshold_accuracy": 0.6956521739130435
+          }
+        },
+        "t2": {
+          "n_eligible": 20,
+          "n_top1_correct": 20,
+          "n_with_conditional_distribution": 20,
+          "n_top3_correct": 20,
+          "n_missing_step": 0,
+          "top1_accuracy": 1.0,
+          "top3_accuracy": 1.0,
+          "conditional_distribution_coverage": 1.0,
+          "scope": "gold_resume_with_identifiable_gold_step; missing predictions count as incorrect",
+          "top3_scope": "all_T2_eligible; missing distribution counts as incorrect; null if none available",
+          "top1_source": "explicit resume_step; not unconditional joint probability"
+        },
+        "states": {
+          "V": {
+            "n_eligible": 51,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "macro_f1_labels": [
+              "CANCELLED",
+              "FULFILLED",
+              "VALID"
+            ],
+            "balanced_accuracy_labels": [
+              "CANCELLED",
+              "FULFILLED",
+              "VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "CANCELLED": {
+                "CANCELLED": 13
+              },
+              "FULFILLED": {
+                "FULFILLED": 6
+              },
+              "VALID": {
+                "VALID": 32
+              }
+            }
+          },
+          "F": {
+            "n_eligible": 52,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.15384615384615385,
+            "macro_f1": 0.3950617283950617,
+            "balanced_accuracy": 0.5510204081632653,
+            "macro_f1_labels": [
+              "BLOCKED",
+              "READY",
+              "UNKNOWN"
+            ],
+            "balanced_accuracy_labels": [
+              "BLOCKED",
+              "READY"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "BLOCKED": {
+                "BLOCKED": 3
+              },
+              "READY": {
+                "UNKNOWN": 44,
+                "READY": 5
+              }
+            }
+          },
+          "A": {
+            "n_eligible": 52,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "macro_f1_labels": [
+              "ACCESSED",
+              "NOT_ACCESSED"
+            ],
+            "balanced_accuracy_labels": [
+              "ACCESSED",
+              "NOT_ACCESSED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "ACCESSED": {
+                "ACCESSED": 46
+              },
+              "NOT_ACCESSED": {
+                "NOT_ACCESSED": 6
+              }
+            }
+          },
+          "B": {
+            "n_eligible": 49,
+            "n_excluded_unknown_or_missing": 3,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.9387755102040817,
+            "macro_f1": 0.8819277108433735,
+            "balanced_accuracy": 0.9651162790697674,
+            "macro_f1_labels": [
+              "BELIEVES_INVALID",
+              "BELIEVES_VALID"
+            ],
+            "balanced_accuracy_labels": [
+              "BELIEVES_INVALID",
+              "BELIEVES_VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "BELIEVES_INVALID": {
+                "BELIEVES_INVALID": 6
+              },
+              "BELIEVES_VALID": {
+                "BELIEVES_VALID": 40,
+                "BELIEVES_INVALID": 3
+              }
+            }
+          },
+          "C": {
+            "n_eligible": 51,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.9019607843137255,
+            "macro_f1": 0.6841772151898734,
+            "balanced_accuracy": 0.6600877192982456,
+            "macro_f1_labels": [
+              "ABANDONED",
+              "ACTIVE",
+              "COMPLETED",
+              "SUSPENDED"
+            ],
+            "balanced_accuracy_labels": [
+              "ABANDONED",
+              "ACTIVE",
+              "COMPLETED",
+              "SUSPENDED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "ABANDONED": {
+                "ABANDONED": 6,
+                "SUSPENDED": 3
+              },
+              "ACTIVE": {
+                "SUSPENDED": 1
+              },
+              "COMPLETED": {
+                "COMPLETED": 3
+              },
+              "SUSPENDED": {
+                "SUSPENDED": 37,
+                "ACTIVE": 1
+              }
+            }
+          },
+          "Q": {
+            "n_eligible": 52,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.9038461538461539,
+            "macro_f1": 0.8060041407867494,
+            "balanced_accuracy": 0.8611111111111112,
+            "macro_f1_labels": [
+              "NOT_APPLICABLE",
+              "UNKNOWN",
+              "assemble_frame",
+              "build_summary",
+              "check_policy",
+              "confirm_visit",
+              "create_return",
+              "do_exercise",
+              "submit_request",
+              "take_quiz"
+            ],
+            "balanced_accuracy_labels": [
+              "NOT_APPLICABLE",
+              "assemble_frame",
+              "build_summary",
+              "check_policy",
+              "confirm_visit",
+              "create_return",
+              "do_exercise",
+              "submit_request",
+              "take_quiz"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "NOT_APPLICABLE": {
+                "NOT_APPLICABLE": 9,
+                "submit_request": 1,
+                "do_exercise": 1,
+                "check_policy": 1
+              },
+              "assemble_frame": {
+                "assemble_frame": 1,
+                "UNKNOWN": 1
+              },
+              "build_summary": {
+                "UNKNOWN": 1,
+                "build_summary": 1
+              },
+              "check_policy": {
+                "check_policy": 11
+              },
+              "confirm_visit": {
+                "confirm_visit": 1
+              },
+              "create_return": {
+                "create_return": 1
+              },
+              "do_exercise": {
+                "do_exercise": 11
+              },
+              "submit_request": {
+                "submit_request": 11
+              },
+              "take_quiz": {
+                "take_quiz": 1
+              }
+            }
+          }
+        },
+        "mechanism_pairs": {
+          "contact_cancellation": {
+            "T1:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.75,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 4,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.75,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.75,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "long_term_commitment": {
+            "T1:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 4,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.25,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 4,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 4,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 4,
+              "n_evaluable": 4,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            }
+          },
+          "resume_position": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "T2:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "other_completion": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "resource_availability": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "nested_interruption": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "future_leak": {
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "hard_decision:equal": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "p_resume:equal": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "state_probs:equal": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "conditional_step_probs:equal": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "comprehension": {
+            "T1:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 3,
+              "n_evaluable": 3,
+              "n_pass": 3,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          }
+        }
+      }
+    }
+  },
+  "reproducibility": {
+    "matched": true,
+    "n_test_predictions": 312,
+    "prediction_sha256": "4f1d3e23f464669d362b81d2112e99bf5d455190e39cb480ce9128f2ab2d141d",
+    "dataset_layer": "P0",
+    "source_sha256": "93ca37e93442495039950c0f8c4c618fee4b8b178cfc52c3269b33cb9f0f7739",
+    "trained_checkpoint_hashes_matched": true,
+    "scope": "same source, inputs, configuration and environment; timing excluded"
+  },
+  "bootstrap_comparisons": [],
+  "calibration": "not fitted; no independent calibration split",
+  "statistical_limits": "few held-out task blueprints; intervals are exploratory; repeated seeds are not extra samples",
+  "run_commands": [
+    "python scripts/run_p0_evaluation.py --profile integrated --data data/p0/v0.3/p0_samples.json --config configs/p0_integrated.json --methods A1,A2,A3,A4,A5,A6 --seeds 0 --output-dir results/p0_release_v03_ablations",
+    "python scripts/check_p0_reproducibility.py --results-dir results/p0_release_v03_ablations"
+  ]
+}
