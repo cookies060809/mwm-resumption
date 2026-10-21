@@ -103,3 +103,7 @@ python scripts/run_p0_evaluation.py --profile integrated --data data/p0/v0.3/p0_
 python scripts/check_p0_reproducibility.py --results-dir results/p0_release_v03_ablations
 python data/auxiliary/C_multisource_v1/verify_bundle.py
 ```
+
+## 后续：A 神经实现独立接入
+
+已合入 main / feat/a-p0-v02-ec-jmf 的 `28525fb`，在完整 B v0.3 上完成 A0–A6 各 20 种子从头训练、六种本地对照重跑和公共协议评分。新神经主模型 T1 平均准确率 82.50%（样本标准差 3.19%），B4 为 78.26%；这与上述旧数值 B10 分开报告。尚不能宣称统计显著或真实人物有效。运行、原 checkpoint 逐张量复现、指标口径和完整结果见 [neural_integration.md](neural_integration.md) 及 [neural_p0_v03_results.json](neural_p0_v03_results.json)。本地完整测试现为 168 项通过。
