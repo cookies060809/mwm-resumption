@@ -9,7 +9,8 @@ data/
 ├── p0/
 │   ├── README.md
 │   ├── p0_samples.json        # 16 条 v0.1 冻结种子
-│   └── p0_samples_v0.2.json   # 240 条 v0.2 正式批次
+│   ├── p0_samples_v0.2.json   # 240 条 v0.2 正式批次
+│   │   └── p0_samples_v0.3.json   # 14 条不确定性批次（reviewed，B 2026-10-21 签核）
 └── p1/
     └── README.md              # P1 访问、伦理与未来 schema 说明
 ```

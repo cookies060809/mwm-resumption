@@ -184,7 +184,7 @@ A 说得对：**标签噪声会直接变成指标上限**。但“标签噪声�
 python scripts/p0_quality_report.py
 ```
 
-它对 `validate_data.DATA_FILES` 里的每个文件（v0.1 的 16 条与 v0.2 的 240 条）输出规模、校验结果、证据覆盖、悬空引用、cutoff 完整性、P07 输入一致性、域/划分分布、SHA256，以及**逐枚举的"schema 声明过 vs 数据用过"对照**。
+它对 `validate_data.DATA_FILES` 里的每个文件（v0.1 的 16 条、v0.2 的 240 条与 v0.3 的 14 条候选）输出规模、校验结果、证据覆盖、悬空引用、cutoff 完整性、P07 输入一致性、域/划分分布、SHA256，以及**逐枚举的"schema 声明过 vs 数据用过"对照**；最后一段会把同一 `schema_version` 的批次合并统计，这样"某个取值仍没人用"不会被"它只在一个文件里为 0"这种单文件口径掩盖。
 
 两条口径要记住：
 
@@ -211,6 +211,36 @@ python scripts/p0_quality_report.py
 这正是 A 在 `A_P0_CHECK_REPORT.md` 里点名的"缺少 UNCERTAIN 接触和完整状态覆盖"。**规模目标达成 ≠ 机制覆盖达成**：滤波器在这份数据上学不到"接触不确定""理解不可判定""证据只是大概"这几档，而它们恰好是本项目要建模的东西。下一批的靶子按这张表补，不要再按家族数凑量。
 
 v0.1 的 16 条是冻结基线，短板相同（`A.UNCERTAIN`、`person_access.UNCERTAIN`、`F.UNKNOWN` 为 0），保留不动。
+
+### v0.3 批次补上 11 个不确定性档位（2026-10-21 实测）
+
+`scripts/build_p0_uncertainty.py` 生成 7 个新家族 / 14 条 / 77 事件（`data/p0/p0_samples_v0.3.json`，仍用 `p0-record/v0.2.0`），逐档实测：
+
+| 档位 | v0.2 | + v0.3 | 由哪个家族承载 |
+|---|---:|---:|---|
+| `state.A.UNCERTAIN` | 0 | 1 | P01-W6-A（投递无回执） |
+| `event.person_access.UNCERTAIN` | 0 | 1 | 同上 |
+| `event.certainty.UNCERTAIN` | 0 | 2 | P01-W6-A、P01-W8-A |
+| `event.certainty.PROBABLE` | 0 | 1 | P01-S6-A（主管口头转述） |
+| `state.B.UNRESOLVED` | 0 | 1 | P01-S6-A（两条矛盾通知未调和） |
+| `state.F.UNKNOWN` | 0 | 1 | P05-D6-A（设备状态不可观察） |
+| `event.person_comprehension.NOT_UNDERSTOOD` | 0 | 1 | P08-W7-B（收到但没看懂） |
+| `event.person_comprehension.UNCERTAIN` | 0 | 4 | P08-S7-B、P01-W6-B、P01-S6-A、P01-W8-A |
+| `state.C.ACTIVE` | 0 | 1 | P02-D7-A（承诺 + 保护材料的持续行动） |
+| `state.C.UNKNOWN` | 0 | 1 | P02-D7-B（无承诺也无放弃的证据） |
+| `state.V.UNKNOWN` | 0 | 1 | P01-W8-A（只有一条未确认的转述，世界事实未定；仍有点标签） |
+
+合并两个批次后，`p0_quality_report.py` 的"声明过但从未使用"只剩 **1 个：`record.split.calibration`**，那仍是 C 的协议决定，不由 B 单方面补。
+
+**这一批已验收：** B 于 2026-10-21 逐对复核 [`p0_spot_audit_v0.3_all7.md`](p0_spot_audit_v0.3_all7.md)（7 对 / 28 个复选框，结论全部"通过"），`annotation.status` 升 `reviewed`。这些 `UNKNOWN` 是脚本设计的认识处境，"设计得是否真的可判"由 §1.4 那条判据（能否指名 cutoff 之前缺的是哪一条证据）第一次成批检验，结论是可判。**签核的仍是 B 自己**，A/C 盲审没做，所以它进不了 `adjudicated`，也不能对外宣称双人复核。
+
+标签口径全部按 v0.2 已有惯例写，没有为这批新造规则：`p0_scripted_policy` 与机制 1:1（受 Gate 5 约束，`p0_expected_action` 必须能由政策 + 状态推出），理解不到位的一臂与 v0.2 的 15 个误解臂同为 `suspend_or_wait`，`indeterminate` 仍只给输入不可区分的家族。三处由 B 在复核时明确认可（2026-10-21）：
+
+1. P01-W8-A 的 `V=UNKNOWN` **不等于**没有点标签——政策看的是"有没有已知取消"，答案是没有，所以期望动作是 `resume_build_summary`。若把它写成 `indeterminate`，就是把"世界事实未定"和"标签未定"混成一件事。
+2. P01-S6 两臂期望动作同为 `do_not_resume`：这对操控的是信念是否调和（`UNRESOLVED` vs `BELIEVES_INVALID`），动作维度刻意保持常量。v0.2 的对照对里两臂动作总是相反的，这是第一批动作不反转的对。
+3. 7 对里有 4 对（P01-S6 / P05-D6 / P02-D7 / P08-S7）A/B 事件条数不等。v0.2 把条数对齐是机器预检的前提，但这里操控变量本身就是"多/少一条证据事件"，补中性事件反而会污染 `pair_diff_report.py` 的读数。
+
+口径与 A 对齐：A 在 2026-10-21 写入 `docs/internal/a/A_ALGORITHM_DECISIONS.md` 的"长期约束"段把 `UNRESOLVED` 定义为"有证据表明人物暂时无法判断"、`UNKNOWN` 定义为"观察者缺乏足够证据"，本批按这个区分写——P01-S6-A 的 `B=UNRESOLVED` 有人物自述"到底是撤还是不撤"撑着，P01-W6 的 `B=UNKNOWN` 一条证据都没有；A 的例二（收到但误解通知、信念仍可维持有效）对应 P08-W7-B。A 同一段还确认了"v0.2 已入库但尚未接入 A 适配器"，这条以前是 B 单方面的推测，现在是 A 自己记的决定，接入验收由 A 侧推进。
 
 P1 阶段再加：
 
@@ -260,8 +290,8 @@ known_issues: ...
 
 ### 待完成
 
-- [ ] **抽查 B 的自审结论。** v0.2 的 240/240 `reviewed` 是 B 自己写入的，尚无第二双眼睛验证；随机抽 20 条用 `pair_diff_report.py --pair` 逐对复核，确认"reviewed"名副其实。
-- [ ] **补 §4 表里 11 个"声明过但从未出现"的不确定性档位。**（`A.UNCERTAIN`、`person_access.UNCERTAIN`、`person_comprehension.{NOT_UNDERSTOOD,UNCERTAIN}`、`certainty.{PROBABLE,UNCERTAIN}`、`V/F.UNKNOWN`、`B.UNRESOLVED`、`C.{ACTIVE,UNKNOWN}`）这是 A 点名的缺口，比再加家族数优先。
+- [x] **抽查 B 的自审结论。** [`p0_spot_audit_v0.2_seed20261021.md`](p0_spot_audit_v0.2_seed20261021.md)（10 对 / 20 条，机制各 1 对 + `sha256("20261021:家族名")` 排序补齐，39 个复选框）已由 B 于 2026-10-21 全部勾为通过。**这仍然只是 B 的自审**，不是第二双眼睛；对外表述只能是"B 复核 + B 抽查签核"，A/C 盲审见下一项。要换样本用 `python scripts/audit_packet.py --seed <新值> --out <新文件>`，旧签核不复用。
+- [x] **复核 v0.3 的 7 对不确定性批次并升到 `reviewed`（2026-10-21 完成）。** 11 个"声明过但从未出现"的档位（`A.UNCERTAIN`、`person_access.UNCERTAIN`、`person_comprehension.{NOT_UNDERSTOOD,UNCERTAIN}`、`certainty.{PROBABLE,UNCERTAIN}`、`V/F.UNKNOWN`、`B.UNRESOLVED`、`C.{ACTIVE,UNKNOWN}`）已由 `scripts/build_p0_uncertainty.py` 覆盖。全批 7 对的签核表 [`p0_spot_audit_v0.3_all7.md`](p0_spot_audit_v0.3_all7.md) 的 28 个复选框已全部勾为通过，上面那三点也逐条认可，批次升 `reviewed`（`annotator_id=B`、`reviewed_at=2026-10-21`）。这是 A 点名的缺口，现已关闭，下一步换成 A/C 盲审。
 - [ ] **和 C 定 `split.calibration`。** C 的交接协议要四档，v0.2 只给了 train/dev/test；要么按家族重划出一档 calibration，要么由 C 改协议。锁版本前必须三方确认，B 不单方面改字段。
 - [ ] A/C 盲审 8 条（A、C 各 4 条，每机制抽 1 条），只给事件与任务图，记录分歧。
 - [ ] 根据分歧改手册/事件，不强行说服。

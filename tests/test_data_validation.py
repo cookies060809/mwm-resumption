@@ -1,5 +1,6 @@
 import copy
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -9,10 +10,15 @@ sys.path.insert(0, str(ROOT))
 from scripts.validate_data import check_record, load_records, validate_all  # noqa: E402
 
 V02_PATH = ROOT / "data" / "p0" / "p0_samples_v0.2.json"
+V03_PATH = ROOT / "data" / "p0" / "p0_samples_v0.3.json"
 
 
 def load_v02():
     return json.loads(V02_PATH.read_text(encoding="utf-8"))
+
+
+def load_v03():
+    return json.loads(V03_PATH.read_text(encoding="utf-8"))
 
 
 def test_repository_data_valid() -> None:
@@ -133,8 +139,8 @@ def test_v02_other_completion_repeat_is_not_resume() -> None:
     assert p04["B"]["state_at_cutoff"]["Q"] != "NOT_APPLICABLE"
 
 
-def test_v02_completed_steps_replay() -> None:
-    for record in load_v02():
+def test_completed_steps_replay_over_every_batch() -> None:
+    for record in load_v02() + load_v03():
         steps = set(record["task_steps"])
         completed = {
             event["step_id"]
@@ -160,8 +166,9 @@ def test_v02_unknown_labels_carry_no_evidence() -> None:
 
 def test_v02_split_is_blueprint_disjoint() -> None:
     """A task blueprint must not appear in two splits, otherwise the model can
-    memorise the task rather than the mechanism."""
-    records = load_v02()
+    memorise the task rather than the mechanism. Checked over every v0.2-line
+    batch, because a follow-up batch is where a reused blueprint would slip in."""
+    records = load_v02() + load_v03()
     blueprint_splits: dict[str, set[str]] = {}
     for record in records:
         family = record["base_story_id"]
@@ -169,6 +176,38 @@ def test_v02_split_is_blueprint_disjoint() -> None:
         blueprint_splits.setdefault(blueprint, set()).add(record["split"])
     crossed = {key: value for key, value in blueprint_splits.items() if len(value) > 1}
     assert crossed == {}, f"blueprints crossing splits: {crossed}"
+
+
+def test_v03_batch_is_signed_by_b() -> None:
+    records = load_v03()
+    assert len(records) == 14
+    assert len({record["base_story_id"] for record in records}) == 7
+    assert all(record["schema_version"] == "p0-record/v0.2.0" for record in records)
+    # B ticked p0_spot_audit_v0.3_all7.md on 2026-10-21, so the batch may now carry
+    # the sign-off. second_reviewer_id stays null until A/C do their blind review.
+    assert all(record["annotation"]["status"] == "reviewed" for record in records)
+    assert all(record["annotation"]["annotator_id"] == "B" for record in records)
+    assert all(record["annotation"]["reviewed_at"] == "2026-10-21" for record in records)
+    assert all(record["annotation"]["second_reviewer_id"] is None for record in records)
+
+
+def test_v03_closes_the_uncertainty_enum_gaps() -> None:
+    """v0.2 hits its 240-record target while 11 uncertainty values stay unused, so
+    volume alone cannot show the mechanism cells are covered. Pooling v0.2 with the
+    v0.3 uncertainty batch must leave only the split C has not decided on."""
+    from scripts.p0_quality_report import enum_counts
+    from scripts.validate_data import SCHEMAS, load_json
+
+    schema = load_json(SCHEMAS["p0-record/v0.2.0"])
+    records = load_v02() + load_v03()
+    events = [event for record in records for event in record["observed_events"]]
+    unused = [
+        f"{label}.{value}"
+        for label, (allowed, counts) in enum_counts(records, events, schema).items()
+        for value in allowed
+        if not counts.get(value)
+    ]
+    assert unused == ["record.split.calibration"]
 
 
 def test_export_matches_evaluation_protocol() -> None:
@@ -219,3 +258,77 @@ def test_export_matches_evaluation_protocol() -> None:
             b, sort_keys=True, ensure_ascii=False
         )
         assert item["observation"]["cutoff"] > 0
+
+
+def test_audit_packet_sample_is_pinned() -> None:
+    """The worksheets are signed by hand, so CI cannot byte-diff them against a fresh
+    run. They are also the only thing proving the draw is interpreter-independent:
+    `random.Random(seed)` shuffles differently across Python series, the packets were
+    drawn on 3.13 and CI pins 3.11, so comparing the committed family list against
+    select() is what keeps a re-shuffle from silently invalidating a signature."""
+    from scripts.audit_packet import clean_pairs, select
+
+    pairs = clean_pairs(load_v02())
+    assert len(pairs) == 120
+    sample = select(pairs, 10, 20261021)
+    assert sample == select(clean_pairs(load_v02()), 10, 20261021)
+    assert len(set(sample)) == 10
+    assert {pairs[family][0]["mechanism"] for family in sample} == {
+        pair["mechanism"] for pair in load_v02()
+    }
+    assert all(len(pairs[family]) == 2 for family in sample)
+
+    worksheets = {
+        "p0_spot_audit_v0.2_seed20261021.md": (sample, 10),
+        "p0_spot_audit_v0.3_all7.md": (
+            select(clean_pairs(load_v03()), 7, 20261021),
+            7,
+        ),
+    }
+    for name, (expected, count) in worksheets.items():
+        text = (ROOT / "docs" / "annotation" / name).read_text(encoding="utf-8")
+        assert re.findall(r"^### (\S+)", text, re.M) == expected, name
+        assert text.count("### ") == count, name
+
+
+def test_spot_audit_packets_carry_bs_signoff() -> None:
+    """B read both worksheets pair by pair on 2026-10-21 and the ticks are the only
+    record of that, so a regenerated (blank) or half-ticked sheet must fail here.
+    The box counts are also quoted in data/p0/README.md, so a sampler change has to
+    be reconciled with the signed sheet rather than silently re-drawn."""
+    packets = {
+        "p0_spot_audit_v0.2_seed20261021.md": (39, 10),
+        "p0_spot_audit_v0.3_all7.md": (28, 7),
+    }
+    for name, (boxes, pairs) in packets.items():
+        text = (ROOT / "docs" / "annotation" / name).read_text(encoding="utf-8")
+        assert text.count("- [x]") == boxes, name
+        assert "- [ ]" not in text, name
+        assert text.count("：**通过**（B · 2026-10-21）") == pairs, name
+        assert "签核：B 于 2026-10-21" in text, name
+
+
+def test_audit_packet_refuses_to_clobber_a_signed_sheet() -> None:
+    """Re-running the generator over a signed sheet would erase the sign-off without
+    a word, which is the one way this instrument can silently produce fake review
+    records. The refusal is the guard, so keep it armed."""
+    from scripts.audit_packet import main as packet_main
+
+    argv = sys.argv
+    try:
+        sys.argv = [
+            "audit_packet.py",
+            "--file",
+            "data/p0/p0_samples_v0.3.json",
+            "--records",
+            "14",
+            "--out",
+            "docs/annotation/p0_spot_audit_v0.3_all7.md",
+        ]
+        assert packet_main() == 1
+    finally:
+        sys.argv = argv
+    text = (ROOT / "docs" / "annotation" / "p0_spot_audit_v0.3_all7.md").read_text(
+        encoding="utf-8"
+    )
+    assert text.count("- [x]") == 28

@@ -1,6 +1,7 @@
 # P0 受控诊断集
 
 > **当前规模：** `p0-record/v0.2.0`，15 个任务骨架 × 8 个受控机制 = **120 个故事家族 × A/B = 240 条**、1831 个事件；`annotation.status=reviewed`（B 已完成人工复核）。
+> **不确定性补量批次：** `p0_samples_v0.3.json` 是 7 家族 / 14 条，用于填 v0.2 里 11 个“声明过但没用过”的不确定性档位；B 于 2026-10-21 逐对复核并把 [`p0_spot_audit_v0.3_all7.md`](../../docs/annotation/p0_spot_audit_v0.3_all7.md) 的 28 个复选框全部勾为通过，`status=reviewed`。草稿由 Qoder 生成、签核署名 B（与 v0.2 同一惯例），A/C 盲审仍未做。
 > **性质：** P0 是人工脚本 + 明确规则的受控诊断数据，**不是真实人类行为证据**。P1 尚未采集。
 > **v0.1 种子：** `p0_samples.json` 保留 16 条冻结版本，供 A 的现有适配器与回归测试使用；v0.2 是新的正式批次。
 
@@ -9,18 +10,23 @@
 | 文件 | 用途 |
 |---|---|
 | [`p0_samples_v0.2.json`](p0_samples_v0.2.json) | 240 条 v0.2 记录（当前正式批次） |
+| [`p0_samples_v0.3.json`](p0_samples_v0.3.json) | 14 条不确定性批次（`reviewed`，B 2026-10-21 签核） |
 | [`p0_samples.json`](p0_samples.json) | 16 条 v0.1 冻结种子（A 适配器 `p0-record/v0.1.0` 仍读此文件） |
 | [`../../schema/p0_record_v0.2.schema.json`](../../schema/p0_record_v0.2.schema.json) | v0.2 JSON Schema（Draft-07），含 `split`/`mechanism`/事件级 `U`/`p0_design` |
 | [`../../schema/p0_record.schema.json`](../../schema/p0_record.schema.json) | v0.1 schema（冻结） |
 | [`../../scripts/build_p0_v02.py`](../../scripts/build_p0_v02.py) | 可复现构建 240 条（种子升级 + 112 家族生成） |
+| [`../../scripts/build_p0_uncertainty.py`](../../scripts/build_p0_uncertainty.py) | 可复现构建 v0.3 不确定性批次（7 家族） |
 | [`../../scripts/build_p0_seed.py`](../../scripts/build_p0_seed.py) | 可复现构建 16 条 v0.1 种子 |
-| [`../../scripts/validate_data.py`](../../scripts/validate_data.py) | 两个批次的 Schema + 跨字段一致性校验 |
-| [`../../scripts/pair_diff_report.py`](../../scripts/pair_diff_report.py) | 逐字段 A/B 差异报告（`--full --pair P01-W2` 看单对） |
+| [`../../scripts/validate_data.py`](../../scripts/validate_data.py) | 三个批次的 Schema + 跨字段一致性校验 |
+| [`../../scripts/pair_diff_report.py`](../../scripts/pair_diff_report.py) | 逐字段 A/B 差异报告（`--pair P01-W2` 看单对，`--full` 看全部对） |
+| [`../../scripts/audit_packet.py`](../../scripts/audit_packet.py) | 生成可复现的人工抽查包（固定 seed，机制各 1 对再按哈希排序补齐，签核框留空；已签核的表默认拒绝覆盖，需 `--force`） |
 | [`../../scripts/export_eval_format.py`](../../scripts/export_eval_format.py) | 转成 C 的 `inputs.jsonl` / `labels.jsonl`（协议 `c-evaluation-draft-1`） |
 | [`eval_v0.2/`](eval_v0.2/) | 已导出的评测格式：`inputs.jsonl`、`labels.jsonl`、`MAPPING.md` |
 | [`../../docs/annotation/annotation_handbook_v1.0.md`](../../docs/annotation/annotation_handbook_v1.0.md) | 标注手册 v1.0 |
 | [`../../docs/annotation/label_quality_plan_v0.1.md`](../../docs/annotation/label_quality_plan_v0.1.md) | 标注质量方案 |
 | [`../../docs/annotation/p0_pair_review_table.md`](../../docs/annotation/p0_pair_review_table.md) | 复核表与机器预检结果 |
+| [`../../docs/annotation/p0_spot_audit_v0.2_seed20261021.md`](../../docs/annotation/p0_spot_audit_v0.2_seed20261021.md) | v0.2 抽查包（10 对 / 20 条，39 个复选框已由 B 于 2026-10-21 全部勾为通过） |
+| [`../../docs/annotation/p0_spot_audit_v0.3_all7.md`](../../docs/annotation/p0_spot_audit_v0.3_all7.md) | v0.3 全批抽查包（7 对 / 14 条，28 个复选框已全部勾为通过） |
 
 ## 2. 加载示例与输入/标签硬边界
 
@@ -67,13 +73,17 @@ design = record["p0_design"]                # 设计簿记，绝不是输入
 
 按**任务骨架**分层：同一骨架不跨 split，避免模型记住任务而不是机制；同族 A/B 必在同一 split，`split` 是家族级字段。每机制仍为 9/3/3。校准集暂不单列，C 需要时从 dev 再切。
 
+v0.3 批次引入 7 个新骨架（`W6/S6/D6/W7/S7/D7/W8`），与 v0.2 的骨架零重叠，按家族分为 train 3 / dev 2 / test 2；`split.calibration` 依旧为 0，等 C 定校准协议再分配。
+
 ## 5. 校验
 
 ```bash
 python scripts/validate_data.py
 python scripts/pair_diff_report.py
-python scripts/pair_diff_report.py --full --pair P04
+python scripts/pair_diff_report.py --full            # 全部家族的逐字段详情
+python scripts/pair_diff_report.py --pair P04        # 单对逐字段详情
 python scripts/export_eval_format.py          # 生成 data/p0/eval_v0.2/*.jsonl
+python scripts/audit_packet.py --records 20 --seed 20261021   # 人工抽查包（签核框留空）
 ```
 
 当前结果：
@@ -81,6 +91,7 @@ python scripts/export_eval_format.py          # 生成 data/p0/eval_v0.2/*.jsonl
 ```text
 OK: 16 records, 8 A/B pairs; schema and cross-field checks passed.
 OK: 240 records, 120 A/B pairs; schema and cross-field checks passed.
+OK: 14 records, 7 A/B pairs; schema and cross-field checks passed.
 P07 identity failures: 0
 ```
 
@@ -97,12 +108,13 @@ P07 identity failures: 0
 
 | 检查项 | 结果 |
 |---|---|
-| Schema 校验（v0.1 / v0.2） | 16/16、240/240 |
-| 证据覆盖率（非 `UNKNOWN`） | 240/240 |
-| cutoff 无未来事件 | 240/240 |
-| A/B 对照隔离 | 120/120（逐字段 diff，事件条数已对齐） |
+| Schema 校验（v0.1 / v0.2 / v0.3） | 16/16、240/240、14/14 |
+| 证据覆盖率（非 `UNKNOWN`） | 240/240（v0.3 另 14/14） |
+| cutoff 无未来事件 | 240/240（v0.3 另 14/14） |
+| A/B 对照隔离 | 120/120（逐字段 diff，事件条数已对齐）；v0.3：7/7 无意外漂移，但 4 对条数刻意不等（操控变量就是一条证据事件） |
 | P07 输入一致性 | 15/15 PASS |
-| B 人工复核 | 240/240，`status=reviewed` |
+| 枚举覆盖（v0.2 + v0.3 合并） | 仅剩 `split.calibration` 未使用 |
+| B 人工复核 | v0.2：240/240，`status=reviewed`；v0.3：14/14，`status=reviewed`（2026-10-21） |
 | A/C 盲审 | 未完成（每机制抽 1 条，共 8 条） |
 | P1 双人标注一致性 | 尚未采集，N/A |
 
@@ -154,12 +166,38 @@ p1_status: not_collected
 noise_ceiling: N/A (P0 scripted); P1 TBD
 ```
 
+### v0.3 不确定性批次（B 已复核）
+
+数据文件 SHA256：`8dfba39ba7d0b3b2779e141038460c5abd7e2c77d804f8b8d94500849ef712e8`（LF；`sha256sum data/p0/p0_samples_v0.3.json` 可复核）。
+
+```text
+dataset: p0-v0.3-uncertainty   # schema 仍是 p0-record/v0.2.0
+status: reviewed by B 2026-10-21; A/C blind review still pending
+n: 14 (7 A/B pairs, 7 families, 77 events)
+purpose: fill the 11 enum values v0.2 declares but never uses
+  state.V.UNKNOWN=1  state.F.UNKNOWN=1  state.A.UNCERTAIN=1  state.B.UNRESOLVED=1
+  state.C.ACTIVE=1   state.C.UNKNOWN=1  event.person_access.UNCERTAIN=1
+  event.person_comprehension.NOT_UNDERSTOOD=1, .UNCERTAIN=4
+  event.certainty.PROBABLE=1, .UNCERTAIN=2
+schema_pass: 14/14
+evidence_coverage: 14/14
+cutoff_no_future: 14/14
+pair_isolation: 7/7 clean A/B (pair_diff_report --full, no unintended field drift)
+paired_event_count_equal: 3/7 - P01-S6 / P05-D6 / P02-D7 / P08-S7 differ by design
+policy_by_mechanism: 1:1 as v0.2; unclear-comprehension arms = suspend_or_wait; no indeterminate here
+splits: train 3 / dev 2 / test 2 families (blueprints W6 S6 D6 W7 S7 D7 W8, disjoint from v0.2)
+enum_gap_remaining: record.split.calibration (needs C's calibration protocol)
+human_audit: 14/14 (annotator_id=B, status=reviewed)
+self_audit_packet: docs/annotation/p0_spot_audit_v0.3_all7.md (28 boxes, all ticked 通过)
+```
+
 ## 10. 后续
 
 | 阶段 | 交付 |
 |---|---|
-| 当前 | 240 条 v0.2，B 复核完成，结构与对照校验通过 |
-| 下一步（A/C） | 每机制抽 1 条盲审（8 条）→ 仲裁 → `adjudicated`；A 加 v0.2 适配器分支；C 确认字段映射 |
+| 当前 | 240 条 v0.2 + 14 条 v0.3 不确定性批次，均 `reviewed`（B 自审签核完成） |
+| 已完成（B） | [`p0_spot_audit_v0.3_all7.md`](../../docs/annotation/p0_spot_audit_v0.3_all7.md)（7 对 / 28 框）与 [`p0_spot_audit_v0.2_seed20261021.md`](../../docs/annotation/p0_spot_audit_v0.2_seed20261021.md)（10 对 / 39 框）已由 B 于 2026-10-21 全部勾为通过，v0.3 随之升 `reviewed` |
+| 下一步（A/C，B 催办） | 每机制抽 1 条盲审（8 条）→ 仲裁 → `adjudicated`；A 加 v0.2/v0.3 适配器分支；C 确认字段映射与 `split.calibration` 协议 |
 | P1 | 另立 schema 与标注流程；当前不纳入竞赛证据 |
 
 > 详细规则见 [标注手册 v1.0](../../docs/annotation/annotation_handbook_v1.0.md)、[质量方案](../../docs/annotation/label_quality_plan_v0.1.md) 与 [复核表](../../docs/annotation/p0_pair_review_table.md)。
