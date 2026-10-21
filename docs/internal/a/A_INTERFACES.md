@@ -57,7 +57,7 @@ joint_fit = fit(examples, stage="joint", epochs=1, seed=0,
 
 损失包含逐因子有证据且非UNKNOWN的state NLL、T1 BCE、条件T2 NLL、严格信息等价的联合(B,C,Q) JS、隐蔽世界干预的knowledge JS、主观完成/终止与Q冲突代价。各项按实际可用数归一；零支持标签以固定概率下限计算并单独计入unsupported_state_targets，不能声称该参数化能拟合所有标签。配对须调用者确认同心智先验/无旁路线索，并通过输入视图与图等价检查；不因机制名相同自动配对，不约束世界或T1必须相同。A0结构约束可使JS/冲突项恒零，不能据此宣称约束训练有效。
 
-只允许同一数据层的train样本进入fit；开发/测试/校准由外部管理。P0 reviewed要求排除v0.3 draft候选。`observed_targets`预备P1删失掩码：已观测恢复可用正例，未恢复且窗口不完整遮蔽；原始P1字段映射和可靠状态证据仍待B/C。P0监督与P1真实行为不混合。
+只允许同一数据层的train样本进入fit；开发/测试/校准由外部管理。P0训练要求reviewed/adjudicated；v0.3现已reviewed，本轮神经主实验不合并该小批。`observed_targets`预备P1删失掩码：已观测恢复可用正例，未恢复且窗口不完整遮蔽；原始P1字段映射和可靠状态证据仍待B/C。P0监督与P1真实行为不混合。
 
 `ABLATIONS`提供A0及A1去接触/理解门控、A2去B→C与终止C→Q耦合、A3最近窗口替代持久记忆、A4去一致性项、A5去步骤辅助损失、A6固定参考门控。A2不是完整独立BCQ基线，A3不是学到的遗忘机制；A7等量历史和完整对比实验归C，尚未执行。
 
@@ -71,3 +71,16 @@ joint_fit = fit(examples, stage="joint", epochs=1, seed=0,
 4. A输出字段与C现有normalize_a_output基本相合，仍需C确认p=0的T2=None、A关键事件汇总、逐因子证据/辅助U字段如何保留、阈值/概率覆盖、预算和错误处理。内部posterior/model不送C JSON。
 5. C文档记录的MENTIS候选SHA是7c6ea55e007a64233c3a0f987b6d229476f3fdf6；本轮未核验官方checkout。正式锁定版本、模型/命令/seed控制、调用预算与等量上下文对照仍需C完成，不能称已接入或复现。
 6. P1仍需B的授权数据/schema/时间与删失证据，以及C的人物/任务族划分、独立校准集、公平基线/预算。真实效果、校准和泛化结论尚不可得。
+
+
+## 神经训练与复现（a-neural-p0/v1）
+
+正式入口 `python -m models.ecr_mwm.neural_training --config configs/a_neural_p0.json`，独立依赖 `requirements-neural.txt` 固定PyTorch 2.11.0。世界/人物GRU隔离，神经网络输出接触/理解/采信、承诺与记忆等命名门控，PyTorch在现有有限状态支持上精确边缘化并自动微分；旧中央差分与float精确/SMC核保留作参考，不冒充神经训练。F初始分布是独立可学习的世界先验。
+
+主批为最新修正v0.2（144/48/48），v0.3现已reviewed，仅作冻结模型补充诊断。预先固定A0–A6、种子0–19、40轮全批AdamW、统一dev masked state+T1+T2 NLL选模规则；所有选模结束才评价test。T1阈值0.5/ECE10，T2条件掩码，T3非UNKNOWN且有cutoff证据；Q按图内位置评分。完整协议在配置，正式生成产物集中于 `results/p0/a_neural_v1/`。
+
+A2使用独立BCQ后验而非旧局部开关；A3丢弃人物近5事件以前记忆但保留世界重放；A4去实际事件语义软对齐和严格信息等价联合JS；A5去训练步骤损失而仍评价；A6固定结构转移门控，但保留共同可学习世界先验/行为头。严格等价JS可能由结构保证为零，不能宣称验证全部认识损失。模型只编码结构化类别，不学习自然语言解析，输入U不是理解识别成绩。
+
+每次选中模型均实际torch.save/load并检查T1/T2/T3一致，仅保留预指定A0 seed0的最终模型。`--predict <checkpoint> --data <P0 JSON>`从输入白名单预测并导出新模型自己的逐事件后验/理解证据轨迹，不读取监督作为特征。公共C update/MENTIS接口未替换。
+
+对于B手册的16条信念争议，A建议将“愿意继续”首先视为C证据，除非明确表达目标有效性，否则不足以确定B；现阶段保持UNKNOWN掩码，不自行改B数据，需B/C共同统一手册和仲裁。真实P1行为、独立校准及公平MENTIS比较仍待交付。
