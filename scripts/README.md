@@ -52,7 +52,7 @@ python scripts/validate_data.py          # 构建后必须重跑
 
 ## `build_p0_uncertainty.py`
 
-可复现构建 v0.3 不确定性候选批次：7 家族 / 14 条，专门填 v0.2 里“schema 声明过但一次没用”的 11 个不确定性档位（`V=UNKNOWN`、`F=UNKNOWN`、`A=UNCERTAIN`、`B=UNRESOLVED`、`C=ACTIVE`、`C=UNKNOWN`、事件级 `person_access=UNCERTAIN`、`person_comprehension=NOT_UNDERSTOOD/UNCERTAIN`、`certainty=PROBABLE/UNCERTAIN`），输出 `data/p0/p0_samples_v0.3.json`。
+可复现构建 v0.3 不确定性批次：7 家族 / 14 条，专门填 v0.2 里“schema 声明过但一次没用”的 11 个不确定性档位（`V=UNKNOWN`、`F=UNKNOWN`、`A=UNCERTAIN`、`B=UNRESOLVED`、`C=ACTIVE`、`C=UNKNOWN`、事件级 `person_access=UNCERTAIN`、`person_comprehension=NOT_UNDERSTOOD/UNCERTAIN`、`certainty=PROBABLE/UNCERTAIN`），输出 `data/p0/p0_samples_v0.3.json`。
 
 ```bash
 python scripts/build_p0_uncertainty.py
@@ -62,20 +62,20 @@ python scripts/pair_diff_report.py --file data/p0/p0_samples_v0.3.json --full
 
 每条的 `UNKNOWN` 都是脚本设计出来的认识处境，不是标注者没想清楚：校验器强制 `UNKNOWN` 因子不得带证据、非 `UNKNOWN` 因子必须带证据，所以偷懒的标签会直接校验失败（口径见标注手册 §1.4）。
 
-生成器沿用 v0.2 的口径，不新造惯例：`p0_scripted_policy` 与机制 1:1 固定（contact_cancellation→`continue_if_no_known_cancellation`，comprehension→`act_on_believed_status`，long_term_commitment→`resume_if_committed_and_unfinished`，resource_availability→`execute_if_ready_else_wait`）；理解不到位的一臂跟 v0.2 的 15 个误解臂一样写 `suspend_or_wait`；`indeterminate` 只留给输入不可区分的家族，所以 `V=UNKNOWN` 的 P01-W8-A 仍有点标签（没有已知取消 → 继续）。两点留给 B 复核时拍板：P01-S6 两臂期望动作同为 `do_not_resume`（操控维度是信念是否调和，不是动作），以及 7 对里 4 对（P01-S6 / P05-D6 / P02-D7 / P08-S7）A/B 事件条数不等——v0.2 是条数对齐的，这里刻意不对齐，因为操控变量本身就是"多/少一条证据事件"。
+生成器沿用 v0.2 的口径，不新造惯例：`p0_scripted_policy` 与机制 1:1 固定（contact_cancellation→`continue_if_no_known_cancellation`，comprehension→`act_on_believed_status`，long_term_commitment→`resume_if_committed_and_unfinished`，resource_availability→`execute_if_ready_else_wait`）；理解不到位的一臂跟 v0.2 的 15 个误解臂一样写 `suspend_or_wait`；`indeterminate` 只留给输入不可区分的家族，所以 `V=UNKNOWN` 的 P01-W8-A 仍有点标签（没有已知取消 → 继续）。B 复核时认可的两处刻意破例：P01-S6 两臂期望动作同为 `do_not_resume`（操控维度是信念是否调和，不是动作），以及 7 对里 4 对（P01-S6 / P05-D6 / P02-D7 / P08-S7）A/B 事件条数不等——v0.2 是条数对齐的，这里刻意不对齐，因为操控变量本身就是"多/少一条证据事件"。
 
-**批次状态是 `draft`、`annotator_id=agent-draft`**：B 本人尚未复核，因此它不是已验收数据，不得导出给 C，也不得作为 A 的训练输入。`split.calibration` 仍为空——那要 C 先定校准协议。
+**批次状态是 `reviewed`（B 于 2026-10-21 逐对签核，草稿由本脚本生成、签核署名 B，与 v0.2 同一惯例）**，可以交 A/C 复核；但 A 的适配器仍只认 `p0-record/v0.1.0`，接入前它进不了训练输入。`split.calibration` 仍为空——那要 C 先定校准协议。
 
 ## `audit_packet.py`
 
-从任一批次里抽一批**可复现**的人工抽查样本，打印成带空白签核框的工作表：`docs/annotation/p0_spot_audit_v0.2_seed20261021.md`（10 对 / 20 条，8 个机制各 1 对 + 哈希排序补齐，共 39 个框——`future_leak` 那对只有 3 个，它的单变量性由输入一致性预检代劳）与 `docs/annotation/p0_spot_audit_v0.3_all7.md`（v0.3 全批 7 对）。每对给出事件条数、逐字段差异数、变化因子、差异字段、期望动作与政策，并把不确定档位和零证据因子挑出来——这三样正是审计人要判的三件事（单变量性、手册 §1.4、Gate 5）。
+从任一批次里抽一批**可复现**的人工抽查样本，打印成带空白签核框的工作表：`docs/annotation/p0_spot_audit_v0.2_seed20261021.md`（10 对 / 20 条，8 个机制各 1 对 + 哈希排序补齐，共 39 个框——`future_leak` 那对只有 3 个，它的单变量性由输入一致性预检代劳）与 `docs/annotation/p0_spot_audit_v0.3_all7.md`（v0.3 全批 7 对 / 28 个框）。两张表都已在 2026-10-21 由 B 勾满。每对给出事件条数、逐字段差异数、变化因子、差异字段、期望动作与政策，并把不确定档位和零证据因子挑出来——这三样正是审计人要判的三件事（单变量性、手册 §1.4、Gate 5）。
 
 ```bash
 python scripts/audit_packet.py --records 20 --seed 20261021
 python scripts/audit_packet.py --file data/p0/p0_samples_v0.3.json --records 14 --seed 20261021
 ```
 
-**脚本不写任何结论**：复选框全空，勾由人打。签核后的文件与重新生成的文本不再逐字节相同，所以它不进 CI 的 `git diff --exit-code`；改 seed 或改抽样规则由 `tests/test_data_validation.py::test_audit_packet_sample_is_pinned` 拦住，"已入库的签核表必须是空白"由 `::test_spot_audit_packets_are_unsigned` 拦住（顺手钉住 README 里引用的复选框数）。`--seed` 换一批样本，旧的签核不能复用。
+**生成时脚本不写任何结论**：复选框全空，勾由人打；人打勾后的文件不再由脚本重写，因此它不进 CI 的 `git diff --exit-code`。为防止"重新生成"把签名抹掉，输出文件里已有 `- [x]` 时默认拒绝覆盖（要重审才加 `--force`）。三道闸：改 seed 或抽样规则由 `tests/test_data_validation.py::test_audit_packet_sample_is_pinned` 拦住，签核表的勾选数与结论行由 `::test_spot_audit_packets_carry_bs_signoff` 钉住，拒绝覆盖的行为由 `::test_audit_packet_refuses_to_clobber_a_signed_sheet` 守住。`--seed` 换一批样本，旧的签核不能复用。
 
 ## `p0_quality_report.py`
 

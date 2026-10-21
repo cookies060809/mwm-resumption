@@ -178,14 +178,17 @@ def test_v02_split_is_blueprint_disjoint() -> None:
     assert crossed == {}, f"blueprints crossing splits: {crossed}"
 
 
-def test_v03_batch_is_draft_candidate_work() -> None:
+def test_v03_batch_is_signed_by_b() -> None:
     records = load_v03()
     assert len(records) == 14
     assert len({record["base_story_id"] for record in records}) == 7
     assert all(record["schema_version"] == "p0-record/v0.2.0" for record in records)
-    # B has not signed this batch yet, so it must not look like accepted data.
-    assert all(record["annotation"]["status"] == "draft" for record in records)
-    assert all(record["annotation"]["annotator_id"] == "agent-draft" for record in records)
+    # B ticked p0_spot_audit_v0.3_all7.md on 2026-10-21, so the batch may now carry
+    # the sign-off. second_reviewer_id stays null until A/C do their blind review.
+    assert all(record["annotation"]["status"] == "reviewed" for record in records)
+    assert all(record["annotation"]["annotator_id"] == "B" for record in records)
+    assert all(record["annotation"]["reviewed_at"] == "2026-10-21" for record in records)
+    assert all(record["annotation"]["second_reviewer_id"] is None for record in records)
 
 
 def test_v03_closes_the_uncertainty_enum_gaps() -> None:
@@ -288,15 +291,44 @@ def test_audit_packet_sample_is_pinned() -> None:
         assert text.count("### ") == count, name
 
 
-def test_spot_audit_packets_are_unsigned() -> None:
-    """A committed packet that already carries ticks would fake a review nobody did.
-    The box counts are also quoted in data/p0/README.md, so a sampler change must
-    fail here rather than leave a stale number in the handoff page."""
+def test_spot_audit_packets_carry_bs_signoff() -> None:
+    """B read both worksheets pair by pair on 2026-10-21 and the ticks are the only
+    record of that, so a regenerated (blank) or half-ticked sheet must fail here.
+    The box counts are also quoted in data/p0/README.md, so a sampler change has to
+    be reconciled with the signed sheet rather than silently re-drawn."""
     packets = {
-        "p0_spot_audit_v0.2_seed20261021.md": 39,
-        "p0_spot_audit_v0.3_all7.md": 28,
+        "p0_spot_audit_v0.2_seed20261021.md": (39, 10),
+        "p0_spot_audit_v0.3_all7.md": (28, 7),
     }
-    for name, boxes in packets.items():
+    for name, (boxes, pairs) in packets.items():
         text = (ROOT / "docs" / "annotation" / name).read_text(encoding="utf-8")
-        assert text.count("- [ ]") == boxes, name
-        assert "- [x]" not in text, name
+        assert text.count("- [x]") == boxes, name
+        assert "- [ ]" not in text, name
+        assert text.count("：**通过**（B · 2026-10-21）") == pairs, name
+        assert "签核：B 于 2026-10-21" in text, name
+
+
+def test_audit_packet_refuses_to_clobber_a_signed_sheet() -> None:
+    """Re-running the generator over a signed sheet would erase the sign-off without
+    a word, which is the one way this instrument can silently produce fake review
+    records. The refusal is the guard, so keep it armed."""
+    from scripts.audit_packet import main as packet_main
+
+    argv = sys.argv
+    try:
+        sys.argv = [
+            "audit_packet.py",
+            "--file",
+            "data/p0/p0_samples_v0.3.json",
+            "--records",
+            "14",
+            "--out",
+            "docs/annotation/p0_spot_audit_v0.3_all7.md",
+        ]
+        assert packet_main() == 1
+    finally:
+        sys.argv = argv
+    text = (ROOT / "docs" / "annotation" / "p0_spot_audit_v0.3_all7.md").read_text(
+        encoding="utf-8"
+    )
+    assert text.count("- [x]") == 28
