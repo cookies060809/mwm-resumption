@@ -1,4 +1,4 @@
-"""Conservative input boundary for B-owned p0-record/v0.1.0.
+"""Versioned input boundary for B-owned P0 v0.1 and v0.2.
 
 This adapter maps evidence, not mental labels. External message semantics need
 a separately audited parser; ACCESSED never implies comprehension.
@@ -9,7 +9,8 @@ import re
 from models.ec_jmf.constraints import validate_graph
 
 SCHEMA_VERSION = "p0-record/v0.1.0"
-ADAPTER_VERSION = "a-p0-input/v0.1.0"
+SCHEMA_V02 = "p0-record/v0.2.0"
+ADAPTER_VERSION = "a-p0-input/v0.2.0"
 
 
 def minutes(value):
@@ -26,7 +27,8 @@ def adapt_record(record):
     variant, or cutoff snapshots. Full records must pass B's validator before
     admission; this function independently validates the selected input.
     """
-    if record.get("schema_version") != SCHEMA_VERSION:
+    version = record.get("schema_version")
+    if version not in (SCHEMA_VERSION, SCHEMA_V02):
         raise ValueError("UNSUPPORTED_SCHEMA_VERSION")
     steps = deepcopy(record["task_steps"])
     dependencies = {step: [] for step in steps}
@@ -51,7 +53,8 @@ def adapt_record(record):
         nested_steps = deepcopy(nested["steps"])
         validate_graph(nested_steps, {})
         graphs[nested["goal_id"]] = {"steps": nested_steps,
-                                   "dependencies": None, "parent_goal_id": goal}
+                                   "dependencies": None, "parent_goal_id": goal,
+                                   "task_id": nested["task_id"]}
     cutoff = minutes(events[-1]["time"])
     seen, previous, mapped = set(), -1, []
     for event in events:
@@ -77,13 +80,34 @@ def adapt_record(record):
         if event["actor"] == "person" and access == "ACCESSED":
             person = {key: deepcopy(event[key]) for key in
                       ("event_type", "goal_id", "step_id", "description")}
+        comprehension = "not_structurally_labeled"
+        semantic = {"kind": "none"}
+        if version == SCHEMA_V02:
+            comprehension = event["person_comprehension"]
+            if comprehension not in ("UNDERSTOOD", "MISUNDERSTOOD", "NOT_UNDERSTOOD",
+                                      "UNCERTAIN", "NOT_APPLICABLE"):
+                raise ValueError("INVALID_COMPREHENSION")
+            if access != "ACCESSED" and comprehension != "NOT_APPLICABLE":
+                raise ValueError("COMPREHENSION_WITHOUT_ACCESS")
+            raw_semantic = event["person_available_semantics"]
+            semantic = {k: deepcopy(raw_semantic[k]) for k in
+                        ("kind", "value", "interpretation") if k in raw_semantic}
+            if (comprehension == "MISUNDERSTOOD" and
+                    semantic.get("interpretation") not in ("defer", "complete", "unresolved")):
+                raise ValueError("MISUNDERSTANDING_WITHOUT_INTERPRETATION")
+        # Explicit whitelist even inside events: injected annotation keys cannot pass.
+        world = {k: deepcopy(event[k]) for k in
+                 ("actor", "event_type", "goal_id", "step_id", "world_effect",
+                  "observer_evidence", "person_access_evidence", "source", "certainty",
+                  "description")}
         mapped.append({"event_id": event_id, "time_minutes": now,
-                       "world": deepcopy(event),
+                       "world": world,
                        "delivery": {"access_evidence": access,
-                                    "comprehension": "not_structurally_labeled"},
+                                    "comprehension": comprehension},
+                       "semantic": semantic,
                        "person": person})
     # Graphs describe observer task metadata, never presumed person knowledge.
-    return {"adapter_version": ADAPTER_VERSION, "schema_version": SCHEMA_VERSION,
+    return {"adapter_version": ADAPTER_VERSION, "schema_version": version,
             "goal_id": goal, "horizon": deepcopy(horizon),
             "cutoff_event_id": events[-1]["event_id"], "cutoff_minutes": cutoff,
             "observer_graphs": graphs, "events": mapped}
@@ -91,9 +115,18 @@ def adapt_record(record):
 
 def person_inputs(adapted):
     """No world payload, private event type/source, or observer task graph."""
-    return [{"event_id": event["event_id"], "time_minutes": event["time_minutes"],
-             "delivery": deepcopy(event["delivery"]),
-             "person": deepcopy(event["person"])} for event in adapted["events"]]
+    result = []
+    for event in adapted["events"]:
+        accessible = event["delivery"]["access_evidence"] != "NOT_ACCESSED"
+        result.append({"event_id": event["event_id"], "time_minutes": event["time_minutes"],
+                       "delivery": deepcopy(event["delivery"]),
+                       "semantic": deepcopy(event["semantic"]) if accessible else {"kind": "none"},
+                       "semantic_goal_id": (event["world"]["goal_id"] if accessible and
+                                            event["semantic"]["kind"] != "none" else None),
+                       "interruption_phase": (event["world"]["event_type"] if accessible and
+                                              event["semantic"]["kind"] == "interruption" else None),
+                       "person": deepcopy(event["person"])})
+    return result
 
 
 def replay_completion_evidence(adapted):
@@ -124,8 +157,20 @@ def scripted_targets(record):
     """Evaluation-only; NEVER pass this object to adapt_record or a model."""
     target = record["p0_expected"]
     resume, step = target["resume_within_horizon"], target["first_step"]
+    if resume is not None and type(resume) is not bool:
+        raise ValueError("INVALID_SCRIPTED_RESUME")
+    undefined = record.get("p0_expected_action") == "indeterminate"
+    if resume is None or undefined:
+        if (resume is not None or not undefined or
+                target.get("undefined_reason") != "indistinguishable_inputs"):
+            raise ValueError("INVALID_UNDEFINED_TARGET")
     t2_valid = resume is True and step in record["task_steps"]
-    return {"p0_resume": resume, "t2_mask": t2_valid,
+    if record.get("schema_version") == SCHEMA_V02 and t2_valid:
+        # T2 concerns future progress, never repetition of an objectively done step.
+        done = replay_completion_evidence(adapt_record(record))["world_done"][record["goal_id"]]
+        t2_valid = step not in done
+    return {"p0_resume": resume, "t1_mask": resume is not None,
+            "undefined_reason": target.get("undefined_reason"), "t2_mask": t2_valid,
             "t2_original_goal_step": step if t2_valid else None,
             "scripted_next_action_step": step,
             "p1_first_step_present": "p1_observed_first_step" in record}
