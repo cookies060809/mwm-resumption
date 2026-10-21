@@ -1,6 +1,6 @@
 # ECR-MWM
 
-完整研究系统的端到端包装。Owner：A；集成验证：C。状态：已新增保守P0输入适配与证据契约诊断；端到端认知转移、预测及MENTIS包装仍未实现。详见 [A接口](../../docs/internal/a/A_INTERFACES.md)。
+完整研究系统的端到端包装。Owner：A；集成验证：C。状态：`structured.py` 与 `training.py` 已提供版本化 P0 推断、T1/T2/T3 和精确参考训练；C 的 `integration/a_model.py` 已接入统一训练/预测/检查点与评测。尚无神经文本编码器、MENTIS 或真人 P1 验证。详见 [A接口](../../docs/internal/a/A_INTERFACES.md) 与 [整合说明](../../evaluation/branch_integration.md)。
 
 ## 范围
 
@@ -45,7 +45,7 @@
 ## 当前状态
 
 - [ ] 接口冻结
-- [ ] 端到端最小可运行版本
-- [ ] T1/T2/T3 输出校验
+- [x] 结构化 P0 最小可运行参考版本（非完整神经模型）
+- [x] T1/T2/T3 输出校验与 C 侧包装
 - [ ] MENTIS 集成
 - [ ] 成本与失败案例记录

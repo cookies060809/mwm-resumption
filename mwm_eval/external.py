@@ -25,7 +25,8 @@ OBSERVATION_FIELDS = {
     "target_person", "goal_id", "task_steps", "cutoff", "horizon", "events",
     "task_graph",
 }
-REQUIRED_OBSERVATION_FIELDS = OBSERVATION_FIELDS
+REQUIRED_OBSERVATION_FIELDS = OBSERVATION_FIELDS.copy()
+OBSERVATION_FIELDS = OBSERVATION_FIELDS | {"structured_evidence"}
 MODES = {"B8": "original", "B9": "memory", "MENTIS_STRUCTURED": "structured", "B10": "full"}
 ABLATIONS = {
     "A0": "complete ECR-MWM",

@@ -24,6 +24,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--results-dir", type=Path, default=ROOT / "results/p0_v02")
     parser.add_argument("--include-source-audit", action="store_true")
+    parser.add_argument("--output", type=Path, default=ROOT / "evaluation/p0_v02_results.json")
     args = parser.parse_args()
     summary, manifest = (read(args.results_dir / name) for name in ("summary.json", "manifest.json"))
     repro = read(args.results_dir / "reproducibility.json")
@@ -35,6 +36,12 @@ def main():
     if canonical_hash(predictions) != repro["prediction_sha256"]:
         raise ValueError("saved predictions differ from verified predictions")
     methods = {}
+    output_relative = args.results_dir.resolve().relative_to(ROOT).as_posix()
+    provenance = manifest["dataset_provenance"]
+    run_command = ("python scripts/run_p0_evaluation.py --profile " + provenance["run_profile"]
+        + " --data " + provenance["source_path"] + " --config " + provenance["configuration_path"]
+        + " --methods " + ",".join(manifest["methods"]) + " --seeds " + ",".join(map(str, manifest["seeds"]))
+        + " --output-dir " + output_relative)
     for method_id, aggregate in summary["aggregate"].items():
         first = next(r for r in summary["runs"] if r["method_id"] == method_id and r["seed"] == manifest["seeds"][0])
         if first["status"] != "completed":
@@ -44,18 +51,20 @@ def main():
             "implementation": first["spec"]["implementation"],
             "strict_reproduction": first["spec"].get("strict_reproduction", False),
             "limitations": first["spec"].get("limitations"),
+            "training": first["spec"].get("training"),
+            "first_seed_checkpoint": first.get("artifacts", []),
             "first_seed": {"counts": metrics["counts"], "t1": metrics["t1"], "t2": metrics["t2"],
                 "states": metrics["states"], "mechanism_pairs": metrics["mechanism_pairs"]}}
-    snapshot_data = {"scope": "scripted P0 diagnostic baseline results; not real human prediction or EC-JMF results",
+    snapshot_data = {"scope": "scripted P0 diagnostic results; A structured reference model when explicitly enabled; not real human validation",
         "seeds": manifest["seeds"], "split_counts": manifest["validation"]["split_counts"],
         "dataset_provenance": manifest["dataset_provenance"],
         "inputs_sha256": manifest["inputs_sha256"], "labels_sha256": manifest["labels_sha256"],
         "code_sha256": manifest["code_sha256"], "methods": methods, "reproducibility": repro,
         "bootstrap_comparisons": read(args.results_dir / "comparisons.json"),
         "calibration": "not fitted; no independent calibration split",
-        "statistical_limits": "test has only three task blueprints; intervals are exploratory; repeated seeds are not extra samples",
-        "run_commands": ["python scripts/run_p0_evaluation.py", "python scripts/check_p0_reproducibility.py"]}
-    write(ROOT / "evaluation/p0_v02_results.json", snapshot_data)
+        "statistical_limits": "few held-out task blueprints; intervals are exploratory; repeated seeds are not extra samples",
+        "run_commands": [run_command, "python scripts/check_p0_reproducibility.py --results-dir " + output_relative]}
+    write(args.output, snapshot_data)
     if args.include_source_audit:
         audit = read(ROOT / "results/p1_audit/source_inventory.json")
         if audit["errors"]:

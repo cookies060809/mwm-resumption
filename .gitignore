@@ -58,6 +58,9 @@ results/full_run/
 results/verification/
 results/p0_v02/
 results/p0_v02_repro/
+results/p0_integrated*/
+results/p0_ablations/
+results/a_model_audit/
 results/p1_audit/
 data/external/raw/
 results/**/predictions.jsonl

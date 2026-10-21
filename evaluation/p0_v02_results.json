@@ -1,5 +1,5 @@
 {
-  "scope": "scripted P0 diagnostic baseline results; not real human prediction or EC-JMF results",
+  "scope": "scripted P0 diagnostic results; A structured reference model when explicitly enabled; not real human validation",
   "seeds": [
     0,
     1,
@@ -29,43 +29,59 @@
     "test": 48
   },
   "dataset_provenance": {
-    "adapter": "c-p0-v02-adapter/1.0.0",
+    "adapter": "c-p0-v02-adapter/1.1.0",
     "source_schema": "p0-record/v0.2.0",
-    "source_sha256": "fb58cf749086bab8d08a3074f97ce1cea8f6fd52b1ec844d3682b1c3e12f29ee",
+    "source_sha256": "3ca55cc51d50b8f38eed48053d78b8232b0708b4cfd71e1eeb6f6275321729ab",
     "source_scope": "B-reviewed scripted P0, not real human behavior",
     "source_records": 240,
     "source_pairs": 120,
     "source_modified": false,
     "split_modified": false,
+    "run_profile": "local",
+    "source_path": "data/p0/p0_samples_v0.2.json",
+    "configuration_path": "configs/external.example.json",
     "semantic_mapping": "typed message content; access and understanding kept separate",
     "known_limits": [
       "no independent calibration split",
       "template-based P0",
-      "nested task graph is not represented in C observation",
+      "nested observer graph is not presumed person knowledge",
       "A/C human blind review not completed"
     ]
   },
-  "inputs_sha256": "328fa4b78d1350d2fa6f06533162632e900148746badcf4ebc0aaf9d0eea63a3",
+  "inputs_sha256": "8d4e031c1fbed10d7b6d99aebde70708eb110c1950d52e4951bc30b71bb17614",
   "labels_sha256": "f7057cdc7e189c6eec1ee691cf15ccf8952765c0fc80ef0e265d3eae0acbccd5",
   "code_sha256": {
-    "integration/a_output_adapter.py": "73e6196b523ccd3157386d4f376052cd8f5768fac2632586b6d01b529c2dc84f",
+    "integration/a_input_adapter.py": "cbb9e8a686663ebff167e9e6b58bc5cd09d96147a97922aed493188f9ff6d8d0",
+    "integration/a_model.py": "d4d90577308daf003bd590ed80d0b4aa5194805edc9af3080794635b26f9b8f4",
+    "integration/a_output_adapter.py": "26013577a5e13903a49759150ba19d3afd3baca8e37018e0a23f8be6df7acd5b",
     "integration/mentis_adapter.py": "02c82fee45a1911c95386688eee1dbaaea2a84839cd711bde6dfc7711cc1b52b",
+    "models/__init__.py": "5928e6773222dba9195019ff16883b6c3cdde84466a15e5033891f7bc1554979",
+    "models/ec_jmf/__init__.py": "d3a836af837b25bd6f97d17ff1b3bbb681eaa83e1e30f0c6612ad53928f3e410",
+    "models/ec_jmf/constraints.py": "ac20d03afd2b0b2bc4ead76e4ef096d5013ca781d921cbc036949ee0bbd25f89",
+    "models/ec_jmf/core.py": "d62d4afde24527d515fdf2938d0a88942e29f4bc853c6b2d4f29f927a42ba328",
+    "models/ec_jmf/structured.py": "e1c4726a9001f56f60e6eed4c1db2091d298b078564d917314dca86d13d430bf",
+    "models/ecr_mwm/__init__.py": "4e29ca307904cbfe2c31f6df310e5b1e9cb33b1ec0720a094e2f6f98e3860147",
+    "models/ecr_mwm/p0_adapter.py": "97124292333d9af1596145cbfee5b8381ebf5e809082e788720713a3f8d437d2",
+    "models/ecr_mwm/p0_diagnostics.py": "264dc5b80d347cf5ed97fdd49fec2e308fd1abf7e1d626ff5223eedad12f70c8",
+    "models/ecr_mwm/structured.py": "eaef2dc49e2f3a7019ff8e0a1ccf64047a18b599df0ee499fe1c97e9eac2584f",
+    "models/ecr_mwm/training.py": "1b769a50ad8e204c8066086d4ff7c1fbc5ddf7d847bb2c50a8c744b9036626db",
     "mwm_eval/__init__.py": "5c870bb14600dfd96b0e4ba64c7cbeb2f9100c13141060631bf9ac7f2e244437",
     "mwm_eval/calibration.py": "52eb8518f47d6f5a30e20598a615681cbdd0e7b2d18560969f8acd7f41d11f7e",
-    "mwm_eval/engine.py": "aee1a22f523138afd92cae838959c1231828a09fbd7b589c6e686326f239111b",
-    "mwm_eval/external.py": "4ff89aec94e5a6f04e9d3f04e74c51975831183dd556dbc0b7d60471275760cc",
+    "mwm_eval/engine.py": "0f2eead767f14dd4049fcf7fe863309fbb5e4fb4218970588e107d8d6a614248",
+    "mwm_eval/external.py": "99a5ad66a66285722f48b010df549a305d6ebfcd7ed77920c0ad61f62868862a",
     "mwm_eval/holoassist_candidates.py": "bb1d93e9ac99356b840009286f1750e0b8389ca3298c0678c9cbd86d1dfbcd3f",
     "mwm_eval/local_baselines.py": "0ca9a167037044a9aa1f6f59f4c7ae32cfe3ef3e0cd92ffb4d0f92c4f919ce2f",
     "mwm_eval/metrics.py": "b1769bc9a7a81588499a5f327b5bee883d98486f639ad5646ff0e4711214a83c",
-    "mwm_eval/p0.py": "489b3a59ac7f958e7bcd921db3c47bd0b29a97145f5baf79f13750c864b7055f",
+    "mwm_eval/p0.py": "48b3bce6dfbd126cb6a83dde4c6c784f34680c69c0493076cc1da6025bf08dd9",
     "mwm_eval/pair_checks.py": "bd18caef7aa09d0f3e29d4e9717a050b29a1d1c76f41913af0fe6b92a9289508",
-    "mwm_eval/schema.py": "5f6bd5d9d48b60a474a5f477e58ace19d77307e658260210b0e8fb661e30e30b",
+    "mwm_eval/schema.py": "70ddfd11fa64537b8dd309c37d208ded4ef0f5c9cc5880c8e4b326241163fd80",
     "mwm_eval/statistics.py": "f16c97c296cdd28879e45267cec1ce3aa4923654a4e665dc91066c8e85bef8b2",
     "run_evaluation.py": "498a5ed4e29ee4a123d10f38c6cdd91819a75e6ece33284faf6377cde5e65a03",
     "scripts/export_eval_format.py": "d629e5cbad3b19b5fe52a85178ce36ab391c6657f2adc150400dafd73e3f123e",
-    "scripts/run_p0_evaluation.py": "53e420d53eb65d9129282e19e693ddff24cbdc25dccb9d9c0fbd3918293d35af",
+    "scripts/run_p0_evaluation.py": "972799822b22a05957965bccef915e4b848d06c39c10d513a25e8f0740280609",
+    "scripts/validate_data.py": "16f6e4bcc642d4426cd94ceb77b9f49f64bda667d8b6b8ca232d32076ba60950",
     "tools/build_dashboard.py": "d9b618888c5893d823dc69f260ccde91dfc18acc5d7b1648f15f4d64725bc63b",
-    "tools/build_delivery.py": "f41561dbb758a7db55f9b319ec0aaead4c4edcfdbf162ef83e0f011577a290f7",
+    "tools/build_delivery.py": "1c272cc49d3809101e686448d250e365dfa0e7f0da27de24ee0e2abd3e6ccf4c",
     "tools/build_integration_fixtures.py": "c69148a190663d87aed023802c668d69e97890ebea16d78ef2fdecc005c87eff"
   },
   "methods": {
@@ -90,6 +106,8 @@
       "implementation": "RecencyBaseline",
       "strict_reproduction": false,
       "limitations": "Latest-action heuristic; no cancellation, belief, or persistent-goal reasoning. Observed legal actions imply completed graph ancestors. B0 searches the complete available history for the latest action.",
+      "training": null,
+      "first_seed_checkpoint": [],
       "first_seed": {
         "counts": {
           "n_planned": 48,
@@ -998,6 +1016,8 @@
       "implementation": "RecencyBaseline",
       "strict_reproduction": false,
       "limitations": "Latest-action heuristic; no cancellation, belief, or persistent-goal reasoning. Observed legal actions imply completed graph ancestors. B1 uses a fixed five-event window and is not SET-PR reproduction.",
+      "training": null,
+      "first_seed_checkpoint": [],
       "first_seed": {
         "counts": {
           "n_planned": 48,
@@ -1906,6 +1926,8 @@
       "implementation": "PersistentMemoryBaseline",
       "strict_reproduction": false,
       "limitations": "Persistent goal/progress memory copies observed world changes into its decision without cognitive accessibility gating; this is its intended ablation.",
+      "training": null,
+      "first_seed_checkpoint": [],
       "first_seed": {
         "counts": {
           "n_planned": 48,
@@ -2824,6 +2846,8 @@
       "implementation": "BDIRuleBaseline",
       "strict_reproduction": false,
       "limitations": "Evidence-gated BDI rules, not a learned joint cognitive model. Predicts continuation from current known prerequisites, without modeling future resource repair, deadlines, or stochastic decisions within the horizon.",
+      "training": null,
+      "first_seed_checkpoint": [],
       "first_seed": {
         "counts": {
           "n_planned": 48,
@@ -3744,6 +3768,8 @@
       "implementation": "ActivationLogisticBaseline",
       "strict_reproduction": false,
       "limitations": "Fitted logistic feature baseline inspired by activation, duration and demand; not a reproduction of Memory for Goals. Dataset numeric time units must match. No belief/commitment inference; step head uses ungated persistent progress.",
+      "training": null,
+      "first_seed_checkpoint": [],
       "first_seed": {
         "counts": {
           "n_planned": 48,
@@ -4671,6 +4697,8 @@
       "implementation": "BayesianGoalHMMBaseline",
       "strict_reproduction": false,
       "limitations": "Four lifecycle states for the nominated target goal; a real HMM with EM, not SIPS/BToM reproduction or full joint cognition. It does not model planning, continuous elapsed time or variable horizons; compare only matched horizons. Step head uses ungated persistent progress; no learned step probabilities. Semantic C probabilities are emitted only if all four states have nonempty training evidence anchors; otherwise only a latent posterior is logged.",
+      "training": null,
+      "first_seed_checkpoint": [],
       "first_seed": {
         "counts": {
           "n_planned": 48,
@@ -5569,9 +5597,10 @@
   "reproducibility": {
     "matched": true,
     "n_test_predictions": 5760,
-    "prediction_sha256": "6114ef02dc8a18706bbd06356fec71d430528c726a146086bc92a3a6c0090ad2",
+    "prediction_sha256": "1b5787fdb9c0add55e13ad45636f7699851ceddce1e5c689017a3794b0e1daca",
     "dataset_layer": "P0",
-    "source_sha256": "fb58cf749086bab8d08a3074f97ce1cea8f6fd52b1ec844d3682b1c3e12f29ee",
+    "source_sha256": "3ca55cc51d50b8f38eed48053d78b8232b0708b4cfd71e1eeb6f6275321729ab",
+    "trained_checkpoint_hashes_matched": true,
     "scope": "same source, inputs, configuration and environment; timing excluded"
   },
   "bootstrap_comparisons": [
@@ -5717,9 +5746,9 @@
     }
   ],
   "calibration": "not fitted; no independent calibration split",
-  "statistical_limits": "test has only three task blueprints; intervals are exploratory; repeated seeds are not extra samples",
+  "statistical_limits": "few held-out task blueprints; intervals are exploratory; repeated seeds are not extra samples",
   "run_commands": [
-    "python scripts/run_p0_evaluation.py",
-    "python scripts/check_p0_reproducibility.py"
+    "python scripts/run_p0_evaluation.py --profile local --data data/p0/p0_samples_v0.2.json --config configs/external.example.json --methods B0,B1,B4,B5,B6,B7 --seeds 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19 --output-dir results/p0_v02",
+    "python scripts/check_p0_reproducibility.py --results-dir results/p0_v02"
   ]
 }

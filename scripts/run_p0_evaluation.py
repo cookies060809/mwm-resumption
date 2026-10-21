@@ -22,21 +22,24 @@ def require_accepted_batch(source):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--profile", choices=("local", "integrated"), default="local")
     parser.add_argument("--data", type=Path, default=ROOT / "data/p0/p0_samples_v0.2.json")
-    parser.add_argument("--output-dir", type=Path, default=ROOT / "results/p0_v02")
+    parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--seeds", help="Comma-separated override; default uses the team's fixed evaluation_seeds")
-    parser.add_argument("--methods", default="B0,B1,B4,B5,B6,B7")
+    parser.add_argument("--methods")
     parser.add_argument("--enable-external", action="store_true")
-    parser.add_argument("--config", type=Path, default=ROOT / "configs/external.example.json")
+    parser.add_argument("--config", type=Path)
     parser.add_argument("--suite", choices=("core", "all"), default="all")
     args = parser.parse_args()
+    config_path = args.config or ROOT / ("configs/p0_integrated.json" if args.profile == "integrated" else "configs/external.example.json")
+    methods = args.methods or ("B0,B1,B4,B5,B6,B7,B10_REFERENCE,B10" if args.profile == "integrated" else "B0,B1,B4,B5,B6,B7")
     source = json.loads(args.data.read_text(encoding="utf-8"))
     errors = validate_records(source)
     if errors:
         raise ValueError("B source validation failed: " + "; ".join(errors[:5]))
     require_accepted_batch(source)
     records, golds = prepare_dataset(source)
-    output = args.output_dir.resolve()
+    output = (args.output_dir or ROOT / ("results/p0_integrated" if args.profile == "integrated" else "results/p0_v02")).resolve()
     output.mkdir(parents=True, exist_ok=True)
     inputs_path, labels_path = output / "prepared_inputs.jsonl", output / "prepared_labels.jsonl"
     dump_jsonl(inputs_path, records)
@@ -46,12 +49,15 @@ def main():
                   "source_scope": "B-reviewed scripted P0, not real human behavior",
                   "source_records": len(source), "source_pairs": len({r['base_story_id'] for r in source}),
                   "source_modified": False, "split_modified": False,
+                  "run_profile": args.profile,
+                  "source_path": str(args.data.resolve().relative_to(ROOT)).replace("\\", "/"),
+                  "configuration_path": str(config_path.resolve().relative_to(ROOT)).replace("\\", "/"),
                   "semantic_mapping": "typed message content; access and understanding kept separate",
                   "known_limits": ["no independent calibration split", "template-based P0",
-                                   "nested task graph is not represented in C observation",
+                                   "nested observer graph is not presumed person knowledge",
                                    "A/C human blind review not completed"]}
     dump_json(output / "adaptation.json", provenance)
-    config = json.loads(args.config.read_text(encoding="utf-8-sig"))
+    config = json.loads(config_path.read_text(encoding="utf-8-sig"))
     config.setdefault("evaluation", {}).update(
         required_group_isolation=["base_story_id", "person_id", "task_family"],
         bootstrap_cluster_key="task_family",
@@ -65,7 +71,7 @@ def main():
         "convention_source": "configs/a_ec_jmf_reference.json:evaluation_seeds",
         "convention_sha256": file_hash(seed_config)}
     summary, status = run_experiment(inputs_path, labels_path, output, config,
-                                    args.methods.split(","), seeds, suite=args.suite,
+                                    methods.split(","), seeds, suite=args.suite,
                                     enable_external=args.enable_external)
     from tools.build_dashboard import build
     build(output, inputs_path, labels_path)

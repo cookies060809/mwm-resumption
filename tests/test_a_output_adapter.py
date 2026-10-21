@@ -55,6 +55,20 @@ class AOutputAdapterTests(unittest.TestCase):
         self.assertEqual(prediction["resume_step"], self.step)
         self.assertTrue(prediction["metadata"]["external"]["real_child_process_execution"])
 
+    def test_boundary_roundoff_is_audited_but_invalid_probabilities_are_rejected(self):
+        payload = copy.deepcopy(self.output)
+        payload["t3_state_distributions"]["B"]["UNKNOWN"] = 1.0000000000000002
+        prediction = normalize_a_output(payload, self.obs)
+        self.assertEqual(prediction["state_probs"]["B"], {"UNKNOWN": 1.0})
+        repairs = prediction["metadata"]["numerical_roundoff_repairs"]
+        self.assertFalse(repairs["calibration"])
+        self.assertEqual(repairs["changes"][0]["path"], "state_probs.B")
+        self.assertEqual(payload["t3_state_distributions"]["B"]["UNKNOWN"], 1.0000000000000002)
+        for value in (1.00001, -0.01, float("nan"), 0.2):
+            payload["t3_state_distributions"]["B"]["UNKNOWN"] = value
+            with self.assertRaises(ValueError):
+                normalize_a_output(payload, self.obs)
+
 
 if __name__ == "__main__":
     unittest.main()

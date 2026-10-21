@@ -1,0 +1,3453 @@
+{
+  "scope": "scripted P0 diagnostic results; A structured reference model when explicitly enabled; not real human validation",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "split_counts": {
+    "train": 6,
+    "dev": 4,
+    "calibration": 0,
+    "test": 4
+  },
+  "dataset_provenance": {
+    "adapter": "c-p0-v02-adapter/1.1.0",
+    "source_schema": "p0-record/v0.2.0",
+    "source_sha256": "8dfba39ba7d0b3b2779e141038460c5abd7e2c77d804f8b8d94500849ef712e8",
+    "source_scope": "B-reviewed scripted P0, not real human behavior",
+    "source_records": 14,
+    "source_pairs": 7,
+    "source_modified": false,
+    "split_modified": false,
+    "run_profile": "integrated",
+    "source_path": "data/p0/p0_samples_v0.3.json",
+    "configuration_path": "configs/p0_integrated.json",
+    "semantic_mapping": "typed message content; access and understanding kept separate",
+    "known_limits": [
+      "no independent calibration split",
+      "template-based P0",
+      "nested observer graph is not presumed person knowledge",
+      "A/C human blind review not completed"
+    ]
+  },
+  "inputs_sha256": "0017a54790eec63fc39bde645799d36763701cd474104bc929f7c660eb0b15c6",
+  "labels_sha256": "db23a46356163aabbcb4af681ca12a215d0af20f5a606de64c097922acd55cab",
+  "code_sha256": {
+    "integration/a_input_adapter.py": "cbb9e8a686663ebff167e9e6b58bc5cd09d96147a97922aed493188f9ff6d8d0",
+    "integration/a_model.py": "d4d90577308daf003bd590ed80d0b4aa5194805edc9af3080794635b26f9b8f4",
+    "integration/a_output_adapter.py": "26013577a5e13903a49759150ba19d3afd3baca8e37018e0a23f8be6df7acd5b",
+    "integration/mentis_adapter.py": "02c82fee45a1911c95386688eee1dbaaea2a84839cd711bde6dfc7711cc1b52b",
+    "models/__init__.py": "5928e6773222dba9195019ff16883b6c3cdde84466a15e5033891f7bc1554979",
+    "models/ec_jmf/__init__.py": "d3a836af837b25bd6f97d17ff1b3bbb681eaa83e1e30f0c6612ad53928f3e410",
+    "models/ec_jmf/constraints.py": "ac20d03afd2b0b2bc4ead76e4ef096d5013ca781d921cbc036949ee0bbd25f89",
+    "models/ec_jmf/core.py": "d62d4afde24527d515fdf2938d0a88942e29f4bc853c6b2d4f29f927a42ba328",
+    "models/ec_jmf/structured.py": "e1c4726a9001f56f60e6eed4c1db2091d298b078564d917314dca86d13d430bf",
+    "models/ecr_mwm/__init__.py": "4e29ca307904cbfe2c31f6df310e5b1e9cb33b1ec0720a094e2f6f98e3860147",
+    "models/ecr_mwm/p0_adapter.py": "97124292333d9af1596145cbfee5b8381ebf5e809082e788720713a3f8d437d2",
+    "models/ecr_mwm/p0_diagnostics.py": "264dc5b80d347cf5ed97fdd49fec2e308fd1abf7e1d626ff5223eedad12f70c8",
+    "models/ecr_mwm/structured.py": "eaef2dc49e2f3a7019ff8e0a1ccf64047a18b599df0ee499fe1c97e9eac2584f",
+    "models/ecr_mwm/training.py": "1b769a50ad8e204c8066086d4ff7c1fbc5ddf7d847bb2c50a8c744b9036626db",
+    "mwm_eval/__init__.py": "5c870bb14600dfd96b0e4ba64c7cbeb2f9100c13141060631bf9ac7f2e244437",
+    "mwm_eval/calibration.py": "52eb8518f47d6f5a30e20598a615681cbdd0e7b2d18560969f8acd7f41d11f7e",
+    "mwm_eval/engine.py": "0f2eead767f14dd4049fcf7fe863309fbb5e4fb4218970588e107d8d6a614248",
+    "mwm_eval/external.py": "99a5ad66a66285722f48b010df549a305d6ebfcd7ed77920c0ad61f62868862a",
+    "mwm_eval/holoassist_candidates.py": "bb1d93e9ac99356b840009286f1750e0b8389ca3298c0678c9cbd86d1dfbcd3f",
+    "mwm_eval/local_baselines.py": "0ca9a167037044a9aa1f6f59f4c7ae32cfe3ef3e0cd92ffb4d0f92c4f919ce2f",
+    "mwm_eval/metrics.py": "b1769bc9a7a81588499a5f327b5bee883d98486f639ad5646ff0e4711214a83c",
+    "mwm_eval/p0.py": "48b3bce6dfbd126cb6a83dde4c6c784f34680c69c0493076cc1da6025bf08dd9",
+    "mwm_eval/pair_checks.py": "bd18caef7aa09d0f3e29d4e9717a050b29a1d1c76f41913af0fe6b92a9289508",
+    "mwm_eval/schema.py": "70ddfd11fa64537b8dd309c37d208ded4ef0f5c9cc5880c8e4b326241163fd80",
+    "mwm_eval/statistics.py": "f16c97c296cdd28879e45267cec1ce3aa4923654a4e665dc91066c8e85bef8b2",
+    "run_evaluation.py": "498a5ed4e29ee4a123d10f38c6cdd91819a75e6ece33284faf6377cde5e65a03",
+    "scripts/export_eval_format.py": "d629e5cbad3b19b5fe52a85178ce36ab391c6657f2adc150400dafd73e3f123e",
+    "scripts/run_p0_evaluation.py": "972799822b22a05957965bccef915e4b848d06c39c10d513a25e8f0740280609",
+    "scripts/validate_data.py": "16f6e4bcc642d4426cd94ceb77b9f49f64bda667d8b6b8ca232d32076ba60950",
+    "tools/build_dashboard.py": "d9b618888c5893d823dc69f260ccde91dfc18acc5d7b1648f15f4d64725bc63b",
+    "tools/build_delivery.py": "1c272cc49d3809101e686448d250e365dfa0e7f0da27de24ee0e2abd3e6ccf4c",
+    "tools/build_integration_fixtures.py": "c69148a190663d87aed023802c668d69e97890ebea16d78ef2fdecc005c87eff"
+  },
+  "methods": {
+    "B0": {
+      "aggregate": {
+        "accuracy_all_eligible": {
+          "mean": 0.5,
+          "sample_sd": 0.0,
+          "n_defined": 20
+        },
+        "resume_f1": {
+          "mean": 0.6666666666666666,
+          "sample_sd": 0.0,
+          "n_defined": 20
+        },
+        "step_accuracy": {
+          "mean": 1.0,
+          "sample_sd": 0.0,
+          "n_defined": 20
+        }
+      },
+      "implementation": "RecencyBaseline",
+      "strict_reproduction": false,
+      "limitations": "Latest-action heuristic; no cancellation, belief, or persistent-goal reasoning. Observed legal actions imply completed graph ancestors. B0 searches the complete available history for the latest action.",
+      "training": null,
+      "first_seed_checkpoint": [],
+      "first_seed": {
+        "counts": {
+          "n_planned": 4,
+          "n_success": 4,
+          "n_error": 0,
+          "n_unavailable": 0,
+          "n_eligible_t1": 4,
+          "n_excluded": {
+            "censored": 0,
+            "unknown": 0
+          },
+          "censored_fraction": 0.0,
+          "n_failure": 0
+        },
+        "t1": {
+          "n_eligible": 4,
+          "n_success": 4,
+          "n_failure": 0,
+          "coverage": 1.0,
+          "n_positive": 2,
+          "n_negative": 2,
+          "accuracy": 0.5,
+          "resume_precision": 0.5,
+          "resume_recall": 1.0,
+          "resume_f1": 0.6666666666666666,
+          "balanced_accuracy": 0.5,
+          "confusion_valid_predictions": {
+            "tp": 2,
+            "fp": 2,
+            "fn": 0,
+            "tn": 0
+          },
+          "failed_by_true_label": {
+            "resume": 0,
+            "not_resume": 0
+          },
+          "classification_scope": "all_eligible",
+          "decision_rule": "predictor hard labels; not replaced using p_resume",
+          "balanced_accuracy_requirement": "both gold classes present",
+          "probability": {
+            "scope": "valid_probability_subset",
+            "n_eligible": 4,
+            "n_probability": 0,
+            "n_missing_probability": 4,
+            "coverage": 0.0,
+            "n_positive": 0,
+            "n_negative": 0,
+            "auroc": null,
+            "average_precision": null,
+            "auprc_definition": "non-interpolated average precision; equal scores grouped",
+            "brier": null,
+            "ece": null,
+            "ece_bins": 10,
+            "ece_definition": "positive-class probability ECE with fixed equal-width bins",
+            "bin_statistics": [],
+            "diagnostic_threshold": 0.5,
+            "threshold_accuracy": null
+          }
+        },
+        "t2": {
+          "n_eligible": 2,
+          "n_top1_correct": 2,
+          "n_with_conditional_distribution": 0,
+          "n_top3_correct": 0,
+          "n_missing_step": 0,
+          "top1_accuracy": 1.0,
+          "top3_accuracy": null,
+          "conditional_distribution_coverage": 0.0,
+          "scope": "gold_resume_with_identifiable_gold_step; missing predictions count as incorrect",
+          "top3_scope": "all_T2_eligible; missing distribution counts as incorrect; null if none available",
+          "top1_source": "explicit resume_step; not unconditional joint probability"
+        },
+        "states": {
+          "V": {
+            "n_eligible": 3,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 3,
+            "coverage": 0.0,
+            "accuracy": 0.0,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "macro_f1_labels": [
+              "CANCELLED",
+              "VALID"
+            ],
+            "balanced_accuracy_labels": [
+              "CANCELLED",
+              "VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "withheld_incomplete_predictions",
+            "confusion": {
+              "CANCELLED": {
+                "__MISSING_PREDICTION__": 1
+              },
+              "VALID": {
+                "__MISSING_PREDICTION__": 2
+              }
+            }
+          },
+          "F": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 4,
+            "coverage": 0.0,
+            "accuracy": 0.0,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "macro_f1_labels": [
+              "READY"
+            ],
+            "balanced_accuracy_labels": [
+              "READY"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "withheld_incomplete_predictions",
+            "confusion": {
+              "READY": {
+                "__MISSING_PREDICTION__": 4
+              }
+            }
+          },
+          "A": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 4,
+            "coverage": 0.0,
+            "accuracy": 0.0,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "macro_f1_labels": [
+              "ACCESSED"
+            ],
+            "balanced_accuracy_labels": [
+              "ACCESSED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "withheld_incomplete_predictions",
+            "confusion": {
+              "ACCESSED": {
+                "__MISSING_PREDICTION__": 4
+              }
+            }
+          },
+          "B": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 4,
+            "coverage": 0.0,
+            "accuracy": 0.0,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "macro_f1_labels": [
+              "BELIEVES_VALID"
+            ],
+            "balanced_accuracy_labels": [
+              "BELIEVES_VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "withheld_incomplete_predictions",
+            "confusion": {
+              "BELIEVES_VALID": {
+                "__MISSING_PREDICTION__": 4
+              }
+            }
+          },
+          "C": {
+            "n_eligible": 3,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 3,
+            "coverage": 0.0,
+            "accuracy": 0.0,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "macro_f1_labels": [
+              "ACTIVE",
+              "SUSPENDED"
+            ],
+            "balanced_accuracy_labels": [
+              "ACTIVE",
+              "SUSPENDED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "withheld_incomplete_predictions",
+            "confusion": {
+              "ACTIVE": {
+                "__MISSING_PREDICTION__": 1
+              },
+              "SUSPENDED": {
+                "__MISSING_PREDICTION__": 2
+              }
+            }
+          },
+          "Q": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 4,
+            "coverage": 0.0,
+            "accuracy": 0.0,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "macro_f1_labels": [
+              "assemble_frame",
+              "build_summary"
+            ],
+            "balanced_accuracy_labels": [
+              "assemble_frame",
+              "build_summary"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "withheld_incomplete_predictions",
+            "confusion": {
+              "assemble_frame": {
+                "__MISSING_PREDICTION__": 2
+              },
+              "build_summary": {
+                "__MISSING_PREDICTION__": 2
+              }
+            }
+          }
+        },
+        "mechanism_pairs": {
+          "long_term_commitment": {
+            "T1:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "F:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "A:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "B:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "Q:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            }
+          },
+          "contact_cancellation": {
+            "T1:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "A:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "B:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "C:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "Q:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            }
+          }
+        }
+      }
+    },
+    "B1": {
+      "aggregate": {
+        "accuracy_all_eligible": {
+          "mean": 0.25,
+          "sample_sd": 0.0,
+          "n_defined": 20
+        },
+        "resume_f1": {
+          "mean": 0.4,
+          "sample_sd": 0.0,
+          "n_defined": 20
+        },
+        "step_accuracy": {
+          "mean": 0.5,
+          "sample_sd": 0.0,
+          "n_defined": 20
+        }
+      },
+      "implementation": "RecencyBaseline",
+      "strict_reproduction": false,
+      "limitations": "Latest-action heuristic; no cancellation, belief, or persistent-goal reasoning. Observed legal actions imply completed graph ancestors. B1 uses a fixed five-event window and is not SET-PR reproduction.",
+      "training": null,
+      "first_seed_checkpoint": [],
+      "first_seed": {
+        "counts": {
+          "n_planned": 4,
+          "n_success": 4,
+          "n_error": 0,
+          "n_unavailable": 0,
+          "n_eligible_t1": 4,
+          "n_excluded": {
+            "censored": 0,
+            "unknown": 0
+          },
+          "censored_fraction": 0.0,
+          "n_failure": 0
+        },
+        "t1": {
+          "n_eligible": 4,
+          "n_success": 4,
+          "n_failure": 0,
+          "coverage": 1.0,
+          "n_positive": 2,
+          "n_negative": 2,
+          "accuracy": 0.25,
+          "resume_precision": 0.3333333333333333,
+          "resume_recall": 0.5,
+          "resume_f1": 0.4,
+          "balanced_accuracy": 0.25,
+          "confusion_valid_predictions": {
+            "tp": 1,
+            "fp": 2,
+            "fn": 1,
+            "tn": 0
+          },
+          "failed_by_true_label": {
+            "resume": 0,
+            "not_resume": 0
+          },
+          "classification_scope": "all_eligible",
+          "decision_rule": "predictor hard labels; not replaced using p_resume",
+          "balanced_accuracy_requirement": "both gold classes present",
+          "probability": {
+            "scope": "valid_probability_subset",
+            "n_eligible": 4,
+            "n_probability": 0,
+            "n_missing_probability": 4,
+            "coverage": 0.0,
+            "n_positive": 0,
+            "n_negative": 0,
+            "auroc": null,
+            "average_precision": null,
+            "auprc_definition": "non-interpolated average precision; equal scores grouped",
+            "brier": null,
+            "ece": null,
+            "ece_bins": 10,
+            "ece_definition": "positive-class probability ECE with fixed equal-width bins",
+            "bin_statistics": [],
+            "diagnostic_threshold": 0.5,
+            "threshold_accuracy": null
+          }
+        },
+        "t2": {
+          "n_eligible": 2,
+          "n_top1_correct": 1,
+          "n_with_conditional_distribution": 0,
+          "n_top3_correct": 0,
+          "n_missing_step": 1,
+          "top1_accuracy": 0.5,
+          "top3_accuracy": null,
+          "conditional_distribution_coverage": 0.0,
+          "scope": "gold_resume_with_identifiable_gold_step; missing predictions count as incorrect",
+          "top3_scope": "all_T2_eligible; missing distribution counts as incorrect; null if none available",
+          "top1_source": "explicit resume_step; not unconditional joint probability"
+        },
+        "states": {
+          "V": {
+            "n_eligible": 3,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 3,
+            "coverage": 0.0,
+            "accuracy": 0.0,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "macro_f1_labels": [
+              "CANCELLED",
+              "VALID"
+            ],
+            "balanced_accuracy_labels": [
+              "CANCELLED",
+              "VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "withheld_incomplete_predictions",
+            "confusion": {
+              "CANCELLED": {
+                "__MISSING_PREDICTION__": 1
+              },
+              "VALID": {
+                "__MISSING_PREDICTION__": 2
+              }
+            }
+          },
+          "F": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 4,
+            "coverage": 0.0,
+            "accuracy": 0.0,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "macro_f1_labels": [
+              "READY"
+            ],
+            "balanced_accuracy_labels": [
+              "READY"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "withheld_incomplete_predictions",
+            "confusion": {
+              "READY": {
+                "__MISSING_PREDICTION__": 4
+              }
+            }
+          },
+          "A": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 4,
+            "coverage": 0.0,
+            "accuracy": 0.0,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "macro_f1_labels": [
+              "ACCESSED"
+            ],
+            "balanced_accuracy_labels": [
+              "ACCESSED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "withheld_incomplete_predictions",
+            "confusion": {
+              "ACCESSED": {
+                "__MISSING_PREDICTION__": 4
+              }
+            }
+          },
+          "B": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 4,
+            "coverage": 0.0,
+            "accuracy": 0.0,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "macro_f1_labels": [
+              "BELIEVES_VALID"
+            ],
+            "balanced_accuracy_labels": [
+              "BELIEVES_VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "withheld_incomplete_predictions",
+            "confusion": {
+              "BELIEVES_VALID": {
+                "__MISSING_PREDICTION__": 4
+              }
+            }
+          },
+          "C": {
+            "n_eligible": 3,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 3,
+            "coverage": 0.0,
+            "accuracy": 0.0,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "macro_f1_labels": [
+              "ACTIVE",
+              "SUSPENDED"
+            ],
+            "balanced_accuracy_labels": [
+              "ACTIVE",
+              "SUSPENDED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "withheld_incomplete_predictions",
+            "confusion": {
+              "ACTIVE": {
+                "__MISSING_PREDICTION__": 1
+              },
+              "SUSPENDED": {
+                "__MISSING_PREDICTION__": 2
+              }
+            }
+          },
+          "Q": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 4,
+            "coverage": 0.0,
+            "accuracy": 0.0,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "macro_f1_labels": [
+              "assemble_frame",
+              "build_summary"
+            ],
+            "balanced_accuracy_labels": [
+              "assemble_frame",
+              "build_summary"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "withheld_incomplete_predictions",
+            "confusion": {
+              "assemble_frame": {
+                "__MISSING_PREDICTION__": 2
+              },
+              "build_summary": {
+                "__MISSING_PREDICTION__": 2
+              }
+            }
+          }
+        },
+        "mechanism_pairs": {
+          "long_term_commitment": {
+            "T1:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "F:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "A:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "B:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "Q:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            }
+          },
+          "contact_cancellation": {
+            "T1:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "A:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "B:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "C:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "Q:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            }
+          }
+        }
+      }
+    },
+    "B10": {
+      "aggregate": {
+        "accuracy_all_eligible": {
+          "mean": 0.5,
+          "sample_sd": 0.0,
+          "n_defined": 20
+        },
+        "resume_f1": {
+          "mean": 0.6666666666666666,
+          "sample_sd": 0.0,
+          "n_defined": 20
+        },
+        "step_accuracy": {
+          "mean": 1.0,
+          "sample_sd": 0.0,
+          "n_defined": 20
+        }
+      },
+      "implementation": "A StructuredModel + exact reference trainer",
+      "strict_reproduction": false,
+      "limitations": "Finite exact reference; no neural text encoder, P1, LLM, MENTIS or calibrated probabilities. A factor uses latest salient event, not B key-event gold. A2 is coupling removal, not independent BCQ.",
+      "training": {
+        "train_n": 6,
+        "layer": "P0",
+        "seed": 0,
+        "variant": "A0",
+        "trained": true,
+        "train_inputs_sha256": "9eb086d4d1699b5a75d244951cda693791ff781cad5d6ef6944ea3ed92255f2e",
+        "train_targets_sha256": "3a559b687ca820278b33dfdd286fcab8d04047d5b55c84bb19a4ce04d4b0641e",
+        "certified_identical_input_pairs": 0,
+        "pair_scope": "identical input views and same reference priors; no inferred hidden-world pairs",
+        "parameters_sha256": "cb47bba477628cdaaca5369a8a0f759d522628461c6624f28bb76e14b7d340d4"
+      },
+      "first_seed_checkpoint": [
+        {
+          "path": "checkpoints/B10/seed_0.json",
+          "sha256": "a20fb6baa4a2f24603ab3f6d8ae0aff913a9a1b815996ffc96d86b429af09c2b"
+        }
+      ],
+      "first_seed": {
+        "counts": {
+          "n_planned": 4,
+          "n_success": 4,
+          "n_error": 0,
+          "n_unavailable": 0,
+          "n_eligible_t1": 4,
+          "n_excluded": {
+            "censored": 0,
+            "unknown": 0
+          },
+          "censored_fraction": 0.0,
+          "n_failure": 0
+        },
+        "t1": {
+          "n_eligible": 4,
+          "n_success": 4,
+          "n_failure": 0,
+          "coverage": 1.0,
+          "n_positive": 2,
+          "n_negative": 2,
+          "accuracy": 0.5,
+          "resume_precision": 0.5,
+          "resume_recall": 1.0,
+          "resume_f1": 0.6666666666666666,
+          "balanced_accuracy": 0.5,
+          "confusion_valid_predictions": {
+            "tp": 2,
+            "fp": 2,
+            "fn": 0,
+            "tn": 0
+          },
+          "failed_by_true_label": {
+            "resume": 0,
+            "not_resume": 0
+          },
+          "classification_scope": "all_eligible",
+          "decision_rule": "predictor hard labels; not replaced using p_resume",
+          "balanced_accuracy_requirement": "both gold classes present",
+          "probability": {
+            "scope": "valid_probability_subset",
+            "n_eligible": 4,
+            "n_probability": 4,
+            "n_missing_probability": 0,
+            "coverage": 1.0,
+            "n_positive": 2,
+            "n_negative": 2,
+            "auroc": 0.5,
+            "average_precision": 0.5833333333333333,
+            "auprc_definition": "non-interpolated average precision; equal scores grouped",
+            "brier": 0.34192601815510726,
+            "ece": 0.45689504985541185,
+            "ece_bins": 10,
+            "ece_definition": "positive-class probability ECE with fixed equal-width bins",
+            "bin_statistics": [
+              {
+                "bin_index": 6,
+                "n": 1,
+                "mean_probability": 0.6610556765825779,
+                "positive_fraction": 0.0
+              },
+              {
+                "bin_index": 8,
+                "n": 2,
+                "mean_probability": 0.8931440434330546,
+                "positive_fraction": 1.0
+              },
+              {
+                "bin_index": 9,
+                "n": 1,
+                "mean_probability": 0.9528126097051787,
+                "positive_fraction": 0.0
+              }
+            ],
+            "diagnostic_threshold": 0.5,
+            "threshold_accuracy": 0.5
+          }
+        },
+        "t2": {
+          "n_eligible": 2,
+          "n_top1_correct": 2,
+          "n_with_conditional_distribution": 2,
+          "n_top3_correct": 2,
+          "n_missing_step": 0,
+          "top1_accuracy": 1.0,
+          "top3_accuracy": 1.0,
+          "conditional_distribution_coverage": 1.0,
+          "scope": "gold_resume_with_identifiable_gold_step; missing predictions count as incorrect",
+          "top3_scope": "all_T2_eligible; missing distribution counts as incorrect; null if none available",
+          "top1_source": "explicit resume_step; not unconditional joint probability"
+        },
+        "states": {
+          "V": {
+            "n_eligible": 3,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "macro_f1_labels": [
+              "CANCELLED",
+              "VALID"
+            ],
+            "balanced_accuracy_labels": [
+              "CANCELLED",
+              "VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "CANCELLED": {
+                "CANCELLED": 1
+              },
+              "VALID": {
+                "VALID": 2
+              }
+            }
+          },
+          "F": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.5,
+            "macro_f1": 0.3333333333333333,
+            "balanced_accuracy": 0.5,
+            "macro_f1_labels": [
+              "READY",
+              "UNKNOWN"
+            ],
+            "balanced_accuracy_labels": [
+              "READY"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "READY": {
+                "READY": 2,
+                "UNKNOWN": 2
+              }
+            }
+          },
+          "A": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "macro_f1_labels": [
+              "ACCESSED"
+            ],
+            "balanced_accuracy_labels": [
+              "ACCESSED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "ACCESSED": {
+                "ACCESSED": 4
+              }
+            }
+          },
+          "B": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.25,
+            "macro_f1": 0.2,
+            "balanced_accuracy": 0.25,
+            "macro_f1_labels": [
+              "BELIEVES_VALID",
+              "UNKNOWN"
+            ],
+            "balanced_accuracy_labels": [
+              "BELIEVES_VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "BELIEVES_VALID": {
+                "UNKNOWN": 3,
+                "BELIEVES_VALID": 1
+              }
+            }
+          },
+          "C": {
+            "n_eligible": 3,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.3333333333333333,
+            "macro_f1": 0.25,
+            "balanced_accuracy": 0.25,
+            "macro_f1_labels": [
+              "ACTIVE",
+              "SUSPENDED"
+            ],
+            "balanced_accuracy_labels": [
+              "ACTIVE",
+              "SUSPENDED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "ACTIVE": {
+                "SUSPENDED": 1
+              },
+              "SUSPENDED": {
+                "ACTIVE": 1,
+                "SUSPENDED": 1
+              }
+            }
+          },
+          "Q": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "macro_f1_labels": [
+              "assemble_frame",
+              "build_summary"
+            ],
+            "balanced_accuracy_labels": [
+              "assemble_frame",
+              "build_summary"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "assemble_frame": {
+                "assemble_frame": 2
+              },
+              "build_summary": {
+                "build_summary": 2
+              }
+            }
+          }
+        },
+        "mechanism_pairs": {
+          "long_term_commitment": {
+            "T1:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "contact_cancellation": {
+            "T1:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          }
+        }
+      }
+    },
+    "B10_REFERENCE": {
+      "aggregate": {
+        "accuracy_all_eligible": {
+          "mean": 0.5,
+          "sample_sd": 0.0,
+          "n_defined": 20
+        },
+        "resume_f1": {
+          "mean": 0.6666666666666666,
+          "sample_sd": 0.0,
+          "n_defined": 20
+        },
+        "step_accuracy": {
+          "mean": 1.0,
+          "sample_sd": 0.0,
+          "n_defined": 20
+        }
+      },
+      "implementation": "A StructuredModel + exact reference trainer",
+      "strict_reproduction": false,
+      "limitations": "Finite exact reference; no neural text encoder, P1, LLM, MENTIS or calibrated probabilities. A factor uses latest salient event, not B key-event gold. A2 is coupling removal, not independent BCQ.",
+      "training": {
+        "train_n": 6,
+        "layer": "P0",
+        "seed": 0,
+        "variant": "A0",
+        "trained": false,
+        "train_inputs_sha256": "9eb086d4d1699b5a75d244951cda693791ff781cad5d6ef6944ea3ed92255f2e",
+        "train_targets_sha256": "3a559b687ca820278b33dfdd286fcab8d04047d5b55c84bb19a4ce04d4b0641e",
+        "certified_identical_input_pairs": 0,
+        "pair_scope": "identical input views and same reference priors; no inferred hidden-world pairs",
+        "parameters_sha256": "af5d8b0e89e78c5a70b4200351aa769708951cabd28460ed606713fbbcda66d6"
+      },
+      "first_seed_checkpoint": [
+        {
+          "path": "checkpoints/B10_REFERENCE/seed_0.json",
+          "sha256": "17608fa227aba0dcecfd08b0c4d9ea0ab872bf362f0d2529a9d57ee056e00cd1"
+        }
+      ],
+      "first_seed": {
+        "counts": {
+          "n_planned": 4,
+          "n_success": 4,
+          "n_error": 0,
+          "n_unavailable": 0,
+          "n_eligible_t1": 4,
+          "n_excluded": {
+            "censored": 0,
+            "unknown": 0
+          },
+          "censored_fraction": 0.0,
+          "n_failure": 0
+        },
+        "t1": {
+          "n_eligible": 4,
+          "n_success": 4,
+          "n_failure": 0,
+          "coverage": 1.0,
+          "n_positive": 2,
+          "n_negative": 2,
+          "accuracy": 0.5,
+          "resume_precision": 0.5,
+          "resume_recall": 1.0,
+          "resume_f1": 0.6666666666666666,
+          "balanced_accuracy": 0.5,
+          "confusion_valid_predictions": {
+            "tp": 2,
+            "fp": 2,
+            "fn": 0,
+            "tn": 0
+          },
+          "failed_by_true_label": {
+            "resume": 0,
+            "not_resume": 0
+          },
+          "classification_scope": "all_eligible",
+          "decision_rule": "predictor hard labels; not replaced using p_resume",
+          "balanced_accuracy_requirement": "both gold classes present",
+          "probability": {
+            "scope": "valid_probability_subset",
+            "n_eligible": 4,
+            "n_probability": 4,
+            "n_missing_probability": 0,
+            "coverage": 1.0,
+            "n_positive": 2,
+            "n_negative": 2,
+            "auroc": 0.5,
+            "average_precision": 0.5833333333333333,
+            "auprc_definition": "non-interpolated average precision; equal scores grouped",
+            "brier": 0.35515178287068405,
+            "ece": 0.36871879013308245,
+            "ece_bins": 10,
+            "ece_definition": "positive-class probability ECE with fixed equal-width bins",
+            "bin_statistics": [
+              {
+                "bin_index": 6,
+                "n": 1,
+                "mean_probability": 0.6903216050873242,
+                "positive_fraction": 0.0
+              },
+              {
+                "bin_index": 9,
+                "n": 3,
+                "mean_probability": 0.9281845184816685,
+                "positive_fraction": 0.6666666666666666
+              }
+            ],
+            "diagnostic_threshold": 0.5,
+            "threshold_accuracy": 0.5
+          }
+        },
+        "t2": {
+          "n_eligible": 2,
+          "n_top1_correct": 2,
+          "n_with_conditional_distribution": 2,
+          "n_top3_correct": 2,
+          "n_missing_step": 0,
+          "top1_accuracy": 1.0,
+          "top3_accuracy": 1.0,
+          "conditional_distribution_coverage": 1.0,
+          "scope": "gold_resume_with_identifiable_gold_step; missing predictions count as incorrect",
+          "top3_scope": "all_T2_eligible; missing distribution counts as incorrect; null if none available",
+          "top1_source": "explicit resume_step; not unconditional joint probability"
+        },
+        "states": {
+          "V": {
+            "n_eligible": 3,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "macro_f1_labels": [
+              "CANCELLED",
+              "VALID"
+            ],
+            "balanced_accuracy_labels": [
+              "CANCELLED",
+              "VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "CANCELLED": {
+                "CANCELLED": 1
+              },
+              "VALID": {
+                "VALID": 2
+              }
+            }
+          },
+          "F": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.5,
+            "macro_f1": 0.3333333333333333,
+            "balanced_accuracy": 0.5,
+            "macro_f1_labels": [
+              "READY",
+              "UNKNOWN"
+            ],
+            "balanced_accuracy_labels": [
+              "READY"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "READY": {
+                "READY": 2,
+                "UNKNOWN": 2
+              }
+            }
+          },
+          "A": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "macro_f1_labels": [
+              "ACCESSED"
+            ],
+            "balanced_accuracy_labels": [
+              "ACCESSED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "ACCESSED": {
+                "ACCESSED": 4
+              }
+            }
+          },
+          "B": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "macro_f1_labels": [
+              "BELIEVES_VALID"
+            ],
+            "balanced_accuracy_labels": [
+              "BELIEVES_VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "BELIEVES_VALID": {
+                "BELIEVES_VALID": 4
+              }
+            }
+          },
+          "C": {
+            "n_eligible": 3,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.3333333333333333,
+            "macro_f1": 0.25,
+            "balanced_accuracy": 0.25,
+            "macro_f1_labels": [
+              "ACTIVE",
+              "SUSPENDED"
+            ],
+            "balanced_accuracy_labels": [
+              "ACTIVE",
+              "SUSPENDED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "ACTIVE": {
+                "SUSPENDED": 1
+              },
+              "SUSPENDED": {
+                "ACTIVE": 1,
+                "SUSPENDED": 1
+              }
+            }
+          },
+          "Q": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.5,
+            "macro_f1": 0.4444444444444444,
+            "balanced_accuracy": 0.5,
+            "macro_f1_labels": [
+              "UNKNOWN",
+              "assemble_frame",
+              "build_summary"
+            ],
+            "balanced_accuracy_labels": [
+              "assemble_frame",
+              "build_summary"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "assemble_frame": {
+                "assemble_frame": 1,
+                "UNKNOWN": 1
+              },
+              "build_summary": {
+                "UNKNOWN": 1,
+                "build_summary": 1
+              }
+            }
+          }
+        },
+        "mechanism_pairs": {
+          "long_term_commitment": {
+            "T1:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            }
+          },
+          "contact_cancellation": {
+            "T1:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            }
+          }
+        }
+      }
+    },
+    "B4": {
+      "aggregate": {
+        "accuracy_all_eligible": {
+          "mean": 0.75,
+          "sample_sd": 0.0,
+          "n_defined": 20
+        },
+        "resume_f1": {
+          "mean": 0.8,
+          "sample_sd": 0.0,
+          "n_defined": 20
+        },
+        "step_accuracy": {
+          "mean": 1.0,
+          "sample_sd": 0.0,
+          "n_defined": 20
+        }
+      },
+      "implementation": "PersistentMemoryBaseline",
+      "strict_reproduction": false,
+      "limitations": "Persistent goal/progress memory copies observed world changes into its decision without cognitive accessibility gating; this is its intended ablation.",
+      "training": null,
+      "first_seed_checkpoint": [],
+      "first_seed": {
+        "counts": {
+          "n_planned": 4,
+          "n_success": 4,
+          "n_error": 0,
+          "n_unavailable": 0,
+          "n_eligible_t1": 4,
+          "n_excluded": {
+            "censored": 0,
+            "unknown": 0
+          },
+          "censored_fraction": 0.0,
+          "n_failure": 0
+        },
+        "t1": {
+          "n_eligible": 4,
+          "n_success": 4,
+          "n_failure": 0,
+          "coverage": 1.0,
+          "n_positive": 2,
+          "n_negative": 2,
+          "accuracy": 0.75,
+          "resume_precision": 0.6666666666666666,
+          "resume_recall": 1.0,
+          "resume_f1": 0.8,
+          "balanced_accuracy": 0.75,
+          "confusion_valid_predictions": {
+            "tp": 2,
+            "fp": 1,
+            "fn": 0,
+            "tn": 1
+          },
+          "failed_by_true_label": {
+            "resume": 0,
+            "not_resume": 0
+          },
+          "classification_scope": "all_eligible",
+          "decision_rule": "predictor hard labels; not replaced using p_resume",
+          "balanced_accuracy_requirement": "both gold classes present",
+          "probability": {
+            "scope": "valid_probability_subset",
+            "n_eligible": 4,
+            "n_probability": 0,
+            "n_missing_probability": 4,
+            "coverage": 0.0,
+            "n_positive": 0,
+            "n_negative": 0,
+            "auroc": null,
+            "average_precision": null,
+            "auprc_definition": "non-interpolated average precision; equal scores grouped",
+            "brier": null,
+            "ece": null,
+            "ece_bins": 10,
+            "ece_definition": "positive-class probability ECE with fixed equal-width bins",
+            "bin_statistics": [],
+            "diagnostic_threshold": 0.5,
+            "threshold_accuracy": null
+          }
+        },
+        "t2": {
+          "n_eligible": 2,
+          "n_top1_correct": 2,
+          "n_with_conditional_distribution": 0,
+          "n_top3_correct": 0,
+          "n_missing_step": 0,
+          "top1_accuracy": 1.0,
+          "top3_accuracy": null,
+          "conditional_distribution_coverage": 0.0,
+          "scope": "gold_resume_with_identifiable_gold_step; missing predictions count as incorrect",
+          "top3_scope": "all_T2_eligible; missing distribution counts as incorrect; null if none available",
+          "top1_source": "explicit resume_step; not unconditional joint probability"
+        },
+        "states": {
+          "V": {
+            "n_eligible": 3,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "macro_f1_labels": [
+              "CANCELLED",
+              "VALID"
+            ],
+            "balanced_accuracy_labels": [
+              "CANCELLED",
+              "VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "CANCELLED": {
+                "CANCELLED": 1
+              },
+              "VALID": {
+                "VALID": 2
+              }
+            }
+          },
+          "F": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.5,
+            "macro_f1": 0.3333333333333333,
+            "balanced_accuracy": 0.5,
+            "macro_f1_labels": [
+              "READY",
+              "UNKNOWN"
+            ],
+            "balanced_accuracy_labels": [
+              "READY"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "READY": {
+                "READY": 2,
+                "UNKNOWN": 2
+              }
+            }
+          },
+          "A": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.75,
+            "macro_f1": 0.42857142857142855,
+            "balanced_accuracy": 0.75,
+            "macro_f1_labels": [
+              "ACCESSED",
+              "UNCERTAIN"
+            ],
+            "balanced_accuracy_labels": [
+              "ACCESSED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "ACCESSED": {
+                "ACCESSED": 3,
+                "UNCERTAIN": 1
+              }
+            }
+          },
+          "B": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.75,
+            "macro_f1": 0.42857142857142855,
+            "balanced_accuracy": 0.75,
+            "macro_f1_labels": [
+              "BELIEVES_INVALID",
+              "BELIEVES_VALID"
+            ],
+            "balanced_accuracy_labels": [
+              "BELIEVES_VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "BELIEVES_VALID": {
+                "BELIEVES_VALID": 3,
+                "BELIEVES_INVALID": 1
+              }
+            }
+          },
+          "C": {
+            "n_eligible": 3,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.3333333333333333,
+            "macro_f1": 0.16666666666666666,
+            "balanced_accuracy": 0.25,
+            "macro_f1_labels": [
+              "ABANDONED",
+              "ACTIVE",
+              "SUSPENDED"
+            ],
+            "balanced_accuracy_labels": [
+              "ACTIVE",
+              "SUSPENDED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "ACTIVE": {
+                "SUSPENDED": 1
+              },
+              "SUSPENDED": {
+                "SUSPENDED": 1,
+                "ABANDONED": 1
+              }
+            }
+          },
+          "Q": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "macro_f1_labels": [
+              "assemble_frame",
+              "build_summary"
+            ],
+            "balanced_accuracy_labels": [
+              "assemble_frame",
+              "build_summary"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "assemble_frame": {
+                "assemble_frame": 2
+              },
+              "build_summary": {
+                "build_summary": 2
+              }
+            }
+          }
+        },
+        "mechanism_pairs": {
+          "long_term_commitment": {
+            "T1:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "contact_cancellation": {
+            "T1:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          }
+        }
+      }
+    },
+    "B5": {
+      "aggregate": {
+        "accuracy_all_eligible": {
+          "mean": 0.5,
+          "sample_sd": 0.0,
+          "n_defined": 20
+        },
+        "resume_f1": {
+          "mean": 0.6666666666666666,
+          "sample_sd": 0.0,
+          "n_defined": 20
+        },
+        "step_accuracy": {
+          "mean": 1.0,
+          "sample_sd": 0.0,
+          "n_defined": 20
+        }
+      },
+      "implementation": "BDIRuleBaseline",
+      "strict_reproduction": false,
+      "limitations": "Evidence-gated BDI rules, not a learned joint cognitive model. Predicts continuation from current known prerequisites, without modeling future resource repair, deadlines, or stochastic decisions within the horizon.",
+      "training": null,
+      "first_seed_checkpoint": [],
+      "first_seed": {
+        "counts": {
+          "n_planned": 4,
+          "n_success": 4,
+          "n_error": 0,
+          "n_unavailable": 0,
+          "n_eligible_t1": 4,
+          "n_excluded": {
+            "censored": 0,
+            "unknown": 0
+          },
+          "censored_fraction": 0.0,
+          "n_failure": 0
+        },
+        "t1": {
+          "n_eligible": 4,
+          "n_success": 4,
+          "n_failure": 0,
+          "coverage": 1.0,
+          "n_positive": 2,
+          "n_negative": 2,
+          "accuracy": 0.5,
+          "resume_precision": 0.5,
+          "resume_recall": 1.0,
+          "resume_f1": 0.6666666666666666,
+          "balanced_accuracy": 0.5,
+          "confusion_valid_predictions": {
+            "tp": 2,
+            "fp": 2,
+            "fn": 0,
+            "tn": 0
+          },
+          "failed_by_true_label": {
+            "resume": 0,
+            "not_resume": 0
+          },
+          "classification_scope": "all_eligible",
+          "decision_rule": "predictor hard labels; not replaced using p_resume",
+          "balanced_accuracy_requirement": "both gold classes present",
+          "probability": {
+            "scope": "valid_probability_subset",
+            "n_eligible": 4,
+            "n_probability": 0,
+            "n_missing_probability": 4,
+            "coverage": 0.0,
+            "n_positive": 0,
+            "n_negative": 0,
+            "auroc": null,
+            "average_precision": null,
+            "auprc_definition": "non-interpolated average precision; equal scores grouped",
+            "brier": null,
+            "ece": null,
+            "ece_bins": 10,
+            "ece_definition": "positive-class probability ECE with fixed equal-width bins",
+            "bin_statistics": [],
+            "diagnostic_threshold": 0.5,
+            "threshold_accuracy": null
+          }
+        },
+        "t2": {
+          "n_eligible": 2,
+          "n_top1_correct": 2,
+          "n_with_conditional_distribution": 0,
+          "n_top3_correct": 0,
+          "n_missing_step": 0,
+          "top1_accuracy": 1.0,
+          "top3_accuracy": null,
+          "conditional_distribution_coverage": 0.0,
+          "scope": "gold_resume_with_identifiable_gold_step; missing predictions count as incorrect",
+          "top3_scope": "all_T2_eligible; missing distribution counts as incorrect; null if none available",
+          "top1_source": "explicit resume_step; not unconditional joint probability"
+        },
+        "states": {
+          "V": {
+            "n_eligible": 3,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "macro_f1_labels": [
+              "CANCELLED",
+              "VALID"
+            ],
+            "balanced_accuracy_labels": [
+              "CANCELLED",
+              "VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "CANCELLED": {
+                "CANCELLED": 1
+              },
+              "VALID": {
+                "VALID": 2
+              }
+            }
+          },
+          "F": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.5,
+            "macro_f1": 0.3333333333333333,
+            "balanced_accuracy": 0.5,
+            "macro_f1_labels": [
+              "READY",
+              "UNKNOWN"
+            ],
+            "balanced_accuracy_labels": [
+              "READY"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "READY": {
+                "READY": 2,
+                "UNKNOWN": 2
+              }
+            }
+          },
+          "A": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.75,
+            "macro_f1": 0.42857142857142855,
+            "balanced_accuracy": 0.75,
+            "macro_f1_labels": [
+              "ACCESSED",
+              "UNCERTAIN"
+            ],
+            "balanced_accuracy_labels": [
+              "ACCESSED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "ACCESSED": {
+                "ACCESSED": 3,
+                "UNCERTAIN": 1
+              }
+            }
+          },
+          "B": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.75,
+            "macro_f1": 0.42857142857142855,
+            "balanced_accuracy": 0.75,
+            "macro_f1_labels": [
+              "BELIEVES_VALID",
+              "UNRESOLVED"
+            ],
+            "balanced_accuracy_labels": [
+              "BELIEVES_VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "BELIEVES_VALID": {
+                "BELIEVES_VALID": 3,
+                "UNRESOLVED": 1
+              }
+            }
+          },
+          "C": {
+            "n_eligible": 3,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 0.6666666666666666,
+            "macro_f1": 0.4,
+            "balanced_accuracy": 0.5,
+            "macro_f1_labels": [
+              "ACTIVE",
+              "SUSPENDED"
+            ],
+            "balanced_accuracy_labels": [
+              "ACTIVE",
+              "SUSPENDED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "ACTIVE": {
+                "SUSPENDED": 1
+              },
+              "SUSPENDED": {
+                "SUSPENDED": 2
+              }
+            }
+          },
+          "Q": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 0,
+            "coverage": 1.0,
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "macro_f1_labels": [
+              "assemble_frame",
+              "build_summary"
+            ],
+            "balanced_accuracy_labels": [
+              "assemble_frame",
+              "build_summary"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "all_eligible",
+            "confusion": {
+              "assemble_frame": {
+                "assemble_frame": 2
+              },
+              "build_summary": {
+                "build_summary": 2
+              }
+            }
+          }
+        },
+        "mechanism_pairs": {
+          "long_term_commitment": {
+            "T1:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          },
+          "contact_cancellation": {
+            "T1:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "A:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "B:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "C:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            },
+            "Q:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 1,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 1.0,
+              "coverage": 1.0
+            }
+          }
+        }
+      }
+    },
+    "B6": {
+      "aggregate": {
+        "accuracy_all_eligible": {
+          "mean": 0.25,
+          "sample_sd": 0.0,
+          "n_defined": 20
+        },
+        "resume_f1": {
+          "mean": 0.0,
+          "sample_sd": 0.0,
+          "n_defined": 20
+        },
+        "step_accuracy": {
+          "mean": 0.0,
+          "sample_sd": 0.0,
+          "n_defined": 20
+        }
+      },
+      "implementation": "ActivationLogisticBaseline",
+      "strict_reproduction": false,
+      "limitations": "Fitted logistic feature baseline inspired by activation, duration and demand; not a reproduction of Memory for Goals. Dataset numeric time units must match. No belief/commitment inference; step head uses ungated persistent progress.",
+      "training": null,
+      "first_seed_checkpoint": [],
+      "first_seed": {
+        "counts": {
+          "n_planned": 4,
+          "n_success": 4,
+          "n_error": 0,
+          "n_unavailable": 0,
+          "n_eligible_t1": 4,
+          "n_excluded": {
+            "censored": 0,
+            "unknown": 0
+          },
+          "censored_fraction": 0.0,
+          "n_failure": 0
+        },
+        "t1": {
+          "n_eligible": 4,
+          "n_success": 4,
+          "n_failure": 0,
+          "coverage": 1.0,
+          "n_positive": 2,
+          "n_negative": 2,
+          "accuracy": 0.25,
+          "resume_precision": 0.0,
+          "resume_recall": 0.0,
+          "resume_f1": 0.0,
+          "balanced_accuracy": 0.25,
+          "confusion_valid_predictions": {
+            "tp": 0,
+            "fp": 1,
+            "fn": 2,
+            "tn": 1
+          },
+          "failed_by_true_label": {
+            "resume": 0,
+            "not_resume": 0
+          },
+          "classification_scope": "all_eligible",
+          "decision_rule": "predictor hard labels; not replaced using p_resume",
+          "balanced_accuracy_requirement": "both gold classes present",
+          "probability": {
+            "scope": "valid_probability_subset",
+            "n_eligible": 4,
+            "n_probability": 4,
+            "n_missing_probability": 0,
+            "coverage": 1.0,
+            "n_positive": 2,
+            "n_negative": 2,
+            "auroc": 0.375,
+            "average_precision": 0.5,
+            "auprc_definition": "non-interpolated average precision; equal scores grouped",
+            "brier": 0.5841147156490005,
+            "ece": 0.6090733302530003,
+            "ece_bins": 10,
+            "ece_definition": "positive-class probability ECE with fixed equal-width bins",
+            "bin_statistics": [
+              {
+                "bin_index": 1,
+                "n": 2,
+                "mean_probability": 0.17960145458447413,
+                "positive_fraction": 0.5
+              },
+              {
+                "bin_index": 2,
+                "n": 1,
+                "mean_probability": 0.20034635593168013,
+                "positive_fraction": 1.0
+              },
+              {
+                "bin_index": 9,
+                "n": 1,
+                "mean_probability": 0.9958425861126293,
+                "positive_fraction": 0.0
+              }
+            ],
+            "diagnostic_threshold": 0.5,
+            "threshold_accuracy": 0.25
+          }
+        },
+        "t2": {
+          "n_eligible": 2,
+          "n_top1_correct": 0,
+          "n_with_conditional_distribution": 2,
+          "n_top3_correct": 2,
+          "n_missing_step": 2,
+          "top1_accuracy": 0.0,
+          "top3_accuracy": 1.0,
+          "conditional_distribution_coverage": 1.0,
+          "scope": "gold_resume_with_identifiable_gold_step; missing predictions count as incorrect",
+          "top3_scope": "all_T2_eligible; missing distribution counts as incorrect; null if none available",
+          "top1_source": "explicit resume_step; not unconditional joint probability"
+        },
+        "states": {
+          "V": {
+            "n_eligible": 3,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 3,
+            "coverage": 0.0,
+            "accuracy": 0.0,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "macro_f1_labels": [
+              "CANCELLED",
+              "VALID"
+            ],
+            "balanced_accuracy_labels": [
+              "CANCELLED",
+              "VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "withheld_incomplete_predictions",
+            "confusion": {
+              "CANCELLED": {
+                "__MISSING_PREDICTION__": 1
+              },
+              "VALID": {
+                "__MISSING_PREDICTION__": 2
+              }
+            }
+          },
+          "F": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 4,
+            "coverage": 0.0,
+            "accuracy": 0.0,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "macro_f1_labels": [
+              "READY"
+            ],
+            "balanced_accuracy_labels": [
+              "READY"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "withheld_incomplete_predictions",
+            "confusion": {
+              "READY": {
+                "__MISSING_PREDICTION__": 4
+              }
+            }
+          },
+          "A": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 4,
+            "coverage": 0.0,
+            "accuracy": 0.0,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "macro_f1_labels": [
+              "ACCESSED"
+            ],
+            "balanced_accuracy_labels": [
+              "ACCESSED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "withheld_incomplete_predictions",
+            "confusion": {
+              "ACCESSED": {
+                "__MISSING_PREDICTION__": 4
+              }
+            }
+          },
+          "B": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 4,
+            "coverage": 0.0,
+            "accuracy": 0.0,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "macro_f1_labels": [
+              "BELIEVES_VALID"
+            ],
+            "balanced_accuracy_labels": [
+              "BELIEVES_VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "withheld_incomplete_predictions",
+            "confusion": {
+              "BELIEVES_VALID": {
+                "__MISSING_PREDICTION__": 4
+              }
+            }
+          },
+          "C": {
+            "n_eligible": 3,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 3,
+            "coverage": 0.0,
+            "accuracy": 0.0,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "macro_f1_labels": [
+              "ACTIVE",
+              "SUSPENDED"
+            ],
+            "balanced_accuracy_labels": [
+              "ACTIVE",
+              "SUSPENDED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "withheld_incomplete_predictions",
+            "confusion": {
+              "ACTIVE": {
+                "__MISSING_PREDICTION__": 1
+              },
+              "SUSPENDED": {
+                "__MISSING_PREDICTION__": 2
+              }
+            }
+          },
+          "Q": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 4,
+            "coverage": 0.0,
+            "accuracy": 0.0,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "macro_f1_labels": [
+              "assemble_frame",
+              "build_summary"
+            ],
+            "balanced_accuracy_labels": [
+              "assemble_frame",
+              "build_summary"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "withheld_incomplete_predictions",
+            "confusion": {
+              "assemble_frame": {
+                "__MISSING_PREDICTION__": 2
+              },
+              "build_summary": {
+                "__MISSING_PREDICTION__": 2
+              }
+            }
+          }
+        },
+        "mechanism_pairs": {
+          "long_term_commitment": {
+            "T1:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "F:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "A:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "B:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "Q:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            }
+          },
+          "contact_cancellation": {
+            "T1:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "A:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "B:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "C:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "Q:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            }
+          }
+        }
+      }
+    },
+    "B7": {
+      "aggregate": {
+        "accuracy_all_eligible": {
+          "mean": 0.5,
+          "sample_sd": 0.0,
+          "n_defined": 20
+        },
+        "resume_f1": {
+          "mean": 0.0,
+          "sample_sd": 0.0,
+          "n_defined": 20
+        },
+        "step_accuracy": {
+          "mean": 0.0,
+          "sample_sd": 0.0,
+          "n_defined": 20
+        }
+      },
+      "implementation": "BayesianGoalHMMBaseline",
+      "strict_reproduction": false,
+      "limitations": "Four lifecycle states for the nominated target goal; a real HMM with EM, not SIPS/BToM reproduction or full joint cognition. It does not model planning, continuous elapsed time or variable horizons; compare only matched horizons. Step head uses ungated persistent progress; no learned step probabilities. Semantic C probabilities are emitted only if all four states have nonempty training evidence anchors; otherwise only a latent posterior is logged.",
+      "training": null,
+      "first_seed_checkpoint": [],
+      "first_seed": {
+        "counts": {
+          "n_planned": 4,
+          "n_success": 4,
+          "n_error": 0,
+          "n_unavailable": 0,
+          "n_eligible_t1": 4,
+          "n_excluded": {
+            "censored": 0,
+            "unknown": 0
+          },
+          "censored_fraction": 0.0,
+          "n_failure": 0
+        },
+        "t1": {
+          "n_eligible": 4,
+          "n_success": 4,
+          "n_failure": 0,
+          "coverage": 1.0,
+          "n_positive": 2,
+          "n_negative": 2,
+          "accuracy": 0.5,
+          "resume_precision": null,
+          "resume_recall": 0.0,
+          "resume_f1": 0.0,
+          "balanced_accuracy": 0.5,
+          "confusion_valid_predictions": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 2,
+            "tn": 2
+          },
+          "failed_by_true_label": {
+            "resume": 0,
+            "not_resume": 0
+          },
+          "classification_scope": "all_eligible",
+          "decision_rule": "predictor hard labels; not replaced using p_resume",
+          "balanced_accuracy_requirement": "both gold classes present",
+          "probability": {
+            "scope": "valid_probability_subset",
+            "n_eligible": 4,
+            "n_probability": 4,
+            "n_missing_probability": 0,
+            "coverage": 1.0,
+            "n_positive": 2,
+            "n_negative": 2,
+            "auroc": 0.5,
+            "average_precision": 0.75,
+            "auprc_definition": "non-interpolated average precision; equal scores grouped",
+            "brier": 0.2829646639447064,
+            "ece": 0.36198039348070865,
+            "ece_bins": 10,
+            "ece_definition": "positive-class probability ECE with fixed equal-width bins",
+            "bin_statistics": [
+              {
+                "bin_index": 1,
+                "n": 2,
+                "mean_probability": 0.1984506565919633,
+                "positive_fraction": 0.5
+              },
+              {
+                "bin_index": 2,
+                "n": 1,
+                "mean_probability": 0.207432727832779,
+                "positive_fraction": 0.0
+              },
+              {
+                "bin_index": 3,
+                "n": 1,
+                "mean_probability": 0.36260984072601793,
+                "positive_fraction": 1.0
+              }
+            ],
+            "diagnostic_threshold": 0.5,
+            "threshold_accuracy": 0.5
+          }
+        },
+        "t2": {
+          "n_eligible": 2,
+          "n_top1_correct": 0,
+          "n_with_conditional_distribution": 2,
+          "n_top3_correct": 2,
+          "n_missing_step": 2,
+          "top1_accuracy": 0.0,
+          "top3_accuracy": 1.0,
+          "conditional_distribution_coverage": 1.0,
+          "scope": "gold_resume_with_identifiable_gold_step; missing predictions count as incorrect",
+          "top3_scope": "all_T2_eligible; missing distribution counts as incorrect; null if none available",
+          "top1_source": "explicit resume_step; not unconditional joint probability"
+        },
+        "states": {
+          "V": {
+            "n_eligible": 3,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 3,
+            "coverage": 0.0,
+            "accuracy": 0.0,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "macro_f1_labels": [
+              "CANCELLED",
+              "VALID"
+            ],
+            "balanced_accuracy_labels": [
+              "CANCELLED",
+              "VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "withheld_incomplete_predictions",
+            "confusion": {
+              "CANCELLED": {
+                "__MISSING_PREDICTION__": 1
+              },
+              "VALID": {
+                "__MISSING_PREDICTION__": 2
+              }
+            }
+          },
+          "F": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 4,
+            "coverage": 0.0,
+            "accuracy": 0.0,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "macro_f1_labels": [
+              "READY"
+            ],
+            "balanced_accuracy_labels": [
+              "READY"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "withheld_incomplete_predictions",
+            "confusion": {
+              "READY": {
+                "__MISSING_PREDICTION__": 4
+              }
+            }
+          },
+          "A": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 4,
+            "coverage": 0.0,
+            "accuracy": 0.0,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "macro_f1_labels": [
+              "ACCESSED"
+            ],
+            "balanced_accuracy_labels": [
+              "ACCESSED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "withheld_incomplete_predictions",
+            "confusion": {
+              "ACCESSED": {
+                "__MISSING_PREDICTION__": 4
+              }
+            }
+          },
+          "B": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 4,
+            "coverage": 0.0,
+            "accuracy": 0.0,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "macro_f1_labels": [
+              "BELIEVES_VALID"
+            ],
+            "balanced_accuracy_labels": [
+              "BELIEVES_VALID"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "withheld_incomplete_predictions",
+            "confusion": {
+              "BELIEVES_VALID": {
+                "__MISSING_PREDICTION__": 4
+              }
+            }
+          },
+          "C": {
+            "n_eligible": 3,
+            "n_excluded_unknown_or_missing": 1,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 3,
+            "coverage": 0.0,
+            "accuracy": 0.0,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "macro_f1_labels": [
+              "ACTIVE",
+              "SUSPENDED"
+            ],
+            "balanced_accuracy_labels": [
+              "ACTIVE",
+              "SUSPENDED"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "withheld_incomplete_predictions",
+            "confusion": {
+              "ACTIVE": {
+                "__MISSING_PREDICTION__": 1
+              },
+              "SUSPENDED": {
+                "__MISSING_PREDICTION__": 2
+              }
+            }
+          },
+          "Q": {
+            "n_eligible": 4,
+            "n_excluded_unknown_or_missing": 0,
+            "n_excluded_unsubstantiated": 0,
+            "n_missing_prediction": 4,
+            "coverage": 0.0,
+            "accuracy": 0.0,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "macro_f1_labels": [
+              "assemble_frame",
+              "build_summary"
+            ],
+            "balanced_accuracy_labels": [
+              "assemble_frame",
+              "build_summary"
+            ],
+            "scope": "substantiated_known_gold_states",
+            "classification_scope": "withheld_incomplete_predictions",
+            "confusion": {
+              "assemble_frame": {
+                "__MISSING_PREDICTION__": 2
+              },
+              "build_summary": {
+                "__MISSING_PREDICTION__": 2
+              }
+            }
+          }
+        },
+        "mechanism_pairs": {
+          "long_term_commitment": {
+            "T1:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "V:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "F:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "A:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "B:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "Q:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            }
+          },
+          "contact_cancellation": {
+            "T1:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 1,
+              "n_pass": 0,
+              "n_missing_output": 0,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": 0.0,
+              "coverage": 1.0
+            },
+            "F:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "A:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "B:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "C:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            },
+            "Q:match_gold": {
+              "n_defined": 1,
+              "n_evaluable": 0,
+              "n_pass": 0,
+              "n_missing_output": 1,
+              "n_incomplete_pair": 0,
+              "n_unlabeled": 0,
+              "rate": null,
+              "coverage": 0.0
+            }
+          }
+        }
+      }
+    }
+  },
+  "reproducibility": {
+    "matched": true,
+    "n_test_predictions": 640,
+    "prediction_sha256": "04445340becba2fabf6a6ec8fbb96e674c53e56d0f39f39102238df78217bf89",
+    "dataset_layer": "P0",
+    "source_sha256": "8dfba39ba7d0b3b2779e141038460c5abd7e2c77d804f8b8d94500849ef712e8",
+    "trained_checkpoint_hashes_matched": true,
+    "scope": "same source, inputs, configuration and environment; timing excluded"
+  },
+  "bootstrap_comparisons": [
+    {
+      "method_a": "B1",
+      "method_b": "B0",
+      "seed": 0,
+      "computed": true,
+      "reason": null,
+      "dataset_layer": "P0",
+      "metric": "accuracy",
+      "difference_definition": "method_A_minus_method_B",
+      "cluster_key": "task_family",
+      "confidence": 0.95,
+      "n_bootstrap_requested": 500,
+      "n_bootstrap_valid": 500,
+      "n_bootstrap_undefined": 0,
+      "n_samples": 4,
+      "n_clusters": 2,
+      "n_excluded": {
+        "censored": 0,
+        "unknown": 0
+      },
+      "score_a": 0.25,
+      "score_b": 0.5,
+      "difference": -0.25,
+      "ci_low": -0.5,
+      "ci_high": 0.0,
+      "ci_method": "paired_cluster_percentile",
+      "failure_policy": "accuracy counts failure wrong; incomplete F1/BA withheld"
+    },
+    {
+      "method_a": "B4",
+      "method_b": "B0",
+      "seed": 0,
+      "computed": true,
+      "reason": null,
+      "dataset_layer": "P0",
+      "metric": "accuracy",
+      "difference_definition": "method_A_minus_method_B",
+      "cluster_key": "task_family",
+      "confidence": 0.95,
+      "n_bootstrap_requested": 500,
+      "n_bootstrap_valid": 500,
+      "n_bootstrap_undefined": 0,
+      "n_samples": 4,
+      "n_clusters": 2,
+      "n_excluded": {
+        "censored": 0,
+        "unknown": 0
+      },
+      "score_a": 0.75,
+      "score_b": 0.5,
+      "difference": 0.25,
+      "ci_low": 0.0,
+      "ci_high": 0.5,
+      "ci_method": "paired_cluster_percentile",
+      "failure_policy": "accuracy counts failure wrong; incomplete F1/BA withheld"
+    },
+    {
+      "method_a": "B5",
+      "method_b": "B0",
+      "seed": 0,
+      "computed": true,
+      "reason": null,
+      "dataset_layer": "P0",
+      "metric": "accuracy",
+      "difference_definition": "method_A_minus_method_B",
+      "cluster_key": "task_family",
+      "confidence": 0.95,
+      "n_bootstrap_requested": 500,
+      "n_bootstrap_valid": 500,
+      "n_bootstrap_undefined": 0,
+      "n_samples": 4,
+      "n_clusters": 2,
+      "n_excluded": {
+        "censored": 0,
+        "unknown": 0
+      },
+      "score_a": 0.5,
+      "score_b": 0.5,
+      "difference": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "ci_method": "paired_cluster_percentile",
+      "failure_policy": "accuracy counts failure wrong; incomplete F1/BA withheld"
+    },
+    {
+      "method_a": "B6",
+      "method_b": "B0",
+      "seed": 0,
+      "computed": true,
+      "reason": null,
+      "dataset_layer": "P0",
+      "metric": "accuracy",
+      "difference_definition": "method_A_minus_method_B",
+      "cluster_key": "task_family",
+      "confidence": 0.95,
+      "n_bootstrap_requested": 500,
+      "n_bootstrap_valid": 500,
+      "n_bootstrap_undefined": 0,
+      "n_samples": 4,
+      "n_clusters": 2,
+      "n_excluded": {
+        "censored": 0,
+        "unknown": 0
+      },
+      "score_a": 0.25,
+      "score_b": 0.5,
+      "difference": -0.25,
+      "ci_low": -0.5,
+      "ci_high": 0.0,
+      "ci_method": "paired_cluster_percentile",
+      "failure_policy": "accuracy counts failure wrong; incomplete F1/BA withheld"
+    },
+    {
+      "method_a": "B7",
+      "method_b": "B0",
+      "seed": 0,
+      "computed": true,
+      "reason": null,
+      "dataset_layer": "P0",
+      "metric": "accuracy",
+      "difference_definition": "method_A_minus_method_B",
+      "cluster_key": "task_family",
+      "confidence": 0.95,
+      "n_bootstrap_requested": 500,
+      "n_bootstrap_valid": 500,
+      "n_bootstrap_undefined": 0,
+      "n_samples": 4,
+      "n_clusters": 2,
+      "n_excluded": {
+        "censored": 0,
+        "unknown": 0
+      },
+      "score_a": 0.5,
+      "score_b": 0.5,
+      "difference": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "ci_method": "paired_cluster_percentile",
+      "failure_policy": "accuracy counts failure wrong; incomplete F1/BA withheld"
+    },
+    {
+      "method_a": "B10_REFERENCE",
+      "method_b": "B0",
+      "seed": 0,
+      "computed": true,
+      "reason": null,
+      "dataset_layer": "P0",
+      "metric": "accuracy",
+      "difference_definition": "method_A_minus_method_B",
+      "cluster_key": "task_family",
+      "confidence": 0.95,
+      "n_bootstrap_requested": 500,
+      "n_bootstrap_valid": 500,
+      "n_bootstrap_undefined": 0,
+      "n_samples": 4,
+      "n_clusters": 2,
+      "n_excluded": {
+        "censored": 0,
+        "unknown": 0
+      },
+      "score_a": 0.5,
+      "score_b": 0.5,
+      "difference": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "ci_method": "paired_cluster_percentile",
+      "failure_policy": "accuracy counts failure wrong; incomplete F1/BA withheld"
+    },
+    {
+      "method_a": "B10",
+      "method_b": "B0",
+      "seed": 0,
+      "computed": true,
+      "reason": null,
+      "dataset_layer": "P0",
+      "metric": "accuracy",
+      "difference_definition": "method_A_minus_method_B",
+      "cluster_key": "task_family",
+      "confidence": 0.95,
+      "n_bootstrap_requested": 500,
+      "n_bootstrap_valid": 500,
+      "n_bootstrap_undefined": 0,
+      "n_samples": 4,
+      "n_clusters": 2,
+      "n_excluded": {
+        "censored": 0,
+        "unknown": 0
+      },
+      "score_a": 0.5,
+      "score_b": 0.5,
+      "difference": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "ci_method": "paired_cluster_percentile",
+      "failure_policy": "accuracy counts failure wrong; incomplete F1/BA withheld"
+    }
+  ],
+  "calibration": "not fitted; no independent calibration split",
+  "statistical_limits": "few held-out task blueprints; intervals are exploratory; repeated seeds are not extra samples",
+  "run_commands": [
+    "python scripts/run_p0_evaluation.py --profile integrated --data data/p0/p0_samples_v0.3.json --config configs/p0_integrated.json --methods B0,B1,B4,B5,B6,B7,B10_REFERENCE,B10 --seeds 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19 --output-dir results/p0_integrated_supplement",
+    "python scripts/check_p0_reproducibility.py --results-dir results/p0_integrated_supplement"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "a_model": {
+    "enabled": true,
+    "inference": "exact",
+    "state_epochs": 1,
+    "joint_epochs": 1,
+    "learning_rate": 0.05,
+    "decision_threshold": 0.5,
+    "particles": 128,
+    "max_states": 10000
+  }
+}

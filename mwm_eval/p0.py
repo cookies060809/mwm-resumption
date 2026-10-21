@@ -6,13 +6,13 @@ from collections import defaultdict
 from scripts.export_eval_format import to_input, to_label
 from mwm_eval.schema import validate_dataset
 
-ADAPTER_VERSION = "c-p0-v02-adapter/1.0.0"
+ADAPTER_VERSION = "c-p0-v02-adapter/1.1.0"
 CONTENT = {"cancellation": "cancellation", "completion_by_other": "fulfillment",
            "resource_available": "resource_ready", "resource_missing": "resource_blocked",
            "commitment": "commitment_resume", "abandonment": "goal_abandoned"}
 
 
-def adapt_input(record):
+def adapt_input(record, include_structured=True):
     """Read only pre-cutoff input fields; never inspect any supervision."""
     if record.get("schema_version") != "p0-record/v0.2.0":
         raise ValueError("C P0 adapter requires p0-record/v0.2.0")
@@ -33,6 +33,9 @@ def adapt_input(record):
             # B's goal_id denotes the interrupted goal, not the interrupting goal.
             # No nested completion snapshots or invented child IDs are introduced.
             event["semantic"].pop("interrupting_goal_id", None)
+    if include_structured:
+        from models.ecr_mwm.p0_adapter import adapt_record
+        mapped["observation"]["structured_evidence"] = adapt_record(record)
     return mapped
 
 

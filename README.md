@@ -6,8 +6,8 @@
 
 > **参赛信息**：第八届全球校园人工智能算法精英大赛 · 算法创新赛 · 赛题 1「算法模型创新」
 > **官方页面**：[aicomp.cn/tracks/tracks-2/3788.html](https://www.aicomp.cn/tracks/tracks-2/3788.html)
-> **仓库状态：P0 v0.2 正式批次与六基线评测（2026-10-21）**
-> 已接入 120 家族 / 240 条 P0，并运行六种本地基线与八类机制检查。正式重复评估使用团队固定的 0–19 种子，详见 [P0 实验说明](evaluation/p0_baselines.md)。新增 v0.3 的 14 条 draft 候选不进入正式评测。核心算法完整预测、真实外部模型对比和正式 P1 评测尚未完成。
+> **仓库状态：A 结构化模型已接入 P0 训练与评测（2026-10-21）**
+> 已整合 A 的 `a-structured/v0.2.0`、B 的已复核数据与 C 的评测；正式重复评估使用团队固定的 0–19 种子。A 提供的是小状态参考模型与训练器，含 T1/T2/T3，尚无神经文本编码器、MENTIS 或真人 P1 验证。整合差异、命令和实际结果见 [分支整合说明](evaluation/branch_integration.md)。
 
 ## 一句话定义
 
@@ -39,10 +39,11 @@
 - [x] B 对 240 条完成人工复核（`annotation.status=reviewed`）
 - [ ] A/C 盲审 8 条（每机制 1 条）并仲裁至 `adjudicated`
 - [x] 竞赛材料骨架、评分映射与提交清单
-- [ ] 核心算法 EC-JMF 最小实现
+- [x] A 的结构化精确/SMC 推断、T1/T2/T3 与有限差分参考训练器
 - [x] B0/B1/B4/B5/B6/B7 本地基线、指标与独立工程复现流程
 - [x] 正式 P0 v0.2 接入、六本地基线与成对机制评测
-- [ ] B2/B3/B8/B9/B10 真实模型运行与公平比较
+- [x] B10 结构化参考模型的 C 侧训练、检查点和 P0 预测接口
+- [ ] B2/B3/B8/B9 外部模型与 MENTIS 公平比较
 - [ ] 真实实验数据与主结果、消融、校准
 - [ ] 技术方案 PDF、答辩 PPT、演示视频
 - [ ] 提交前合规与复现审查
@@ -107,6 +108,17 @@ python scripts/check_p0_reproducibility.py
 结果与离线页面位于 `results/p0_v02/`。C 的版本化适配层保留 B 的原始数据与划分；72 条 `data/integration/` 仍单独用于工程自检。已保存的匿名结果摘要见 [evaluation/p0_v02_results.json](evaluation/p0_v02_results.json)。预测协议见 [schema/模型交接协议.md](schema/模型交接协议.md)。
 
 真实数据的字段审查、候选提取与边界见 [evaluation/p1_source_audit.md](evaluation/p1_source_audit.md)。原始标注、转录和问卷回答只保存在被忽略的本地目录。
+
+A 模型与六基线一起运行：
+
+```bash
+python scripts/run_p0_evaluation.py --profile integrated
+python scripts/check_p0_reproducibility.py --results-dir results/p0_integrated
+```
+
+该入口对每个固定种子重新用 train 拟合 A 的状态与联合阶段，保存检查点；`B10_REFERENCE` 使用未训练参数作对照。v0.3 的 14 条补充记录现已由 B 签核 reviewed，保留单独结果，不改变原 240 条主批次。校准方案维持当前三档，未从 train/dev 切走样本。
+
+主批次汇总见 [p0_integrated_results.json](evaluation/p0_integrated_results.json)。A 训练后 T1 准确率为 57.1%，当前最佳规则基线 B4 为 78.6%；本轮尚未显示 A 的整体优势。独立补充结果与机制诊断见 [分支整合说明](evaluation/branch_integration.md)。
 
 ## 数据与证据边界
 

@@ -29,9 +29,9 @@ def main():
         files.extend(path for path in (ROOT / folder).rglob("*") if path.is_file()
                      and "__pycache__" not in path.parts and path.suffix not in {".pyc", ".pyo"})
     files += [ROOT / "configs" / name for name in
-              ("external.example.json", "ablation_matrix.json", "a_ec_jmf_reference.json", "base.yaml")]
+              ("external.example.json", "ablation_matrix.json", "a_ec_jmf_reference.json", "base.yaml", "p0_integrated.json")]
     files.append(ROOT / ".gitignore")
-    # Upstream regression tests require these two unsigned technical audit packets.
+    # Upstream regression tests require these two B-signed technical audit packets.
     files += [ROOT / "docs/annotation" / name for name in
               ("p0_spot_audit_v0.2_seed20261021.md", "p0_spot_audit_v0.3_all7.md")]
     # package.log is still being written by the parent wrapper; verification.json

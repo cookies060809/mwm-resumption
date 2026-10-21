@@ -32,6 +32,10 @@ class P0EvaluationTests(unittest.TestCase):
     def test_draft_candidate_batch_cannot_enter_formal_evaluation(self):
         require_accepted_batch(self.source)
         candidates = json.loads((ROOT / "data/p0/p0_samples_v0.3.json").read_text(encoding="utf-8"))
+        require_accepted_batch(candidates)  # B has now signed the supplemental batch.
+        candidates = copy.deepcopy(candidates)
+        for record in candidates:
+            record["annotation"].update(status="draft", annotator_id="agent-draft")
         with self.assertRaisesRegex(ValueError, "Draft/candidate"):
             require_accepted_batch(candidates)
 

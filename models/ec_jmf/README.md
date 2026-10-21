@@ -2,7 +2,7 @@
 
 **Epistemically Constrained Joint Mental-State Filter**（拟议算法名，非已发表方法）。
 
-> Owner：A。状态：已接入通用精确/SMC数值内核，具体心智状态转移及公共包装未实现，M1尚待三方评审。低层数值接口与下列公共草案的层次区别见 [A接口](../../docs/internal/a/A_INTERFACES.md)。
+> Owner：A。状态：已提供结构化心智转移、精确/SMC 推断与参考训练；C 已接入 P0 训练和预测。公共在线 update 与 MENTIS 包装仍未冻结。低层数值接口与下列公共草案的层次区别见 [A接口](../../docs/internal/a/A_INTERFACES.md)。
 
 ## 核心命题
 

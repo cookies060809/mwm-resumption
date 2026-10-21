@@ -95,7 +95,7 @@ def validate_graph(graph, steps):
 
 def validate_observation(obs):
     required = {"target_person", "goal_id", "task_steps", "task_graph", "cutoff", "horizon", "events"}
-    if not isinstance(obs, dict) or set(obs) != required:
+    if not isinstance(obs, dict) or not required <= set(obs) or set(obs) - required - {"structured_evidence"}:
         raise ValueError("observation fields must match protocol; no labels or sample IDs")
     if not text(obs["target_person"]) or not text(obs["goal_id"]):
         raise ValueError("target_person and goal_id are required")
@@ -178,6 +178,9 @@ def validate_observation(obs):
             if event["goal_id"] == obs["goal_id"] and event["step_id"] not in steps:
                 raise ValueError("task action points to unknown target step")
         ids.add(event["event_id"])
+    if "structured_evidence" in obs:
+        from integration.a_input_adapter import validate_structured_evidence
+        validate_structured_evidence(obs["structured_evidence"], obs)
 
 
 def validate_dataset(records, golds):

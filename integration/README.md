@@ -49,7 +49,7 @@ conditional_step_probs
 
 `a_output_adapter.py` 已支持 A 草案中的 `t1_resume_probability / t2_conditional_step_distribution / t3_state_distributions / evidence_trace / cost` 到 C 输出的显式转换。B10 子进程配置需选择 `output_format="a-t123-draft-1"`，默认配置仍关闭。阈值固定为 0.5，条件步骤取 argmax；`P(resume)=0` 时条件步骤分布必须为 null。缺失输出、不合法分布和截止外证据会拒绝，状态和成本不补造。
 
-A 当前交付的是 v0.1 输入适配与数值滤波基础，尚无 v0.2 完整 T1/T2/T3 预测包装。`scripts/check_a_p0.py` 验证其 13 项现有契约；`tests/test_a_output_adapter.py` 验证输出运输与转换。两类检查都不代表真实模型效果或完整 EC-JMF 已实现。
+A 已上传 `a-structured/v0.2.0` 推断与参考训练器。`a_model.py` 现在提供原生 fit/predict、检查点和 B10/A1–A6 注册；`a_input_adapter.py` 校验无损结构化输入与原观测一致，保留完整 U 和嵌套图。运行 `python scripts/run_p0_evaluation.py --profile integrated`。它是结构化 P0 参考模型，尚无神经文本编码器、真实人类验证或 MENTIS。`scripts/check_a_p0.py` 继续用于旧版兼容契约；完整整合见 `evaluation/branch_integration.md`。
 
 - [ ] 拉取并锁定 MENTIS 版本
 - [ ] 复现官方示例

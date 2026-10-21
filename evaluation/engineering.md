@@ -1,6 +1,6 @@
 # 本地基线与评测工程
 
-本模块提供六种本地方法、统一指标、外部适配和离线复现工具。工程样例与正式 P0 v0.2 分开运行；P0 结果见 `p0_baselines.md` 与 `p0_v02_results.json`。尚无完整 EC-JMF 或正式 P1 预测结果。
+本模块提供六种本地方法、A 的结构化参考模型、统一指标、外部适配和离线复现工具。工程样例与正式 P0 分开运行；A 整合入口与实际范围见 `branch_integration.md`。尚无完整神经 EC-JMF、MENTIS 或正式 P1 预测结果。
 
 ## 运行
 
@@ -60,4 +60,4 @@ manifest 保存代码、输入、标签及配置 SHA256 与环境；逐样例日
 
 复制 `configs/external.example.json` 到被忽略的个人配置，配置环境变量并显式加 `--enable-external` 才启用真实调用。密钥不写入仓库。B8/B9使用另行安装的官方 checkout；真实端点、官方运行与 A 模型均不能由本机协议测试替代。B9字符摘要尚未完成严格 token 等量控制。
 
-`configs/ablation_matrix.json` 仅登记 A0–A7 等待交付项；null 不是模型实现。P0 v0.2 已交付并完成本地基线诊断；完整核心算法、训练检查点、审核后的 P1、预算公平性及主实验仍需实际交付和运行。外部接口说明见 `schema/模型交接协议.md`，官方版本与差异见 `integration/mentis_public_audit.md`。
+`configs/ablation_matrix.json` 现在区分 A0–A6 参考实现与 A7/附加对照的未交付状态。`--profile integrated` 将 B10 与未训练的 B10_REFERENCE 接入同一引擎，按 train 拟合并保存检查点。v0.3 已由 B 签核 reviewed，单独小批次报告；未审核草稿仍被拒绝。真实 P1、神经模型、MENTIS、校准与完整公平预算比较尚未完成。外部协议见 `schema/模型交接协议.md`。

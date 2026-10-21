@@ -41,3 +41,8 @@ jobs:
         run: |
           python scripts/run_p0_evaluation.py
           python scripts/check_p0_reproducibility.py
+
+      - name: Train and reproduce A structured P0 integration
+        run: |
+          python scripts/run_p0_evaluation.py --profile integrated --seeds 0 --suite core
+          python scripts/check_p0_reproducibility.py --results-dir results/p0_integrated

@@ -2,32 +2,131 @@
   "version": "ec-jmf-ablation-handoff-1",
   "owner": "member_A",
   "source_plan": "MWM_Research_Plan_V1_1_EC-JMF.md sections 5.12 and 9.3",
-  "status": "required_not_supplied",
-  "execution_policy": "References only. Do not substitute local rule baselines for trained EC-JMF ablations.",
+  "status": "A0_A6_structured_reference_integrated; A7_and_additional_controls_pending",
+  "execution_policy": "Use actual A structured reference implementation; declare finite-state training scope. No substitution with local rule baselines; no P1 or full neural-model claims.",
   "primary_method": {
     "id": "B10",
     "equivalent_variant": "A0",
     "description": "Complete ECR-MWM with EC-JMF joint state update, epistemic gating and resumption prediction",
-    "model_config_path": null,
-    "checkpoint_path": null,
-    "command_config": null,
-    "status": "required_not_supplied"
+    "model_config_path": "configs/p0_integrated.json",
+    "checkpoint_path": "results/p0_integrated/checkpoints/B10/seed_<seed>.json",
+    "command_config": "python scripts/run_p0_evaluation.py --profile integrated --methods B10",
+    "status": "reference_implementation_integrated"
   },
   "variants": [
-    {"id": "A0", "description": "Complete ECR-MWM", "requires_checkpoint": true, "model_config_path": null, "checkpoint_path": null, "command_config": null, "status": "awaiting_member_A"},
-    {"id": "A1", "description": "Remove information-access gating; permit objective events to update person belief directly", "requires_checkpoint": true, "model_config_path": null, "checkpoint_path": null, "command_config": null, "status": "awaiting_member_A"},
-    {"id": "A2", "description": "Remove joint commitment-progress update; estimate state factors independently", "requires_checkpoint": true, "model_config_path": null, "checkpoint_path": null, "command_config": null, "status": "awaiting_member_A"},
-    {"id": "A3", "description": "Remove persistent goal memory and retain only the declared recent window", "requires_checkpoint": true, "model_config_path": null, "checkpoint_path": null, "command_config": null, "status": "awaiting_member_A"},
-    {"id": "A4", "description": "Remove event consistency loss; member A must identify the exact removed loss terms", "requires_checkpoint": true, "model_config_path": null, "checkpoint_path": null, "command_config": null, "status": "awaiting_member_A"},
-    {"id": "A5", "description": "Remove resumption-step auxiliary training task", "requires_checkpoint": true, "model_config_path": null, "checkpoint_path": null, "command_config": null, "status": "awaiting_member_A"},
-    {"id": "A6", "description": "Replace learned information-access gate with declared evidence rules", "requires_checkpoint": true, "model_config_path": null, "checkpoint_path": null, "command_config": null, "status": "awaiting_member_A"},
-    {"id": "A7", "description": "Add matched history-summary or prompt tokens without the proposed transition mechanism", "requires_checkpoint": false, "model_config_path": null, "checkpoint_path": null, "command_config": null, "status": "awaiting_member_A"}
+    {
+      "id": "A0",
+      "description": "Complete ECR-MWM",
+      "requires_checkpoint": true,
+      "model_config_path": "configs/p0_integrated.json",
+      "checkpoint_path": "results/p0_integrated/checkpoints/B10/seed_<seed>.json",
+      "command_config": "python scripts/run_p0_evaluation.py --profile integrated --methods B10",
+      "status": "reference_implementation_integrated"
+    },
+    {
+      "id": "A1",
+      "description": "Remove information-access gating; permit objective events to update person belief directly",
+      "requires_checkpoint": true,
+      "model_config_path": "configs/p0_integrated.json",
+      "checkpoint_path": "results/p0_integrated/checkpoints/A1/seed_<seed>.json",
+      "command_config": "python scripts/run_p0_evaluation.py --profile integrated --methods A1",
+      "status": "reference_implementation_integrated"
+    },
+    {
+      "id": "A2",
+      "description": "Remove B-to-C and terminal-C-to-Q coupling in the structured reference model",
+      "requires_checkpoint": true,
+      "model_config_path": "configs/p0_integrated.json",
+      "checkpoint_path": "results/p0_integrated/checkpoints/A2/seed_<seed>.json",
+      "command_config": "python scripts/run_p0_evaluation.py --profile integrated --methods A2",
+      "status": "reference_implementation_integrated",
+      "implementation_scope": "Remove B-to-C and terminal-C-to-Q coupling; NOT full independent BCQ"
+    },
+    {
+      "id": "A3",
+      "description": "Remove persistent goal memory and retain only the declared recent window",
+      "requires_checkpoint": true,
+      "model_config_path": "configs/p0_integrated.json",
+      "checkpoint_path": "results/p0_integrated/checkpoints/A3/seed_<seed>.json",
+      "command_config": "python scripts/run_p0_evaluation.py --profile integrated --methods A3",
+      "status": "reference_implementation_integrated",
+      "implementation_scope": "Replay five most recent events; not learned forgetting"
+    },
+    {
+      "id": "A4",
+      "description": "Remove event consistency loss; member A must identify the exact removed loss terms",
+      "requires_checkpoint": true,
+      "model_config_path": "configs/p0_integrated.json",
+      "checkpoint_path": "results/p0_integrated/checkpoints/A4/seed_<seed>.json",
+      "command_config": "python scripts/run_p0_evaluation.py --profile integrated --methods A4",
+      "status": "reference_implementation_integrated"
+    },
+    {
+      "id": "A5",
+      "description": "Remove resumption-step auxiliary training task",
+      "requires_checkpoint": true,
+      "model_config_path": "configs/p0_integrated.json",
+      "checkpoint_path": "results/p0_integrated/checkpoints/A5/seed_<seed>.json",
+      "command_config": "python scripts/run_p0_evaluation.py --profile integrated --methods A5",
+      "status": "reference_implementation_integrated"
+    },
+    {
+      "id": "A6",
+      "description": "Replace learned information-access gate with declared evidence rules",
+      "requires_checkpoint": true,
+      "model_config_path": "configs/p0_integrated.json",
+      "checkpoint_path": "results/p0_integrated/checkpoints/A6/seed_<seed>.json",
+      "command_config": "python scripts/run_p0_evaluation.py --profile integrated --methods A6",
+      "status": "reference_implementation_integrated"
+    },
+    {
+      "id": "A7",
+      "description": "Add matched history-summary or prompt tokens without the proposed transition mechanism",
+      "requires_checkpoint": false,
+      "model_config_path": null,
+      "checkpoint_path": null,
+      "command_config": null,
+      "status": "awaiting_member_A"
+    }
   ],
   "additional_controls": [
-    {"id": "same_size_hmm", "description": "Ordinary HMM or SMC with the same declared state count; match data, state capacity and inference budget", "requires_checkpoint": true, "model_config_path": null, "checkpoint_path": null, "command_config": null, "status": "required_not_supplied", "local_B7_is_replacement": false},
-    {"id": "no_cf_loss", "description": "Keep information-access fields and remove information-equivalence counterfactual/pair constraint losses; distinguish from A4 event consistency if the implementation uses separate terms", "requires_checkpoint": true, "model_config_path": null, "checkpoint_path": null, "command_config": null, "status": "required_not_supplied"},
-    {"id": "independent_BCQ", "description": "Estimate B/C/Q independently without joint message passing; document overlap or distinction with A2", "requires_checkpoint": true, "model_config_path": null, "checkpoint_path": null, "command_config": null, "status": "required_not_supplied"},
-    {"id": "equal_data_no_pair", "description": "Use identical added training examples while removing their pair-relation losses", "requires_checkpoint": true, "model_config_path": null, "checkpoint_path": null, "command_config": null, "status": "required_not_supplied"}
+    {
+      "id": "same_size_hmm",
+      "description": "Ordinary HMM or SMC with the same declared state count; match data, state capacity and inference budget",
+      "requires_checkpoint": true,
+      "model_config_path": null,
+      "checkpoint_path": null,
+      "command_config": null,
+      "status": "required_not_supplied",
+      "local_B7_is_replacement": false
+    },
+    {
+      "id": "no_cf_loss",
+      "description": "Keep information-access fields and remove information-equivalence counterfactual/pair constraint losses; distinguish from A4 event consistency if the implementation uses separate terms",
+      "requires_checkpoint": true,
+      "model_config_path": null,
+      "checkpoint_path": null,
+      "command_config": null,
+      "status": "required_not_supplied"
+    },
+    {
+      "id": "independent_BCQ",
+      "description": "Estimate B/C/Q independently without joint message passing; document overlap or distinction with A2",
+      "requires_checkpoint": true,
+      "model_config_path": null,
+      "checkpoint_path": null,
+      "command_config": null,
+      "status": "required_not_supplied"
+    },
+    {
+      "id": "equal_data_no_pair",
+      "description": "Use identical added training examples while removing their pair-relation losses",
+      "requires_checkpoint": true,
+      "model_config_path": null,
+      "checkpoint_path": null,
+      "command_config": null,
+      "status": "required_not_supplied"
+    }
   ],
   "required_comparison_controls": {
     "same_train_dev_calibration_test_splits": true,

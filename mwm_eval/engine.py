@@ -42,6 +42,8 @@ def actual_observation(record, method_id):
     obs = copy.deepcopy(record["observation"])
     if method_id == "B1":
         obs["events"] = obs["events"][-5:]
+        if "structured_evidence" in obs:
+            obs["structured_evidence"]["events"] = obs["structured_evidence"]["events"][-5:]
     return obs
 
 
@@ -181,7 +183,8 @@ def run_experiment(inputs_path, labels_path, output_dir, config, methods, seeds,
     first_seed_rows, first_seed_models = {}, {}
     for seed in seeds:
         settings["run_seed"] = seed
-        registry = {**make_local_baselines(seed), **make_external_baselines(settings)}
+        from integration.a_model import make_a_models
+        registry = {**make_local_baselines(seed), **make_external_baselines(settings), **make_a_models(settings, seed)}
         for method_id in methods:
             if method_id not in registry:
                 raise ValueError(f"unknown method: {method_id}")
@@ -197,6 +200,7 @@ def run_experiment(inputs_path, labels_path, output_dir, config, methods, seeds,
                     reason = f"fit failed: {type(exc).__name__}: {exc}"
                     failure_status = "error"
             fit_ms = (time.perf_counter()-fit_started)*1000
+            artifacts = method.save_artifacts(output / "checkpoints" / method_id) if reason is None and hasattr(method, "save_artifacts") else []
             calibration_rows = predict_rows(method, calibration_records, seed, reason, failure_status)
             calibration = fit_temperature(calibration_rows, calibration_golds)
             calibration_evaluation = evaluate(calibration_rows, calibration_golds, calibration_records) if calibration_records else None
@@ -221,7 +225,7 @@ def run_experiment(inputs_path, labels_path, output_dir, config, methods, seeds,
             entry = {"method_id": method_id, "seed": seed, "status": run_status, "reason": reason,
                      "spec": method.spec(), "fit_ms": fit_ms, "calibration": calibration,
                      "metrics": metrics, "raw_metrics": raw_metrics, "counts": counts, "cost": _cost(rows),
-                     "calibration_cost": _cost(calibration_rows)}
+                     "calibration_cost": _cost(calibration_rows), "artifacts": artifacts}
             if suite == "all" and run_status != "unavailable":
                 entry["subgroups"] = _subgroup_scores(rows, test_golds, test)
             runs.append(entry)
@@ -246,8 +250,8 @@ def run_experiment(inputs_path, labels_path, output_dir, config, methods, seeds,
     if suite == "all":
         stress = _stress_runs(first_seed_models, test, test_golds, seeds[0])
     code_paths = [ROOT / "run_evaluation.py", ROOT / "scripts/run_p0_evaluation.py",
-                  ROOT / "scripts/export_eval_format.py"]
-    for folder in ("mwm_eval", "integration", "tools"):
+                  ROOT / "scripts/export_eval_format.py", ROOT / "scripts/validate_data.py"]
+    for folder in ("mwm_eval", "integration", "tools", "models"):
         code_paths.extend(path for path in (ROOT/folder).rglob("*.py") if "__pycache__" not in str(path))
     manifest = {"protocol": "c-engineering-draft-0.2", "created_utc": datetime.now(timezone.utc).isoformat(),
                 "purpose": "synthetic integration verification only" if validation["dataset_layer"] == "integration_fixture" else "research evaluation",
@@ -314,6 +318,10 @@ def _stress_runs(models, records, golds, seed):
         changed = copy.deepcopy(records)
         for record in changed:
             obs = record["observation"]
+            # This sweep is restricted below to six legacy baselines. They use
+            # the canonical view only; do not retain an unmodified second view
+            # when padding that history with synthetic events.
+            obs.pop("structured_evidence", None)
             for index in range(padding):
                 obs["events"].append({
                     "event_id": f"stress_pad_{index}", "time": obs["cutoff"], "actor": "observer",
@@ -329,7 +337,7 @@ def _stress_runs(models, records, golds, seed):
             rows = predict_rows(method, changed, seed)
             results.append({"transform": "neutral_event_padding", "padding_events": padding,
                             "method_id": method_id, "metrics": evaluate(rows, golds, changed), "cost": _cost(rows),
-                            "scope": "synthetic length stress only; nested/task-count/missing-evidence sweeps still require validated data"})
+                            "scope": "six legacy baselines, canonical view only; A model excluded; synthetic length stress, not validated nested/task-count/missing-evidence data"})
     return results
 
 
@@ -372,7 +380,7 @@ def write_report(path, summary, manifest, comparisons, stress, status):
               "## 实现范围", "",
               "- B0 最近活动、B1 最近五事件、B4 无认知门控的持久记忆、B5 证据规则 BDI；B1 不声称严格复现 SET-PR。",
               "- B6 使用时长/负荷/线索的训练型逻辑回归；B7 为训练型 HMM，非 SIPS。HMM 潜态只有全部获得证据锚定才发布语义 C 分布。",
-              "- 步骤分布是规则候选的点质量分布，不是学习到的步骤不确定性。未提供的状态因子或概率均保留缺失。",
+              "- 六种原有基线的步骤分布是规则候选点质量；启用 A 时使用 A 实际条件步骤/状态分布。未提供的状态因子或概率均保留缺失。",
               "- T1/T2、状态掩码、AUROC/AP、Brier/ECE、显式约束、成对诊断、覆盖率及分组统计。",
               "- train/calibration/test 分离，按故事簇配对 Bootstrap；逐样例预测、代码与数据哈希、实际耗时。",
               "- 外部协议的本机测试结果见测试日志；真实外部方法是否运行以上表和 status.json 为准。", "",
@@ -385,7 +393,7 @@ def write_report(path, summary, manifest, comparisons, stress, status):
               "- summary.json：每个方法/种子的完整指标、分母、覆盖率、训练参数、原始与校准结果。",
               "- predictions.jsonl / calibration_predictions.jsonl：逐条实际结果及输入/错误/资源记录。",
               "- comparisons.json：首种子按故事簇配对的差值区间；不将多个种子当新增人物。",
-              "- stress.json：中性事件增加的长度敏感性；尚不能替代全部复杂度/鲁棒性实验。",
+              "- stress.json：仅六种原有基线的中性事件长度敏感性，A 未参加此变换；尚不能替代全部复杂度/鲁棒性实验。",
               "- error_cases.json：首种子 T1/T2 错误类别与逐例预测，仅在推理后对照答案生成。",
               "- manifest.json / status.json：可复现指纹、划分重叠和真实依赖状态。", "",
               "## 统计边界", "",
