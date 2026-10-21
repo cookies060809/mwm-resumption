@@ -66,7 +66,8 @@ def total_loss(terms,variant,config,selection=False):
 
 def checkpoint_bytes(model,config,seed,epoch):
     buffer=io.BytesIO()
-    torch.save({'format':'a-neural-ec-jmf/v1','variant':model.variant,'hidden_dim':model.hidden,
+    torch.save({'format':('a-neural-ec-jmf/v1' if model.semantic_contract=='legacy-v1' else 'a-neural-ec-jmf/v2'),
+                'semantic_contract':model.semantic_contract,'variant':model.variant,'hidden_dim':model.hidden,
                 'seed':seed,'selected_epoch':epoch,'config':config,
                 'state_dict':{k:v.detach().cpu().clone() for k,v in model.state_dict().items()}},buffer)
     return buffer.getvalue()
@@ -74,15 +75,17 @@ def checkpoint_bytes(model,config,seed,epoch):
 
 def reload_model(payload):
     checkpoint=torch.load(io.BytesIO(payload),map_location='cpu',weights_only=True)
-    if checkpoint['format']!='a-neural-ec-jmf/v1': raise ValueError('UNKNOWN_CHECKPOINT_FORMAT')
-    model=NeuralECJMF(checkpoint['variant'],checkpoint['hidden_dim'])
+    if checkpoint['format']=='a-neural-ec-jmf/v1': contract='legacy-v1'
+    elif checkpoint['format']=='a-neural-ec-jmf/v2': contract=checkpoint['semantic_contract']
+    else: raise ValueError('UNKNOWN_CHECKPOINT_FORMAT')
+    model=NeuralECJMF(checkpoint['variant'],checkpoint['hidden_dim'],contract)
     model.load_state_dict(checkpoint['state_dict'],strict=True);model.eval()
     return model
 
 
 def fit_one(train,dev,variant,seed,config):
     seed_everything(seed,config['threads'])
-    model=NeuralECJMF(variant,config['hidden_dim'])
+    model=NeuralECJMF(variant,config['hidden_dim'],config.get('semantic_contract','legacy-v1'))
     optimizer=torch.optim.AdamW([p for p in model.parameters() if p.requires_grad],
                                lr=config['learning_rate'],weight_decay=config['weight_decay'])
     best_loss=float('inf');best_state=None;best_epoch=None;first_audit=None
@@ -204,7 +207,7 @@ def run(config_path):
     selected={};batches={}
     for variant in config['variants']:
         print(f'{variant}: compile train/dev, {len(parts["train"])}/{len(parts["dev"])} records',flush=True)
-        train,dev=Batch(parts['train'],variant),Batch(parts['dev'],variant)
+        train,dev=(Batch(parts[s],variant,config.get('semantic_contract','legacy-v1')) for s in ('train','dev'))
         batches[variant]=(train,dev)
         selected[variant]=[]
         for seed in config['evaluation_seeds']:
@@ -224,7 +227,8 @@ def run(config_path):
             'limitations':['scripted P0 only','structured inputs; no text understanding learning',
                            'UNKNOWN masks preserve B disputes','no calibration/P1/MENTIS conclusions']}
     for variant in config['variants']:
-        test=Batch(parts['test'],variant);transfer=Batch(supplemental,variant) if supplement else None
+        test=Batch(parts['test'],variant,config.get('semantic_contract','legacy-v1'))
+        transfer=Batch(supplemental,variant,config.get('semantic_contract','legacy-v1')) if supplement else None
         rows=[]
         slices={m:[i for i,e in enumerate(parts['test']) if e['mechanism']==m] for m in sorted({e['mechanism'] for e in parts['test']})}
         mechanism_metrics={m:[] for m in slices}
@@ -263,9 +267,9 @@ def predict_file(checkpoint_path,data_path):
     raw=json.loads(data_path.read_text(encoding='utf8'));raw=raw if isinstance(raw,list) else [raw]
     model=reload_model(checkpoint_path.read_bytes())
     examples=[{'input':adapt_record(r)} for r in raw]
-    predictions=model.predict(Batch(examples,model.variant),evidence=True)
+    predictions=model.predict(Batch(examples,model.variant,model.semantic_contract),evidence=True)
     for r,p in zip(raw,predictions):
-        public={'sample_id':r.get('sample_id'),'t1_resume_probability':p['t1'],
+        public={'sample_id':r.get('sample_id'),'semantic_contract':model.semantic_contract,'t1_resume_probability':p['t1'],
                 't2_conditional_step_distribution':p['t2'],'t3_state_distributions':p['t3'],
                 'evidence_trace':p['evidence_trace'],'calibrated':False}
         print(json.dumps(public,ensure_ascii=False,allow_nan=False))

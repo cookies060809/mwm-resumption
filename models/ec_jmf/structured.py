@@ -90,7 +90,10 @@ class StructuredModel:
     person_graphs must be separately evidenced knowledge, not observer metadata.
     """
     def __init__(self, adapted, parameters=None, mechanisms=Mechanisms(),
-                 person_graphs=None, max_goals=8, max_depth=4):
+                 person_graphs=None, max_goals=8, max_depth=4, semantic_contract="legacy-v1"):
+        if semantic_contract not in ("legacy-v1", "b-p0-v03/v2"):
+            raise ValueError("UNKNOWN_SEMANTIC_CONTRACT")
+        self.semantic_contract = semantic_contract
         self.graphs = adapted["observer_graphs"]
         self.target = adapted["goal_id"]
         self.mechanisms = mechanisms
@@ -108,6 +111,8 @@ class StructuredModel:
         self.parameters = {"access_uncertain": 0.0, "understanding_uncertain": 0.0,
                            "accept_message": 1.0, "invalid_abandon": 0.0,
                            "action_validity": 0.0, "world_uncertain": 0.0, "recall_next": 0.0}
+        if self.semantic_contract == "b-p0-v03/v2":
+            self.parameters["recommit_goal"] = 0.0
         if parameters:
             if set(parameters) - set(self.parameters):
                 raise ValueError("UNKNOWN_TRANSITION_PARAMETER")
@@ -191,7 +196,10 @@ class StructuredModel:
             if self.mechanisms.joint_progress:
                 values["commitment"] = "SUSPENDED"
         elif interpretation == "complete" or kind == "completion_by_other":
-            values.update(belief="BELIEVES_INVALID",
+            # B P0: confirmed fulfillment is distinct from cancellation.
+            completed_belief = ("BELIEVES_VALID" if self.semantic_contract == "b-p0-v03/v2"
+                                and kind == "completion_by_other" else "BELIEVES_INVALID")
+            values.update(belief=completed_belief,
                           person_done=frozenset(self.graphs[goal.goal_id]["steps"]),
                           known_steps=frozenset(self.graphs[goal.goal_id]["steps"]))
             if self.mechanisms.joint_progress:
@@ -235,10 +243,20 @@ class StructuredModel:
             values.update(commitment="SUSPENDED", waiting=False)
         # Unparsed statements are evidence in the trace, never keyword rules.
         updated = changed(goal, event_id, **values)
+        outcomes = [(updated, 1.0)]
+        if (self.semantic_contract == "b-p0-v03/v2" and
+                kind in ("step_started", "step_attempted") and
+                goal.commitment in ("ABANDONED", "COMPLETED")):
+            # A local action is not certain renewed commitment to the whole goal.
+            # Both interpretations remain possible; no label or story ID is read.
+            p = self.chance("recommit_goal")
+            retained = changed(updated, event_id, commitment=goal.commitment, q="NOT_APPLICABLE")
+            outcomes = [(retained, 1-p), (updated, p)]
         if kind in ("goal_start", "step_started", "step_attempted") and goal.belief == "UNKNOWN":
             p = self.chance("action_validity")
-            return [(changed(updated, event_id, belief="BELIEVES_VALID"), p), (updated, 1-p)]
-        return [(updated, 1.0)]
+            return [(changed(state, event_id, belief="BELIEVES_VALID"), w*p)
+                    for state,w in outcomes] + [(state,w*(1-p)) for state,w in outcomes]
+        return outcomes
 
     def transition(self, state, event):
         goal_id = event["world"]["goal_id"]

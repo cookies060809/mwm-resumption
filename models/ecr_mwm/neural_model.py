@@ -9,7 +9,7 @@ from torch.nn import functional as F
 from models.ec_jmf.structured import JointState
 from models.ecr_mwm.p0_adapter import person_inputs
 from models.ec_jmf.neural_filter import (PackedTopology,compile_record,probability_values,
-                                       LABELS,OFFSETS,GATES,factor_vector)
+                                       LABELS,OFFSETS,gate_names,factor_vector)
 from models.ecr_mwm.neural_data import (event_features,state_features,WORLD_DIM,PERSON_DIM,
                                        MENTAL_DIM,STATE_DIM)
 
@@ -19,9 +19,10 @@ def mlp(inputs,hidden,outputs):
 
 
 class Batch:
-    def __init__(self, examples, variant='A0'):
+    def __init__(self, examples, variant='A0', semantic_contract='legacy-v1'):
         self.examples,self.variant = examples,variant
-        self.topology = PackedTopology([compile_record(x['input'],variant) for x in examples])
+        self.semantic_contract = semantic_contract
+        self.topology = PackedTopology([compile_record(x['input'],variant,semantic_contract=semantic_contract) for x in examples])
         self.n = len(examples)
         self.lengths = [len(x['input']['events']) for x in examples]
         self.length = max(self.lengths)
@@ -142,12 +143,13 @@ class Batch:
 
 
 class NeuralECJMF(nn.Module):
-    def __init__(self,variant='A0',hidden=24):
+    def __init__(self,variant='A0',hidden=24,semantic_contract='legacy-v1'):
         super().__init__();self.variant,self.hidden=variant,hidden
+        self.semantic_contract = semantic_contract
         self.world_encoder=nn.GRUCell(WORLD_DIM,hidden)
         self.person_encoder=nn.GRUCell(PERSON_DIM,hidden)
-        self.person_gates=mlp(hidden+MENTAL_DIM,hidden,len(GATES))
-        self.world_gates=mlp(hidden,hidden,len(GATES))
+        self.person_gates=mlp(hidden+MENTAL_DIM,hidden,len(gate_names(semantic_contract)))
+        self.world_gates=mlp(hidden,hidden,len(gate_names(semantic_contract)))
         self.independent=nn.ModuleDict({factor:mlp(hidden,hidden,len(LABELS[factor])) for factor in 'BCQ'})
         self.resume_head=mlp(STATE_DIM,hidden,1)
         self.step_head=mlp(STATE_DIM+4,hidden,1)
@@ -175,6 +177,8 @@ class NeuralECJMF(nn.Module):
         return result
 
     def forward(self,batch):
+        if batch.semantic_contract != self.semantic_contract:
+            raise ValueError("MODEL_BATCH_SEMANTIC_CONTRACT_MISMATCH")
         world,person,memory=self.encode(batch);top=batch.topology
         pc=person[top.ctx_record,top.ctx_time];wc=world[top.ctx_record,top.ctx_time]
         logits=torch.where(top.ctx_world[:,None],self.world_gates(wc),
