@@ -1,0 +1,276 @@
+{
+  "format_version": "1.0",
+  "release_version": "1.0.1",
+  "complete_real_P1_six_factor_gold": false,
+  "tomi_official_QA_before_cross_split_dedup": 17982,
+  "tomi_QA_removed_cross_split_duplicate_story": 0,
+  "sources": {
+    "tomi_auxiliary": {
+      "train": {
+        "samples": 5994,
+        "groups": 999,
+        "direct_state_supervision": {
+          "V": 0,
+          "F": 0,
+          "A": 1998,
+          "B": 0,
+          "C": 0,
+          "Q": 0
+        },
+        "label_counts": {
+          "V": {},
+          "F": {},
+          "A": {
+            "ACCESSED": 1440,
+            "NOT_ACCESSED": 558
+          },
+          "B": {},
+          "C": {},
+          "Q": {}
+        }
+      },
+      "dev": {
+        "samples": 5994,
+        "groups": 999,
+        "direct_state_supervision": {
+          "V": 0,
+          "F": 0,
+          "A": 1998,
+          "B": 0,
+          "C": 0,
+          "Q": 0
+        },
+        "label_counts": {
+          "V": {},
+          "F": {},
+          "A": {
+            "ACCESSED": 1450,
+            "NOT_ACCESSED": 548
+          },
+          "B": {},
+          "C": {},
+          "Q": {}
+        }
+      },
+      "test": {
+        "samples": 5994,
+        "groups": 999,
+        "direct_state_supervision": {
+          "V": 0,
+          "F": 0,
+          "A": 1998,
+          "B": 0,
+          "C": 0,
+          "Q": 0
+        },
+        "label_counts": {
+          "V": {},
+          "F": {},
+          "A": {
+            "ACCESSED": 1454,
+            "NOT_ACCESSED": 544
+          },
+          "B": {},
+          "C": {},
+          "Q": {}
+        }
+      }
+    },
+    "casas_real_proxy": {
+      "train": {
+        "samples": 84,
+        "groups": 12,
+        "direct_state_supervision": {
+          "V": 0,
+          "F": 0,
+          "A": 0,
+          "B": 0,
+          "C": 0,
+          "Q": 0
+        },
+        "label_counts": {
+          "V": {},
+          "F": {},
+          "A": {},
+          "B": {},
+          "C": {},
+          "Q": {}
+        }
+      },
+      "dev": {
+        "samples": 33,
+        "groups": 4,
+        "direct_state_supervision": {
+          "V": 0,
+          "F": 0,
+          "A": 0,
+          "B": 0,
+          "C": 0,
+          "Q": 0
+        },
+        "label_counts": {
+          "V": {},
+          "F": {},
+          "A": {},
+          "B": {},
+          "C": {},
+          "Q": {}
+        }
+      },
+      "test": {
+        "samples": 34,
+        "groups": 4,
+        "direct_state_supervision": {
+          "V": 0,
+          "F": 0,
+          "A": 0,
+          "B": 0,
+          "C": 0,
+          "Q": 0
+        },
+        "label_counts": {
+          "V": {},
+          "F": {},
+          "A": {},
+          "B": {},
+          "C": {},
+          "Q": {}
+        }
+      }
+    },
+    "p0_NEW_controlled_augmentation": {
+      "train": {
+        "samples": 936,
+        "groups": 72,
+        "direct_state_supervision": {
+          "V": 936,
+          "F": 936,
+          "A": 936,
+          "B": 864,
+          "C": 864,
+          "Q": 864
+        },
+        "label_counts": {
+          "V": {
+            "CANCELLED": 288,
+            "FULFILLED": 144,
+            "VALID": 504
+          },
+          "F": {
+            "READY": 864,
+            "BLOCKED": 72
+          },
+          "A": {
+            "NOT_ACCESSED": 144,
+            "ACCESSED": 720,
+            "UNCERTAIN": 72
+          },
+          "B": {
+            "BELIEVES_VALID": 792,
+            "BELIEVES_INVALID": 72
+          },
+          "C": {
+            "SUSPENDED": 576,
+            "ABANDONED": 144,
+            "COMPLETED": 72,
+            "ACTIVE": 72
+          },
+          "Q": {
+            "write_record": 504,
+            "NOT_APPLICABLE": 216,
+            "submit_record": 72,
+            "verify_record": 72
+          }
+        }
+      },
+      "dev": {
+        "samples": 312,
+        "groups": 24,
+        "direct_state_supervision": {
+          "V": 312,
+          "F": 312,
+          "A": 312,
+          "B": 288,
+          "C": 288,
+          "Q": 288
+        },
+        "label_counts": {
+          "V": {
+            "CANCELLED": 96,
+            "FULFILLED": 48,
+            "VALID": 168
+          },
+          "F": {
+            "READY": 288,
+            "BLOCKED": 24
+          },
+          "A": {
+            "NOT_ACCESSED": 48,
+            "ACCESSED": 240,
+            "UNCERTAIN": 24
+          },
+          "B": {
+            "BELIEVES_VALID": 264,
+            "BELIEVES_INVALID": 24
+          },
+          "C": {
+            "SUSPENDED": 192,
+            "ABANDONED": 48,
+            "COMPLETED": 24,
+            "ACTIVE": 24
+          },
+          "Q": {
+            "write_record": 168,
+            "NOT_APPLICABLE": 72,
+            "submit_record": 24,
+            "verify_record": 24
+          }
+        }
+      },
+      "test": {
+        "samples": 312,
+        "groups": 24,
+        "direct_state_supervision": {
+          "V": 312,
+          "F": 312,
+          "A": 312,
+          "B": 288,
+          "C": 288,
+          "Q": 288
+        },
+        "label_counts": {
+          "V": {
+            "CANCELLED": 96,
+            "FULFILLED": 48,
+            "VALID": 168
+          },
+          "F": {
+            "READY": 288,
+            "BLOCKED": 24
+          },
+          "A": {
+            "NOT_ACCESSED": 48,
+            "ACCESSED": 240,
+            "UNCERTAIN": 24
+          },
+          "B": {
+            "BELIEVES_VALID": 264,
+            "BELIEVES_INVALID": 24
+          },
+          "C": {
+            "SUSPENDED": 192,
+            "ABANDONED": 48,
+            "COMPLETED": 24,
+            "ACTIVE": 24
+          },
+          "Q": {
+            "write_record": 168,
+            "NOT_APPLICABLE": 72,
+            "submit_record": 24,
+            "verify_record": 24
+          }
+        }
+      }
+    }
+  }
+}
