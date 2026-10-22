@@ -1,6 +1,6 @@
 # 结果目录
 
-> A侧脚本P0神经训练与机制消融已完成：[完整v0.3重新训练](p0/a_neural_v03_v1/README.md)、[历史v0.2训练及冻结补充](p0/a_neural_v1/README.md)。不代表真实人物预测性能。数字均由训练入口生成。
+> A侧脚本P0神经训练与机制消融已完成：[v0.3语义修正版与限制](p0/a_neural_v03_v3/README.md)、[历史v0.2训练及冻结补充](p0/a_neural_v1/README.md)。不代表真实人物预测性能。数字均由训练入口生成。
 
 ## 规则
 
@@ -35,7 +35,8 @@ results/<phase>/<experiment>/<model>/<run_id>/
 | run_id | 实验 | 模型 | 状态 | 备注 |
 |---|---|---|---|---|
 | a_neural_v1 | P0 v0.2；v0.3冻结补充 | A0–A6 | 140次完成 | [协议、指标、失败边界与复现](p0/a_neural_v1/README.md) |
-| a_neural_v03_v1 | 完整P0 v0.3（150/52/52）从头训练 | A0–A6 | 140次完成 | [固定协议、指标、零支持与复现](p0/a_neural_v03_v1/README.md) |
+| a_neural_v03_v1 | 完整P0 v0.3历史训练（已发现语义偏差） | A0–A6 | 历史140次完成 | [固定协议、指标、零支持与复现](p0/a_neural_v03_v1/README.md) |
+| a_neural_v03_v3 | 完整P0 v0.3语义修订；A焦点映射仍有限 | A0–A6 | 140次完成 | [修复、剩余缺口与复现](p0/a_neural_v03_v3/README.md) |
 
 ## 归档
 
