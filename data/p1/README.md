@@ -7,9 +7,39 @@
 
 ## 当前状态
 
-- P0 种子 16 条已入库：`data/p0/p0_samples.json`。
+- P0 已入库：`data/p0/p0_samples_v0.2.json`（240 条 / 120 家族）、`data/p0/p0_samples_v0.3.json`（254 条）、`data/p0/p0_samples.json`（16 条冻结种子）。
 - P1 尚未采集；当前没有 P1 记录模板，也不复用 P0 schema。
 - 待数据许可、伦理审批与访问控制方案确定后，单独设计 P1 schema（ISO 8601 时间、观察窗口、删失、逐标注者记录等）。
+
+## 与 `data/auxiliary/C_multisource_v1` 的关系（重要）
+
+C 在 `data/auxiliary/C_multisource_v1/` 放了一份 19,693 条的多源训练包。**它不是本目录的 P1**，三处自陈均为证：
+
+- 目录名为 `auxiliary`，README_C.md 首句即「它不 是六变量齐全的真实人物 P1」；
+- `stats.json` 第一行：`"complete_real_P1_six_factor_gold": false`；
+- README_C.md 结论段：「目前不能报告真实人类六变量联合监督训练/完整 P1 已建立」。
+
+| 源 | 条数（train） | 总量 | 占比 | 六变量直接监督 | 性质 |
+|---|---:|---:|---:|---|---|
+| `tomi_auxiliary` | 5,994 | 17,982 | 91.3% | 仅 A 1,998（训练集），V/F/B/C/Q 全 0 | ToMi 心理理论 QA，A 由场景规则推导，非真人测量 |
+| `p0_NEW_controlled_augmentation` | 936 | 1,560 | 7.9% | V/F/A 936，B/C/Q 864 | **脚本增强**，基于 ToMi 背景；任务模板实测只有 **1 个**（`verify_record → write_record → submit_record`），936 = 72 背景 × 13 版本 |
+| `casas_real_proxy` | 84 | 151 | 0.8% | **全部 0** | 唯一真实人类来源，但只有 `activity_return_within_60s` 一个二值代理 |
+
+**最关键的一行：带六变量标签的真实人类样本 = 0 条。**
+
+A 因此判定"用不了"，结论成立，不是数据缺失而是结构问题：
+
+1. `casas_real_proxy` 的 `state_loss_mask` 六项全 0，喂进六变量主损失等于没喂；
+2. `tomi_auxiliary` 只有 A 头有监督，且标签是"进入/离开 + 同室观察"规则推导的，会把 A 头训成 ToMi 场景规则而不是通用可达性；
+3. `p0_NEW` 虽六变量齐全，但单一任务模板，且与本仓库 P0 v0.2（15 骨架 × 8 机制）分布不同，混训会让消融无法归因。
+
+**表述红线（竞赛提交前必须守住）：**
+
+- 不得把 19,693 条写成"多源 P1 数据集"——其中 91.3% 是 ToMi QA、7.9% 是脚本增强、0.8% 是无六变量标签的真人活动记录；
+- 不得把 `p0_NEW` 的六变量标签写成人类行为证据，它是 `NEW_controlled_P0_augmentation`；
+- 可报告的准确表述是：「受控 P0 六变量训练 + 公开合成 ToM 辅助训练 + 真实活动返回代理实验」。
+
+P1 的采集与再标注仍由 B 负责，这份辅助包不替代，也不减少该项工作。
 
 ## 访问与存放
 
