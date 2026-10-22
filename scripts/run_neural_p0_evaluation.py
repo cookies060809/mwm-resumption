@@ -44,8 +44,10 @@ def state_hash(payload):
     return h.hexdigest()
 
 
-def run(data_path, output, seeds, variants, epochs=None):
-    config = json.loads((ROOT / "configs/a_neural_p0.json").read_text(encoding="utf-8"))
+def run(data_path, output, seeds, variants, epochs=None, config_path=None):
+    config_path = (config_path or ROOT / "configs/a_neural_p0.json").resolve()
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    contract = config.get("semantic_contract", "legacy-v1")
     if epochs is not None:
         config["epochs"] = epochs
     config["data"] = data_path.resolve().relative_to(ROOT).as_posix()
@@ -69,6 +71,10 @@ def run(data_path, output, seeds, variants, epochs=None):
         if example["input"] != validate_structured_evidence(record["observation"]["structured_evidence"], record["observation"]):
             raise ValueError("A_C_INPUT_MISMATCH")
     parts = {split: [e for e in examples if e["split"] == split] for split in ("train", "dev", "test")}
+    if config.get("expected_data_sha256") and file_hash(data_path) != config["expected_data_sha256"]:
+        raise ValueError("DATA_RELEASE_CHANGED")
+    if config.get("expected_counts") and {k:len(v) for k,v in parts.items()} != config["expected_counts"]:
+        raise ValueError("DATA_SPLIT_COUNTS_CHANGED")
     if any(not part for part in parts.values()):
         raise ValueError("TRAIN_DEV_TEST_REQUIRED")
     test_records = [r for r in records if r["split"] == "test"]
@@ -81,7 +87,7 @@ def run(data_path, output, seeds, variants, epochs=None):
     selected, train_batches, runs = {}, {}, []
     for variant in variants:
         print(f"{variant}: compiling {len(parts['train'])} train / {len(parts['dev'])} dev", flush=True)
-        train, dev = Batch(parts["train"], variant), Batch(parts["dev"], variant)
+        train, dev = Batch(parts["train"], variant, contract), Batch(parts["dev"], variant, contract)
         train_batches[variant] = train, dev
         selected[variant] = []
         for seed in seeds:
@@ -112,7 +118,7 @@ def run(data_path, output, seeds, variants, epochs=None):
 
         for variant in variants:
             # No labels, IDs, mechanism or family metadata in the prediction batch.
-            test_batch = Batch([{"input": copy.deepcopy(r["observation"]["structured_evidence"])} for r in test_records], variant)
+            test_batch = Batch([{"input": copy.deepcopy(r["observation"]["structured_evidence"])} for r in test_records], variant, contract)
             for payload, metadata in selected[variant]:
                 model = reload_model(payload)
                 stamp = perf_counter()
@@ -164,16 +170,16 @@ def run(data_path, output, seeds, variants, epochs=None):
             test_golds, test_records, metric="accuracy", seed=seeds[0], n_bootstrap=500, cluster_key="task_family"))
     representative = output / "representative.pt"
     representative.write_bytes(original)
-    paths = [ROOT / "configs/a_neural_p0.json", Path(__file__).resolve()]
+    paths = [config_path, Path(__file__).resolve()]
     for folder in ("models", "integration", "mwm_eval"):
         paths.extend((ROOT / folder).rglob("*.py"))
     report = {"scope": "C independent neural training and common-protocol P0 evaluation; scripted data only",
-              "a_source_commit": "28525fb03a29ee27c0c85a1d0911f4bbffc0cf57",
+              "a_source_commit": subprocess.check_output(["git", "log", "-1", "--format=%H", "HEAD", "--", "models", config_path.relative_to(ROOT).as_posix()], cwd=ROOT, text=True).strip(),
               "code_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
               "code_sha256": {p.relative_to(ROOT).as_posix(): file_hash(p) for p in sorted(set(paths))},
               "data": {"path": config["data"], "sha256": file_hash(data_path), "validation": validation,
                        "counts": {k: len(v) for k,v in parts.items()}, "group_audit": group_audit},
-              "config": config, "seeds": seeds, "aggregate": _aggregate(runs), "runs": runs,
+              "config": config, "config_path":config_path.relative_to(ROOT).as_posix(), "seeds": seeds, "aggregate": _aggregate(runs), "runs": runs,
               "training_seconds": training_seconds, "total_seconds": perf_counter() - start,
               "environment": {"python": sys.version, "torch": str(torch.__version__), "platform": platform.platform(), "device": "cpu", "threads": config["threads"]},
               "verification": {"representative_retrained_identically": True, "all_checkpoint_reloads_exact": True,
@@ -185,7 +191,7 @@ def run(data_path, output, seeds, variants, epochs=None):
               "limits": ["No real-human P1, independent calibration, LLM or MENTIS experiment.",
                          "20 seeds quantify training randomness, not 20 independent datasets.",
                          "Structured features and supplied understanding evidence; no free-text encoder.",
-                         "Inherited B label disputes and A structural zero support remain unchanged.",
+                         "B label disputes and incomplete focal-event/message-scope/resource mappings remain; support diagnostics depend on the selected semantic contract.",
                          "A T2 scores conditional argmax; C T2 scores the emitted step, so a negative T1 decision counts as a missing step. Both are reported without forcing equality.",
                          "Native v0.3 only; auxiliary multi-source JSONL requires a separate semantic adapter.",
                          "Checkpoint choice uses dev only, threshold is fixed at 0.5; no test-based model selection."]}
@@ -201,6 +207,7 @@ def main():
     parser.add_argument("--seeds", default=",".join(map(str, range(20))))
     parser.add_argument("--variants", default="A0,A1,A2,A3,A4,A5,A6")
     parser.add_argument("--epochs", type=int)
+    parser.add_argument("--config", type=Path, help="Explicit A configuration; aligned v3 requires its semantic contract in every batch.")
     args = parser.parse_args()
     seeds = [int(x) for x in args.seeds.split(",")]
     variants = args.variants.split(",")
@@ -208,7 +215,7 @@ def main():
         raise ValueError("UNIQUE_NONEMPTY_SEEDS_AND_VARIANTS_REQUIRED")
     if set(variants) - {f"A{i}" for i in range(7)} or (args.epochs is not None and args.epochs < 1):
         raise ValueError("INVALID_VARIANTS_OR_EPOCHS")
-    run(args.data, args.output_dir, seeds, variants, args.epochs)
+    run(args.data, args.output_dir, seeds, variants, args.epochs, args.config)
 
 
 if __name__ == "__main__":

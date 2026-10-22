@@ -63,6 +63,9 @@ def export(results, target):
         + " --seeds " + ",".join(map(str, report["seeds"]))
         + " --variants " + ",".join(report["config"]["variants"])
         + " --epochs " + str(report["config"]["epochs"]))
+    if report.get('config_path'):
+        snapshot['config_path'] = report['config_path']
+        snapshot['run_command'] += ' --config ' + report['config_path']
     if (results / "original_A_check.json").exists():
         snapshot["original_A_reproduction"] = json.loads((results / "original_A_check.json").read_text(encoding="utf-8"))
     target.parent.mkdir(parents=True, exist_ok=True)

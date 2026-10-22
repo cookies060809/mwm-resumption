@@ -19,13 +19,15 @@ from scripts.run_neural_p0_evaluation import state_hash
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_neural_checkpoint_actually_trains_and_reloads_into_C():
+@pytest.mark.parametrize('contract', ['legacy-v1', 'b-p0-v03/v3'])
+def test_neural_checkpoint_actually_trains_and_reloads_into_C(contract):
     config = json.loads((ROOT / "configs/a_neural_p0.json").read_text(encoding="utf-8"))
     config["epochs"] = 1
+    config['semantic_contract'] = contract
     examples = load_records(ROOT / "data/p0/v0.3/p0_samples.json")
     seed_everything(0)
-    train = Batch([e for e in examples if e["split"] == "train"][:2])
-    dev = Batch([e for e in examples if e["split"] == "dev"][:2])
+    train = Batch([e for e in examples if e["split"] == "train"][:2], semantic_contract=contract)
+    dev = Batch([e for e in examples if e["split"] == "dev"][:2], semantic_contract=contract)
     payload, audit = fit_one(train, dev, "A0", 0, config)
     assert audit["first_epoch_audit"]["nonzero_gradient_parameters"] > 0
     assert audit["reload_max_abs_error"] == 0
@@ -34,13 +36,27 @@ def test_neural_checkpoint_actually_trains_and_reloads_into_C():
     raw = json.loads((ROOT / "data/p0/v0.3/p0_samples.json").read_text(encoding="utf-8"))
     records, _ = prepare_dataset(raw)
     obs = next(r["observation"] for r in records if r["split"] == "test")
-    batch = Batch([{"input": obs["structured_evidence"]}])
+    batch = Batch([{"input": obs["structured_evidence"]}], semantic_contract=contract)
     native = reload_model(payload).predict(batch, evidence=True)[0]
     prediction = normalize_neural_output(native, obs)
     validate_prediction(prediction, obs)
     assert prediction["p_resume"] == native["t1"]
     assert prediction["state_probs"] == native["t3"]
     assert prediction["metadata"]["a_evidence_trace"]
+
+
+def test_aligned_model_rejects_legacy_batch():
+    examples = load_records(ROOT / 'data/p0/v0.3/p0_samples.json')
+    model = NeuralECJMF(semantic_contract='b-p0-v03/v3')
+    with pytest.raises(ValueError, match='MODEL_BATCH_SEMANTIC_CONTRACT_MISMATCH'):
+        model.predict(Batch([{'input':examples[0]['input']}]))
+
+
+def test_supplied_aligned_checkpoint_matches_A_and_C_protocol():
+    from scripts.check_aligned_neural_checkpoint import check
+    result = check()
+    assert all(result['verification'].values())
+    assert result['C_metrics']['counts']['n_failure'] == 0
 
 
 def test_neural_inference_does_not_read_targets_or_private_ids():
