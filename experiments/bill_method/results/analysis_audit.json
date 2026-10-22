@@ -1,0 +1,40 @@
+{
+  "split_summary": {
+    "train": {
+      "records": 150,
+      "families": 75,
+      "known_resume": 132
+    },
+    "dev": {
+      "records": 52,
+      "families": 26,
+      "known_resume": 46
+    },
+    "test": {
+      "records": 52,
+      "families": 26,
+      "known_resume": 46
+    }
+  },
+  "family_overlap": false,
+  "T3_probability_identical_to_original": {
+    "original_frozen": true,
+    "head_continue": true,
+    "visible_context": true,
+    "visible_context_balanced": true
+  },
+  "selection": {
+    "method_mean_dev_loss": {
+      "original_frozen": 0.2518230080604553,
+      "head_continue": 0.11504979431629181,
+      "visible_context": 0.10374607741832734,
+      "visible_context_balanced": 0.10420916080474854
+    },
+    "selected_method": "visible_context",
+    "canonical_seed": 0,
+    "selection_completed_before_test_evaluation": true
+  },
+  "all_runs": 12,
+  "all_reload_exact": true,
+  "all_frozen_unchanged": true
+}

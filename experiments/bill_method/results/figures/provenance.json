@@ -1,0 +1,18 @@
+{
+  "audience": "本地研究诊断与队内讨论；非期刊指定格式",
+  "source": [
+    "results/comparison.csv",
+    "results/*/seed_*/history.csv"
+  ],
+  "aggregation": "比较图按方法对续训种子取均值，散点显示所有运行；开发集曲线为每轮均值和全部原始轨迹，无平滑",
+  "uncertainty": "不绘总体置信区间；共用原始seed0检查点，只衡量后续模块/训练随机性",
+  "png_dpi": 300,
+  "formats": [
+    "PNG",
+    "SVG",
+    "PDF"
+  ],
+  "matplotlib": "3.10.3",
+  "alt_comparison": "原版准确率91.30%，继续训练和上下文模块97.83%，平衡版均值97.39%；上下文模块平均Brier约0.0274。",
+  "alt_dev_curves": "从同一原始开发集损失开始，继续训练和两个上下文分支的损失均下降；曲线保留每次运行。"
+}

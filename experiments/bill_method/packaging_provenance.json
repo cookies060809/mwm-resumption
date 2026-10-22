@@ -1,0 +1,16 @@
+{
+  "experiment_base_commit": "87a660b67be19dbd374b4709f7509f94871f9848",
+  "packaging_changes": [
+    "Resolve original source/data/checkpoint from repository root instead of a duplicated working_copy",
+    "Keep historical archive SHA256 as a provenance value; do not require a local ZIP",
+    "Write replay protocols into the new results directory so runtime metadata does not overwrite the historical protocol"
+  ],
+  "training_or_model_weights_changed_during_packaging": false,
+  "results_copied_byte_for_byte": true,
+  "original_source_preserved": true,
+  "verification": {
+    "copied_result_bytes_identical": true,
+    "new_context_and_head_control_dev_prediction_smoke": "passed",
+    "token_and_local_user_path_patterns": "no matches"
+  }
+}

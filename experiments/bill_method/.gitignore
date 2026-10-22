@@ -1,0 +1,5 @@
+# Intentionally publish these small P0 experiment artifacts.
+!results/**/checkpoint.pt
+!results/**/predictions.jsonl
+rerun_*/
+__pycache__/

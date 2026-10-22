@@ -1,0 +1,5 @@
+﻿sample_id,family,mechanism,target_resume,original_frozen_p,original_frozen_correct,head_continue_p,head_continue_correct,visible_context_p,visible_context_correct,visible_context_balanced_p,visible_context_balanced_correct
+P02-D7-B,P02-D7,long_term_commitment,False,0.8401415944099426,False,0.9448805451393127,False,0.6174096465110779,False,0.6638074517250061,False
+P06-D2-B,P06-D2,nested_interruption,False,0.6947945356369019,False,0.3307284712791443,True,0.3020632266998291,True,0.30852988362312317,True
+P06-D4-B,P06-D4,nested_interruption,False,0.6947945356369019,False,0.3307284712791443,True,0.3020632266998291,True,0.30852988362312317,True
+P06-S1-B,P06-S1,nested_interruption,False,0.6947945356369019,False,0.3307284712791443,True,0.3020632266998291,True,0.30852988362312317,True

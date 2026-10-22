@@ -1,0 +1,61 @@
+{
+  "name": "P0 local warm-start context residual diagnostic v1",
+  "created_date": "2026-10-22",
+  "source_commit": "87a660b67be19dbd374b4709f7509f94871f9848",
+  "source_archive_sha256": "48e583d17ea965817f4cea0f4ee60e2264eb20d59ad258c8d2dc4ca9d58bba21",
+  "base_checkpoint_sha256": "d0c04535c7594919cf403306251be16181d8f3482700657e5d17b232f9557044",
+  "data_sha256": "93ca37e93442495039950c0f8c4c618fee4b8b178cfc52c3269b33cb9f0f7739",
+  "original_config_sha256": "f450d3825a285d0931d582e5cf2c3eb70d6d8330f8185f3eed83197d7db79763",
+  "variants": [
+    "original_frozen",
+    "head_continue",
+    "visible_context",
+    "visible_context_balanced"
+  ],
+  "seeds": {
+    "original_frozen": [
+      0
+    ],
+    "head_continue": [
+      0
+    ],
+    "visible_context": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "visible_context_balanced": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "epochs": 40,
+  "learning_rate": 0.01,
+  "weight_decay": 0.0001,
+  "gradient_clip": 5.0,
+  "hidden_dim": 24,
+  "residual_bound": 2.0,
+  "dropout": 0.1,
+  "base_parameters": "freeze all base parameters, except original resume_head in head_continue control",
+  "loss": "original state NLL + resume BCE + conditional step NLL + 0.05*(event consistency + invariance); balanced variant changes only train resume BCE weights by train mechanism inverse frequency",
+  "selection": "minimum unweighted original dev state NLL + T1 BCE + T2 NLL; earliest tie; compare method mean dev loss to original; canonical seed0, never best test seed",
+  "test_policy": "train and select all runs before opening test predictions; one terminal evaluation of all predefined runs; historical P0 test is already exposed, not a fresh blind holdout",
+  "stress": [
+    "consistent identifier renaming",
+    "10 invisible semantic no-op events",
+    "30 invisible semantic no-op events"
+  ],
+  "scope": "structured scripted P0 only; no human generalization or world-model-paper reproduction claim",
+  "hardware": {
+    "python": "3.12.14",
+    "torch": "2.14.0+cpu",
+    "device": "cpu",
+    "threads": 1,
+    "logical_cpu_count": 24
+  }
+}

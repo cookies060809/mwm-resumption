@@ -1,0 +1,15 @@
+{
+  "kind": "head_continue",
+  "seed": 0,
+  "selected_epoch": 40,
+  "initial_dev_loss": 0.2518230080604553,
+  "dev_selection_loss": 0.11504979431629181,
+  "parameter_count": 18377,
+  "trainable_parameters": 817,
+  "initial_prediction_max_error": 0.0,
+  "reload_max_error": 0.0,
+  "frozen_parameters_unchanged": true,
+  "seconds": 0.9292237000045134,
+  "checkpoint": "results\\head_continue\\seed_0\\checkpoint.pt",
+  "checkpoint_sha256": "8c040ea84cf5e04cf4e612e62a9689eec76351fefd3cae98b5077598dffd75c5"
+}

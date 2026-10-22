@@ -1,0 +1,4 @@
+# Preserve the bytes of recorded experiment outputs across platforms.
+results/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Matplotlib emits intentional whitespace inside SVG path strings.
+results/figures/*.svg -whitespace

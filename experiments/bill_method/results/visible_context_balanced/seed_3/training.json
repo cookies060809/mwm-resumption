@@ -1,0 +1,15 @@
+{
+  "kind": "visible_context_balanced",
+  "seed": 3,
+  "selected_epoch": 40,
+  "initial_dev_loss": 0.2518230080604553,
+  "dev_selection_loss": 0.1046350970864296,
+  "parameter_count": 20370,
+  "trainable_parameters": 1993,
+  "initial_prediction_max_error": 0.0,
+  "reload_max_error": 0.0,
+  "frozen_parameters_unchanged": true,
+  "seconds": 1.1079736000028788,
+  "checkpoint": "results\\visible_context_balanced\\seed_3\\checkpoint.pt",
+  "checkpoint_sha256": "dbcea05f96cdc923b5f34c0557cf409319d42bcd257e6652d9c64921c0b66efe"
+}
