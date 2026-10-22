@@ -254,6 +254,8 @@ class ChatCompletionBaseline:
             "temperature": self.config.get("temperature", 0),
             "max_output_tokens": self.config.get("max_output_tokens", 1024),
             "token_parameter": self.config.get("token_parameter", "max_completion_tokens"),
+            "thinking_mode": self.config.get("thinking_mode"),
+            "output_contract": self.config.get("output_contract", "legacy"),
             "max_retries": self.config.get("max_retries", 2),
             **_seed_details(self.config, "http"),
             "availability": self.availability(),
@@ -281,6 +283,21 @@ class ChatCompletionBaseline:
             )
         else:
             variant = 'Predict resumption directly from the complete event history. '
+        if self.config.get('output_contract') == 'canonical-label-v2':
+            # Publish the validator vocabulary, never gold labels or evidence IDs.
+            from mwm_eval.schema import FACTORS
+            vocabulary = {k:sorted(v) for k,v in FACTORS.items()}
+            vocabulary['Q'] = list(observation['task_steps']) + ['UNKNOWN','NOT_APPLICABLE']
+            contract += (
+                'State factor meanings: V objective goal validity, F objective feasibility, '
+                'A person information access, B person belief about goal validity, '
+                'C person goal commitment/activity, Q person progress/resumption step. '
+                'The ONLY allowed state labels for each factor are: '
+                + json.dumps(vocabulary,sort_keys=True) + '. '
+                'Do not use resume/not_resume as state labels. If a state distribution '
+                'cannot be supplied, omit that factor or return state_probs={}. '
+                'This is an output vocabulary, not evidence that any state is true. '
+            )
         return [
             {"role": "system", "content": variant + contract},
             {"role": "user", "content": json.dumps(observation, ensure_ascii=False, sort_keys=True, allow_nan=False)},
@@ -303,6 +320,11 @@ class ChatCompletionBaseline:
             raise ValueError("invalid output-token or retry budget")
         payload = {"model": model, "messages": self._messages(obs), token_parameter: max_tokens,
                    "response_format": {"type": "json_object"}}
+        thinking = cfg.get("thinking_mode")
+        if thinking is not None:
+            if thinking not in {"enabled", "disabled"}:
+                raise ValueError("thinking_mode must be enabled or disabled")
+            payload["thinking"] = {"type": thinking}
         if cfg.get("temperature", 0) is not None:
             payload["temperature"] = cfg.get("temperature", 0)
         if seed_details["effective_seed_requested"] is not None:
@@ -378,6 +400,7 @@ class ChatCompletionBaseline:
             "latency_ms": round((time.perf_counter() - started) * 1000, 3),
             "attempts": attempts, "retries": attempts - 1, "failures": failures,
             "temperature": cfg.get("temperature", 0), "max_output_tokens": max_tokens,
+            "thinking_mode": cfg.get("thinking_mode"),
             "real_http_execution": True,
             **seed_details,
         }

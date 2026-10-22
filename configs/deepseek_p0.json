@@ -1,0 +1,19 @@
+{
+  "llm": {
+    "enabled": true,
+    "base_url": "https://api.deepseek.com",
+    "model": "deepseek-flash",
+    "api_key_env": "MWM_LLM_API_KEY",
+    "require_api_key": true,
+    "supports_seed": false,
+    "temperature": 0,
+    "thinking_mode": "disabled",
+    "output_contract": "canonical-label-v2",
+    "max_output_tokens": 4096,
+    "token_parameter": "max_tokens",
+    "max_retries": 1,
+    "retry_delay_seconds": 1,
+    "timeout_seconds": 120
+  },
+  "evaluation": {"external_repetitions": "One API pass per method; provider does not expose a reproducible seed. Not 20 neural training seeds."}
+}

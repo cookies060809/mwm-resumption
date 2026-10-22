@@ -91,6 +91,19 @@ def completion(content=None):
 
 
 class ExternalIntegrationTests(unittest.TestCase):
+    def test_deepseek_transport_and_canonical_label_vocabulary_are_explicit(self):
+        with LocalEndpoint([(200, completion())]) as endpoint:
+            cfg = {**endpoint.config(), 'thinking_mode':'disabled',
+                   'output_contract':'canonical-label-v2','token_parameter':'max_tokens'}
+            result = ChatCompletionBaseline('B2',cfg).predict(observation())
+            payload = endpoint.received[0]['payload']
+            self.assertEqual(payload['thinking'],{'type':'disabled'})
+            self.assertEqual(payload['max_tokens'],200)
+            self.assertNotIn('max_completion_tokens',payload)
+            self.assertIn('BELIEVES_VALID',payload['messages'][0]['content'])
+            self.assertNotIn('TRAIN_LABEL_MUST_NOT_LEAK',str(payload))
+            self.assertEqual(result['metadata']['external']['thinking_mode'],'disabled')
+
     def test_unconfigured_registry_is_explicitly_unavailable(self):
         methods = make_external_baselines({})
         self.assertEqual(set(methods), {"B2", "B3", "B8", "B9", "B10", "MENTIS_STRUCTURED"})

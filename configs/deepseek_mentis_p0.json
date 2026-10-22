@@ -1,0 +1,27 @@
+{
+  "commands": {
+    "B8": {
+      "enabled": true,
+      "supports_seed": false,
+      "argv": ["C:/Program Files/Python312/python.exe", "integration/mentis_adapter.py"],
+      "mode": "original",
+      "required_env": ["MWM_MENTIS_ROOT", "MWM_LLM_API_KEY", "MWM_LLM_MODEL", "MWM_LLM_BASE_URL", "MWM_LLM_THINKING_MODE", "MWM_LLM_MAX_OUTPUT_TOKENS"],
+      "required_root_files": {"MWM_MENTIS_ROOT": "mentis/engine.py"},
+      "timeout_seconds": 600,
+      "provenance": {
+        "repository": "https://github.com/mental-world/Mentis",
+        "commit": "7c6ea55e007a64233c3a0f987b6d229476f3fdf6",
+        "task": "project resumption MCQ adaptation; original upstream pipeline",
+        "provider": "DeepSeek official",
+        "model": "deepseek-flash",
+        "thinking_mode": "disabled",
+        "max_output_tokens_per_call": 4096,
+        "temperature": 0,
+        "retries": 1,
+        "memory_control_chars": 4000,
+        "budget_scope": "per-call limit only; no claim of equal total tokens"
+      }
+    },
+    "B9": {"enabled": true}
+  }
+}

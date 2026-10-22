@@ -185,12 +185,27 @@ def _load_official(status):
         # Constructor does not issue requests; official client is created lazily.
         engine = module.MentisEngine(settings)
         importlib.import_module("openai")
+        thinking = os.environ.get("MWM_LLM_THINKING_MODE")
+        if thinking:
+            if thinking not in {"enabled", "disabled"}:
+                raise ValueError("invalid thinking mode")
+            # Provider transport settings only; retain the upstream pipeline/prompts.
+            client_class = importlib.import_module("openai").AsyncOpenAI
+            from types import SimpleNamespace
+            provider_client = client_class(timeout=settings.request_timeout_seconds, max_retries=0)
+            async def provider_create(**kwargs):
+                kwargs['max_tokens'] = kwargs.pop('max_completion_tokens')
+                kwargs['extra_body'] = {'thinking':{'type':thinking}}
+                return await provider_client.chat.completions.create(**kwargs)
+            engine.llm._client = SimpleNamespace(chat=SimpleNamespace(
+                completions=SimpleNamespace(create=provider_create)))
     except (ImportError, KeyError, ValueError) as exc:
         raise UnavailableError("official dependency/configuration unavailable: " + type(exc).__name__) from None
     settings_spec = {
         "model": settings.model, "temperature": settings.temperature,
         "max_output_tokens": settings.max_output_tokens, "max_retries": settings.max_retries,
         "schema_retries": settings.schema_retries, "branch_concurrency": settings.branch_concurrency,
+        "thinking_mode": os.environ.get("MWM_LLM_THINKING_MODE"),
     }
     return engine, settings_spec
 
