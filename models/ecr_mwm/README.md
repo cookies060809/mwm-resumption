@@ -1,51 +1,14 @@
-# ECR-MWM
+# 完整可见上下文 EC-JMF
 
-完整研究系统的端到端包装。Owner：A；集成验证：C。状态：已新增保守P0输入适配与证据契约诊断；端到端认知转移、预测及MENTIS包装仍未实现。详见 [A接口](../../docs/internal/a/A_INTERFACES.md)。
+本分支采用 C `Bill_method@291e94a` 的 `visible_context`。
+`context_residual.py` 提供完整模型，`neural_model.py`提供必要批处理/私有骨干，
+`neural_training.py`提供40轮残差训练、开发集选模、自包含保存重载和T1/T2/T3推理。
+模型与训练配置为 `results/p0/c_visible_context/model.pt`、`configs/a_context_p0_v03.json`。
 
-## 范围
+[完整获取、使用、复现和证据边界](../../results/p0/c_visible_context/README.md)；
+[正式接口](../../docs/internal/a/A_INTERFACES.md)；
+[算法决策和长期认识约束](../../docs/internal/a/A_ALGORITHM_DECISIONS.md)。
 
-- 调用 `models/ec_jmf` 维护联合状态后验；
-- 生成 T1/T2/T3 输出与证据引用；
-- 提供与 MENTIS 的适配接口；
-- 汇总成本、不确定性、失败案例与可复现元数据。
-
-## 输出契约（草案）
-
-```json
-{
-  "sample_id": "P01-B",
-  "cutoff_event_id": "e05",
-  "horizon": {"type": "decision_opportunities", "value": 3},
-  "t1_resume_probability": 0.0,
-  "t2_conditional_step_distribution": {"step_id": 0.0},
-  "t3_state_distributions": {
-    "V": {}, "F": {}, "A": {}, "B": {}, "C": {}, "Q": {}
-  },
-  "evidence_trace": [],
-  "uncertainty": {},
-  "cost": {"tokens": 0, "latency_ms": 0, "compute": "cpu"}
-}
-```
-
-规则：
-
-- `t2` 必须在“未来确实恢复”条件下求分布；恢复概率很低时标注适用范围与不确定性。
-- `t3` 不得伪造确定标签；未知时输出分布或 `UNKNOWN`。
-- 每个预测必须能回溯到输入事件与证据；不得引用 `t` 之后的行动。
-- 成本字段必须由真实运行记录填写，不能预估后写成实测。
-
-## 集成变体
-
-1. 原始发布版 MENTIS；
-2. 等量历史/记忆增强 MENTIS（排除“上下文更多”解释）；
-3. ECR-MWM（联合状态 + 可达性约束 + 恢复预测）。
-
-三者在相同输入、相同基座、可比预算下比较；具体版本与调用方式见 `integration/README.md`。
-
-## 当前状态
-
-- [ ] 接口冻结
-- [ ] 端到端最小可运行版本
-- [ ] T1/T2/T3 输出校验
-- [ ] MENTIS 集成
-- [ ] 成本与失败案例记录
+当前仅一种完整模型；旧模型文件、中央差分/独立SMC入口、旧配置和历史结果已移出。
+原A分支与main不变。骨干是新模型的必要组成，冻结残差训练不是从零训练整个网络。
+P0为脚本诊断，不代表真实人物预测效果。

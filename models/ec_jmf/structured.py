@@ -34,18 +34,6 @@ class Mechanisms:
     step_loss: bool = True
 
 
-# A1--A6 are executable switches; A7 remains C's equal-context baseline.
-ABLATIONS = {
-    "A0": Mechanisms(),
-    "A1": Mechanisms(access_gate=False, comprehension_gate=False),
-    "A2": Mechanisms(joint_progress=False),
-    "A3": Mechanisms(persistent_memory=False),
-    "A4": Mechanisms(consistency_loss=False),
-    "A5": Mechanisms(step_loss=False),
-    "A6": Mechanisms(learned_gates=False),
-}
-
-
 @dataclass(frozen=True)
 class GoalState:
     goal_id: str

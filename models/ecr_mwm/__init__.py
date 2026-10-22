@@ -1,1 +1,1 @@
-"""ECR-MWM input adaptation; trained end-to-end wrapper remains pending."""
+"""Complete context-residual EC-JMF: structured P0 input, training and prediction."""

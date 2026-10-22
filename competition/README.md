@@ -33,7 +33,7 @@
 | 评分项 | 本项目对应内容 | 仓库位置 | 当前状态 |
 |---|---|---|---|
 | 创新性 | EC-JMF 的认知可达性约束联合更新、承诺—进度联合滤波、信息等价反事实约束 | [models/ec_jmf](../models/ec_jmf/README.md)、[技术方案 §2](technical_report.md) | 仅接口与文字方案 |
-| 技术实现难度 | 因子化转移 `T^W/T^AU/T^B/T^C/T^Q`、粒子滤波、任务图约束、恢复步骤输出 | [models/](../models/README.md)、[configs/base.yaml](../configs/base.yaml) | 未实现 |
+| 技术实现难度 | 因子化转移 `T^W/T^AU/T^B/T^C/T^Q`、粒子滤波、任务图约束、恢复步骤输出 | [models/](../models/README.md)、[configs/a_context_p0_v03.json](../configs/a_context_p0_v03.json) | 未实现 |
 | 实验验证 | P0 最小对照、B0–B9 基线、消融、校准、效率与泄漏检查 | [data/p0](../data/p0/README.md)、[baselines](../baselines/README.md)、[evaluation](../evaluation/README.md)、[results](../results/README.md) | P0 种子 16 条已校验；无实验结果 |
 | 方案完整性 | 按官方大纲逐节撰写技术方案 | [competition/technical_report.md](technical_report.md) | 仅提纲与草稿 |
 | 应用价值 | 任务中断辅助、具身智能/主动辅助、工作流恢复 | [技术方案 §3.5](technical_report.md) | 待撰写应用论证 |
