@@ -91,6 +91,19 @@ def completion(content=None):
 
 
 class ExternalIntegrationTests(unittest.TestCase):
+    def test_v3_shared_distribution_contract_and_null_fallback(self):
+        for method_id in ('B2','B3'):
+            output=prediction()
+            output['conditional_step_probs']=None
+            with LocalEndpoint([(200,completion(json.dumps(output)))]) as endpoint:
+                result=ChatCompletionBaseline(method_id,{**endpoint.config(),'output_contract':'canonical-label-v3'}).predict(observation())
+                prompt=endpoint.received[0]['payload']['messages'][0]['content']
+                self.assertIn('CONDITIONAL ON resuming',prompt)
+                self.assertIn('0.000001',prompt)
+                self.assertIn('BELIEVES_VALID',prompt)
+                self.assertIsNone(result['conditional_step_probs'])
+                self.assertEqual(result['resume_step'],'ship')
+
     def test_deepseek_transport_and_canonical_label_vocabulary_are_explicit(self):
         with LocalEndpoint([(200, completion())]) as endpoint:
             cfg = {**endpoint.config(), 'thinking_mode':'disabled',

@@ -283,7 +283,7 @@ class ChatCompletionBaseline:
             )
         else:
             variant = 'Predict resumption directly from the complete event history. '
-        if self.config.get('output_contract') == 'canonical-label-v2':
+        if self.config.get('output_contract') in {'canonical-label-v2', 'canonical-label-v3'}:
             # Publish the validator vocabulary, never gold labels or evidence IDs.
             from mwm_eval.schema import FACTORS
             vocabulary = {k:sorted(v) for k,v in FACTORS.items()}
@@ -297,6 +297,21 @@ class ChatCompletionBaseline:
                 'Do not use resume/not_resume as state labels. If a state distribution '
                 'cannot be supplied, omit that factor or return state_probs={}. '
                 'This is an output vocabulary, not evidence that any state is true. '
+            )
+        if self.config.get('output_contract') == 'canonical-label-v3':
+            contract += (
+                'Probability semantics and final format check: conditional_step_probs is the '
+                'categorical distribution of the ONE next step CONDITIONAL ON resuming. '
+                'It is NOT the independent confidence that each step will eventually happen. '
+                'Use task step IDs only. For an abstract two-choice example, {"x":0.7,"y":0.3} '
+                'is valid, while {"x":0.8,"y":0.6} is invalid. The example labels are not task IDs. '
+                'Each provided state_probs factor is also a separate categorical distribution. '
+                'Every nonempty distribution must sum to exactly 1 (absolute tolerance 0.000001), '
+                'not 0.99 or 1.01; use a final residual probability to make the sum exactly 1. '
+                'Before emitting JSON, check the arithmetic of EVERY distribution. If you cannot '
+                'supply a valid conditional_step_probs, emit null; if you cannot supply a valid '
+                'state factor distribution, omit that factor. Missing probabilities are allowed '
+                'and must not change your resume_label or resume_step decision. '
             )
         return [
             {"role": "system", "content": variant + contract},

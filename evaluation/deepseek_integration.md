@@ -1,5 +1,7 @@
 # DeepSeek 实际调用评测
 
+后续 B2/B3 v3 已澄清概率输出合同并完成完整重评，B3 无格式失败，最新结果见 [v3 协议与结果](deepseek_v3_format_protocol.md)。本文及 `deepseek_p0_results.json` 保留为 v2 历史实验记录。
+
 本轮使用 B 的脚本构造 P0 v0.3，固定原有 52 条 test；T1 排除 6 条 UNKNOWN，分母为 46；T2 分母为 20。没有加入 HoloAssist/RFM-HRI 真人数据，也没有新盲测集或独立 calibration。测试集已参与此前诊断，不能将本轮结果解释为真人泛化效果。
 
 调用官方 DeepSeek `deepseek-flash`，temperature=0、thinking=disabled，每次内部调用输出上限 4096 token。API 不提供本项目可控的可复现 seed；每个方法只有一次提供商推理结果，并非 20 次独立训练。匿名汇总、指标和输入哈希见 `deepseek_p0_results.json`；原始预测保存在本地忽略目录。

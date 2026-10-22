@@ -21,7 +21,7 @@ from scripts.run_p0_evaluation import require_accepted_batch
 from scripts.validate_data import validate_records
 
 
-def run(config_path, output, methods, workers, reuse_successes_from=None, max_new_records=None, max_new_tokens=None):
+def run(config_path, output, methods, workers, reuse_successes_from=None, max_new_records=None, max_new_tokens=None, split='test'):
     data = ROOT / 'data/p0/v0.3/p0_samples.json'
     raw = json.loads(data.read_text(encoding='utf-8'))
     if validate_records(raw): raise ValueError('INVALID_DATA')
@@ -31,7 +31,8 @@ def run(config_path, output, methods, workers, reuse_successes_from=None, max_ne
     groups = audit_groups(records)
     for key in ('base_story_id','person_id','task_family'):
         if any(groups[key]['pairwise_overlap'].values()): raise ValueError('SPLIT_LEAKAGE')
-    test = [r for r in records if r['split']=='test']
+    if split not in {'dev','test'}: raise ValueError('SPLIT_DEV_OR_TEST')
+    test = [r for r in records if r['split']==split]
     gold_by_id = {g['sample_id']:g for g in golds}
     gold = [gold_by_id[r['sample_id']] for r in test]
     config = json.loads(config_path.read_text(encoding='utf-8'))
@@ -39,7 +40,7 @@ def run(config_path, output, methods, workers, reuse_successes_from=None, max_ne
     registry = make_external_baselines(config)
     output.mkdir(parents=True,exist_ok=True)
     fingerprint = {'data_sha256':file_hash(data),'config_sha256':file_hash(config_path),
-                   'methods':methods,'test_ids':[r['sample_id'] for r in test],
+                   'methods':methods,'split':split,'test_ids':[r['sample_id'] for r in test],
                    'code_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
                    'source_sha256':{p:file_hash(ROOT/p) for p in ('mwm_eval/external.py','integration/mentis_adapter.py',
                                                                  'scripts/run_external_resumable.py')}}
@@ -87,8 +88,9 @@ def run(config_path, output, methods, workers, reuse_successes_from=None, max_ne
         count=sum(r['method_id']==row['method_id'] for r in rows)
         print(f'{row["method_id"]}: {count}/{len(test)} {row["status"]}; new known tokens={charged_tokens()}',flush=True)
         if row['status']!='ok':
-            detail=row.get('failure_metadata',{}).get('raw_output','')
-            if '402' in detail and ('Insufficient Balance' in detail or 'Error code: 402' in detail):
+            failure=row.get('failure_metadata',{})
+            detail=failure.get('raw_output','')
+            if any(f.get('status')==402 for f in failure.get('failures',[])) or ('402' in detail and ('Insufficient Balance' in detail or 'Error code: 402' in detail)):
                 raise RuntimeError('API402_CIRCUIT_OPEN: log saved; no next sample will be called')
     for name in methods:
         method = registry[name]
@@ -124,7 +126,7 @@ def run(config_path, output, methods, workers, reuse_successes_from=None, max_ne
         selected = [r for r in rows if r['method_id']==name]
         runs.append({'method_id':name,'seed':0,'metrics':evaluate(selected,gold,test),
                      'cost':_cost(selected),'spec':registry[name].spec()})
-    result={'scope':'Real API single pass on previously exposed scripted P0; not new blind testing',
+    result={'scope':'Real API single pass on scripted P0 '+split+'; not new blind testing',
             'fingerprint':fingerprint,'validation':validation,'group_audit':groups,'runs':runs,
             'limits':['No independent calibration; no reproducible provider seed.',
                       'Same per-call cap is not equal total inference budget for a multi-call pipeline.',
@@ -143,7 +145,8 @@ if __name__=='__main__':
     parser.add_argument('--reuse-successes-from',type=Path)
     parser.add_argument('--max-new-records',type=int)
     parser.add_argument('--max-new-tokens',type=int)
+    parser.add_argument('--split',choices=['dev','test'],default='test')
     args=parser.parse_args()
     if not 1<=args.workers<=8: raise ValueError('WORKERS_1_TO_8')
     run(args.config,args.output_dir,args.methods.split(','),args.workers,args.reuse_successes_from,
-        args.max_new_records,args.max_new_tokens)
+        args.max_new_records,args.max_new_tokens,args.split)

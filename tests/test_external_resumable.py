@@ -14,6 +14,17 @@ class FakeMethod:
 
 
 class ResumableControlsTest(unittest.TestCase):
+    def test_sanitized_http_balance_failure_stops_direct_llm(self):
+        calls=[]
+        def predict(method, records, seed):
+            calls.append(1)
+            return [{'method_id':'B9','sample_id':records[0]['sample_id'],'status':'error',
+                     'failure_metadata':{'failures':[{'kind':'http','status':402}]}}]
+        with tempfile.TemporaryDirectory() as folder:
+            with self.assertRaisesRegex(RuntimeError,'API402_CIRCUIT_OPEN'):
+                self.invoke(Path(folder),predict)
+        self.assertEqual(len(calls),1)
+
     def invoke(self, output, fake_predict, **kwargs):
         with patch.object(runner, 'make_external_baselines', return_value={'B9': FakeMethod()}), \
              patch.object(runner, 'predict_rows', side_effect=fake_predict):
