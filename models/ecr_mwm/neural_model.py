@@ -6,10 +6,10 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from models.ec_jmf.structured import JointState
+from models.ec_jmf.structured import JointState,resolve_person_event_goal
 from models.ecr_mwm.p0_adapter import person_inputs
 from models.ec_jmf.neural_filter import (PackedTopology,compile_record,probability_values,
-                                       LABELS,OFFSETS,GATES,factor_vector)
+                                       LABELS,OFFSETS,gate_names,factor_vector)
 from models.ecr_mwm.neural_data import (event_features,state_features,WORLD_DIM,PERSON_DIM,
                                        MENTAL_DIM,STATE_DIM)
 
@@ -19,9 +19,10 @@ def mlp(inputs,hidden,outputs):
 
 
 class Batch:
-    def __init__(self, examples, variant='A0'):
+    def __init__(self, examples, variant='A0', semantic_contract='legacy-v1'):
         self.examples,self.variant = examples,variant
-        self.topology = PackedTopology([compile_record(x['input'],variant) for x in examples])
+        self.semantic_contract = semantic_contract
+        self.topology = PackedTopology([compile_record(x['input'],variant,semantic_contract=semantic_contract) for x in examples])
         self.n = len(examples)
         self.lengths = [len(x['input']['events']) for x in examples]
         self.length = max(self.lengths)
@@ -32,7 +33,7 @@ class Batch:
         self.valid = torch.zeros_like(self.visible)
         self.regularizers = []
         for row,example in enumerate(examples):
-            world,person,visible = event_features(example['input'],leak=variant=='A1')
+            world,person,visible = event_features(example['input'],leak=variant=='A1',semantic_contract=semantic_contract)
             length = len(world)
             self.world[row,:length] = torch.tensor(world)
             self.person[row,:length] = torch.tensor(person)
@@ -53,10 +54,12 @@ class Batch:
                     elif interpretation=='complete': factor,label='C','COMPLETED'
                     elif kind=='cancellation': factor,label='B','BELIEVES_INVALID'
                     elif kind=='completion_by_other': factor,label='C','COMPLETED'
-                    elif kind=='commitment': factor,label='C','SUSPENDED'
+                    elif kind=='commitment': factor,label='C',(('ACTIVE','SUSPENDED') if semantic_contract=='b-p0-v03/v3' else 'SUSPENDED')
                     elif kind=='abandonment': factor,label='C','ABANDONED'
                     if factor and not (variant=='A3' and time<max(0,length-5)):
-                        self.regularizers.append((time,row,OFFSETS[factor][0]+LABELS[factor].index(label)))
+                        columns=([OFFSETS[factor][0]+LABELS[factor].index(item) for item in label]
+                                 if isinstance(label,tuple) else OFFSETS[factor][0]+LABELS[factor].index(label))
+                        self.regularizers.append((time,row,columns))
             if variant=='A3':
                 start = max(0,length-5)
                 self.visible[row,:start]=False;self.carry[row,:start]=False
@@ -66,7 +69,7 @@ class Batch:
                 right=examples[j]
                 if (left.get('family') and left.get('family')==right.get('family') and
                     left['input']['observer_graphs']==right['input']['observer_graphs'] and
-                    person_inputs(left['input'])==person_inputs(right['input'])):
+                    person_inputs(left['input'],semantic_contract)==person_inputs(right['input'],semantic_contract)):
                     self.info_pairs.append((j,i))
         self.final = self.topology.levels[-1]
         self.state_record = self.final['record']
@@ -142,12 +145,13 @@ class Batch:
 
 
 class NeuralECJMF(nn.Module):
-    def __init__(self,variant='A0',hidden=24):
+    def __init__(self,variant='A0',hidden=24,semantic_contract='legacy-v1'):
         super().__init__();self.variant,self.hidden=variant,hidden
+        self.semantic_contract = semantic_contract
         self.world_encoder=nn.GRUCell(WORLD_DIM,hidden)
         self.person_encoder=nn.GRUCell(PERSON_DIM,hidden)
-        self.person_gates=mlp(hidden+MENTAL_DIM,hidden,len(GATES))
-        self.world_gates=mlp(hidden,hidden,len(GATES))
+        self.person_gates=mlp(hidden+MENTAL_DIM,hidden,len(gate_names(semantic_contract)))
+        self.world_gates=mlp(hidden,hidden,len(gate_names(semantic_contract)))
         self.independent=nn.ModuleDict({factor:mlp(hidden,hidden,len(LABELS[factor])) for factor in 'BCQ'})
         self.resume_head=mlp(STATE_DIM,hidden,1)
         self.step_head=mlp(STATE_DIM+4,hidden,1)
@@ -175,6 +179,8 @@ class NeuralECJMF(nn.Module):
         return result
 
     def forward(self,batch):
+        if batch.semantic_contract != self.semantic_contract:
+            raise ValueError("MODEL_BATCH_SEMANTIC_CONTRACT_MISMATCH")
         world,person,memory=self.encode(batch);top=batch.topology
         pc=person[top.ctx_record,top.ctx_time];wc=world[top.ctx_record,top.ctx_time]
         logits=torch.where(top.ctx_world[:,None],self.world_gates(wc),
@@ -208,7 +214,7 @@ class NeuralECJMF(nn.Module):
         qmass=torch.zeros(batch.n,8).index_add(0,batch.state_record,mass[:,None]*steps)
         q=qmass/p[:,None].clamp_min(1e-12)
         if batch.regularizers:
-            consistency=torch.stack([-marginals[t][r,column].clamp_min(1e-8).log()
+            consistency=torch.stack([-marginals[t][r,column].sum().clamp_min(1e-8).log()
                                      for t,r,column in batch.regularizers]).mean()
         else:
             consistency=p.sum()*0
@@ -257,7 +263,10 @@ class NeuralECJMF(nn.Module):
                         keys=steps+['UNKNOWN','NOT_APPLICABLE'] if factor=='Q' else labels
                         if factor=='Q': vals=vals[:len(steps)]+vals[8:]
                         states[factor]=dict(zip(keys,vals))
+                    resolved=resolve_person_event_goal(event,example['input']['observer_graphs'],example['input']['goal_id'],self.semantic_contract)
                     trace.append({'event_id':event['event_id'],'delivery':event['delivery'],
+                                  'source_goal_id':event['world']['goal_id'],'resolved_person_goal_id':resolved,
+                                  'unassigned_information':event['semantic'] if resolved is None and event['delivery']['access_evidence']!='NOT_ACCESSED' else None,
                                   'state_after':states,'evidence_role':'conditioned_transition; no duplicate action likelihood'})
                 predictions[row]['evidence_trace']=trace
         return predictions

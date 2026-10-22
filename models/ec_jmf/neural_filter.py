@@ -13,6 +13,13 @@ from models.ecr_mwm.neural_data import state_features, MENTAL_DIM
 GATES = ('access_uncertain', 'understanding_uncertain', 'accept_message',
          'invalid_abandon', 'action_validity', 'world_uncertain', 'recall_next',
          'initial_ready', 'initial_blocked')
+def gate_names(semantic_contract):
+    if semantic_contract == 'legacy-v1': return GATES
+    if semantic_contract == 'b-p0-v03/v2': return GATES + ('recommit_goal',)
+    if semantic_contract == 'b-p0-v03/v3': return GATES + ('reengage_goal',)
+    raise ValueError('UNKNOWN_SEMANTIC_CONTRACT')
+
+
 LABELS = {'V':('VALID','CANCELLED','FULFILLED','UNKNOWN'),
           'F':('READY','BLOCKED','UNKNOWN'), 'A':('ACCESSED','NOT_ACCESSED','UNCERTAIN'),
           'B':('BELIEVES_VALID','BELIEVES_INVALID','UNRESOLVED','UNKNOWN'),
@@ -63,10 +70,10 @@ def factor_vector(state, target, graphs):
 
 
 class TopologyModel(StructuredModel):
-    def __init__(self, adapted, variant):
+    def __init__(self, adapted, variant, semantic_contract):
         mechanisms = Mechanisms(access_gate=variant!='A1', comprehension_gate=variant!='A1',
                                 learned_gates=variant!='A6')
-        super().__init__(adapted, mechanisms=mechanisms)
+        super().__init__(adapted, mechanisms=mechanisms, semantic_contract=semantic_contract)
         self.variant = variant
         self.contexts, self.context_keys = [], {}
         self.stage, self.previous = 0, None
@@ -83,7 +90,7 @@ class TopologyModel(StructuredModel):
         if key not in self.context_keys:
             self.context_keys[key] = len(self.contexts)
             self.contexts.append(key)
-        return Probability(1.0, ((self.context_keys[key],GATES.index(name),True),))
+        return Probability(1.0, ((self.context_keys[key],gate_names(self.semantic_contract).index(name),True),))
 
     def chance(self, name):
         return super().chance(name) if self.variant == 'A6' else self.atom(name)
@@ -103,8 +110,8 @@ class TopologyModel(StructuredModel):
         return branches
 
 
-def compile_record(adapted, variant='A0', max_states=10000):
-    model = TopologyModel(adapted,variant)
+def compile_record(adapted, variant='A0', max_states=10000, semantic_contract='legacy-v1'):
+    model = TopologyModel(adapted,variant,semantic_contract)
     state = model.initial(); goal = state.goal(model.target)
     ready,blocked = model.atom('initial_ready'),model.atom('initial_blocked')
     initial_states, initial_probs = [], []
