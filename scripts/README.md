@@ -71,7 +71,7 @@ python scripts/pair_diff_report.py --file data/p0/p0_samples_v0.3.json --full
 
 生成器沿用 v0.2 的口径，不新造惯例：`p0_scripted_policy` 与机制 1:1 固定（contact_cancellation→`continue_if_no_known_cancellation`，comprehension→`act_on_believed_status`，long_term_commitment→`resume_if_committed_and_unfinished`，resource_availability→`execute_if_ready_else_wait`）；理解不到位的一臂跟 v0.2 的 15 个误解臂一样写 `suspend_or_wait`；`indeterminate` 只留给输入不可区分的家族，所以 `V=UNKNOWN` 的 P01-W8-A 仍有点标签（没有已知取消 → 继续）。B 复核时认可的两处刻意破例：P01-S6 两臂期望动作同为 `do_not_resume`（操控维度是信念是否调和，不是动作），以及 7 对里 4 对（P01-S6 / P05-D6 / P02-D7 / P08-S7）A/B 事件条数不等——v0.2 是条数对齐的，这里刻意不对齐，因为操控变量本身就是"多/少一条证据事件"。
 
-**批次状态是 `reviewed`（B 于 2026-10-21 逐对签核，草稿由本脚本生成、签核署名 B，与 v0.2 同一惯例）**，可以交 A/C 复核；但 A 的适配器仍只认 `p0-record/v0.1.0`，接入前它进不了训练输入。`split.calibration` 仍为空——那要 C 先定校准协议。
+**批次状态是 `reviewed`（B 于 2026-10-21 逐对签核，草稿由本脚本生成、签核署名 B，与 v0.2 同一惯例）**，可以交 A/C 复核；但 A 的适配器仍只认 `p0-record/v0.1.0`，接入前它进不了训练输入。`split.calibration` 保持 0——2026-10-21 C 已定案 P0 这轮不单列校准集，未切走任何 `base_story_id`，枚举值与校准接口保留。
 
 ## `audit_packet.py`
 
@@ -94,7 +94,7 @@ python scripts/p0_quality_report.py
 
 `human_audit` 读 `annotation.status`，人工复核签完自动变化；`second_reviewer` 无数据依据，恒为 `not recorded`，只能由 A/C 本人声明后另行记录。报告数字不得手工改写，也不得由 B 代 A/C 勾选。
 
-未使用的枚举取值不是装饰：v0.2 有 12 个，其中 11 个是 `UNCERTAIN` / `UNKNOWN` / `PROBABLE` 这类不确定性档位，第 12 个是 `split.calibration`（C 的交接协议要求四档划分，数据只落了三档）。批次可以达标 240 条而机制覆盖仍为空，这个检查就是用来暴露这件事的。检查范围覆盖记录级 `domain` / `split` / `mechanism`、六因子状态和事件级枚举。
+未使用的枚举取值不是装饰：v0.2 有 12 个，其中 11 个是 `UNCERTAIN` / `UNKNOWN` / `PROBABLE` 这类不确定性档位，第 12 个是 `split.calibration`。批次可以达标 240 条而机制覆盖仍为空，这个检查就是用来暴露这件事的。检查范围覆盖记录级 `domain` / `split` / `mechanism`、六因子状态和事件级枚举。**注意最后这一个的读法已经变了**：此前 B 把它写成"C 的交接协议要求四档划分、数据只落了三档"，是不准确的转述（C 的 `mwm_eval/schema.py` 只校验取值域，不要求该档非空）；2026-10-21 C 定案 P0 不切校准集，所以它现在是**已决定的空**，脚本仍如实列出，但下游不该把它当待补项。
 
 ## `export_eval_format.py`
 

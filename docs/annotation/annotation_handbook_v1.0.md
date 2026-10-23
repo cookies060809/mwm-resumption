@@ -1,7 +1,7 @@
 # 状态标签标注手册 v1.0
 
 **项目：** ECR-MWM（认知可达性约束的动态心智世界模型）
-**文档版本：** v1.0.3｜2026-10-21（升版依据：A/C 盲审回条实测——补 §2.3 的 P0 `READY` 可判定口径、§11.1 第 14 条记录待 A 表态的信念维缺口、修 v0.2 P01 B 臂自述步数并给 `validate_data.py` 加回归检查；v1.0.1 补 §1.4 未知档位判据，v1.0.2 记录 v0.3 签核通过）
+**文档版本：** v1.0.4｜2026-10-21（升版依据：§6.3 与 §11.1 第 13 条转录 C 的 `split.calibration` 定案——P0 这轮不切校准集；v1.0.3 依 A/C 盲审回条实测补 §2.3 的 P0 `READY` 可判定口径、§11.1 第 14 条记录待 A 表态的信念维缺口、修 v0.2 P01 B 臂自述步数并给 `validate_data.py` 加回归检查；v1.0.1 补 §1.4 未知档位判据，v1.0.2 记录 v0.3 签核通过）
 **Owner：** B（数据与认知机制）
 **状态：** 已冻结事件契约与六因子定义；P0 标注状态 `reviewed`，A/C 盲审与仲裁未完成
 **配套文件：** `schema/p0_record_v0.2.schema.json`、`data/p0/p0_samples_v0.2.json`、`data/p0/p0_samples_v0.3.json`（`reviewed`）、`scripts/validate_data.py`、`scripts/pair_diff_report.py`、`scripts/audit_packet.py`、`scripts/build_p0_v02.py`、`scripts/build_p0_uncertainty.py`、抽查签核表 [`p0_spot_audit_v0.2_seed20261021.md`](p0_spot_audit_v0.2_seed20261021.md) / [`p0_spot_audit_v0.3_all7.md`](p0_spot_audit_v0.3_all7.md)
@@ -344,7 +344,7 @@ v0.2 把八组对照升级为八个 `mechanism`，每个家族都要声明自己
 |---|---|
 | 规模 | 15 个任务骨架 × 8 个机制 = 120 个 `base_story_id`，每个家族 A/B 两条，共 240 条、1831 个事件 |
 | 领域 | 5 个 work / 5 个 collaboration_service / 5 个 daily_life 骨架，按机制轮换使用，家族级覆盖接近均衡（约 38–42 个/域） |
-| 划分 | 按**任务骨架**分层（同一骨架不跨 split）：每个机制 9 train / 3 dev / 3 test，共 72 / 24 / 24；同族 A/B 必在同一 split |
+| 划分 | 按**任务骨架**分层（同一骨架不跨 split）：每个机制 9 train / 3 dev / 3 test，共 72 / 24 / 24；同族 A/B 必在同一 split。第四个枚举 `calibration` 本轮不切——**P0 calibration＝0，未切走任何 `base_story_id`**（C 2026-10-21 定案，独立校准集推到 P1，见 §11.1 第 13 条） |
 | 种子 | P01–P08 为手写种子，保留在 v0.2 中并补齐新字段；其余 112 个家族由 `scripts/build_p0_v02.py` 按骨架 + 机制生成 |
 | 生成边界 | 家族之间任务、实体、编号独立；**句式按机制模板复用**，表达多样性有限，属已知限制，不能当作自然语言多样性证据 |
 
@@ -436,7 +436,7 @@ v0.2 把八组对照升级为八个 `mechanism`，每个家族都要声明自己
 10. ~~P04-B 的 T1 口径冲突~~ → **已按研究方案 §3.4 处理（v0.2）**：凡步骤已客观完成的重复动作不计 T1/T2，`resume_within_horizon=false, first_step=null`，主观滞后只体现在 `Q`。该决定已写入 8 个 `other_completion` 机制家族；若 A 另行定口径，需同时改 15 个家族并升版本。
 11. **字段名冲突（未解决）：** B 的 `person_access_evidence` 是自由文本，C 的同名字段是 `{status, understood}` 对象。三方合并前必须改名或改类型；建议 C 改名为 `person_access_note`，或在映射层做显式转换。
 12. **A 适配器当前只认 `p0-record/v0.1.0`：** 传入 v0.2 会显式报 `UNSUPPORTED_SCHEMA_VERSION`（这是期望行为，不是缺陷）。A 需新增版本分支后，B 才能把 v0.2 作为正式训练输入交付。
-13. **11 个不确定性档位已覆盖并验收：** v0.2 的 240 条里 `A=UNCERTAIN`、`V/F=UNKNOWN`、`B=UNRESOLVED`、`C∈{ACTIVE,UNKNOWN}`、事件级 `person_access=UNCERTAIN`、`person_comprehension∈{NOT_UNDERSTOOD,UNCERTAIN}`、`certainty∈{PROBABLE,UNCERTAIN}` 一次都没出现。`data/p0/p0_samples_v0.3.json`（7 家族 / 14 条）按 §1.4 判据各覆盖至少一次，B 已于 2026-10-21 逐对复核并升 `reviewed`，可以交 A/C 盲审。`split.calibration` 仍为空，要 C 先定校准协议。
+13. **11 个不确定性档位已覆盖并验收：** v0.2 的 240 条里 `A=UNCERTAIN`、`V/F=UNKNOWN`、`B=UNRESOLVED`、`C∈{ACTIVE,UNKNOWN}`、事件级 `person_access=UNCERTAIN`、`person_comprehension∈{NOT_UNDERSTOOD,UNCERTAIN}`、`certainty∈{PROBABLE,UNCERTAIN}` 一次都没出现。`data/p0/p0_samples_v0.3.json`（7 家族 / 14 条）按 §1.4 判据各覆盖至少一次，B 已于 2026-10-21 逐对复核并升 `reviewed`，可以交 A/C 盲审。**`split.calibration` 已定案（2026-10-21，C 决定）：P0 这轮不单列校准集，calibration＝0，未切走任何 `base_story_id`**，枚举值与校准接口保留，独立校准集推到 P1；标注员不需要为校准档做任何额外动作。
 14. **`contact_cancellation` B 臂的 `B=UNKNOWN` 与 §2.5 冲突，待 A 表态（2026-10-21 盲审提出，未解决）：** §2.5 判定顺序第 1 条允许"明确行动"、第 2 条把"仍然有效/继续"的表达判为 `BELIEVES_VALID`，而实测 19 条 `B=UNKNOWN` 里有 **16 条**（v0.2 的 P01-B + 14 个 `contact_cancellation` B 臂 + v0.1 的 P01-B）在取消事件之后仍存在人物陈述或 `return_to_task` 行动、却没有计入 `state_evidence_by_factor.B`。同批次 215 条 `BELIEVES_VALID` 正是拿 `step_started`/人物自述当 B 证据（P08-W1-B 甚至把 e03 与 e06 都计入），只有 P01 B 臂例外。另 3 条（v0.3 的 P01-W6-A/B、P08-S7-B）实测在关键事件之后人物再无任何事件，`UNKNOWN` 合法、不动。出路只有把这 16 条升为 `BELIEVES_VALID` 并补证据引用（改文案以保住 `UNKNOWN` 不可行：§2.6 第 3 步要求 `C=SUSPENDED` 必须有"仍表达继续意图"，删了会连带废掉 C 的证据）。**B 不单方面改：** 这动的是 A 在信念维的监督信号，且含 v0.1 冻结基线里的 1 条；§1.4/§2.4/§2.5 现在还把"P01-B 的 `B=UNKNOWN`"当正面例子讲，改标要同步改这三处。
 
 ### 11.2 变更记录
@@ -448,6 +448,7 @@ v0.2 把八组对照升级为八个 `mechanism`，每个家族都要声明自己
 | v1.0.1 | 2026-10-20 | 新增 §1.4「P0 里未知档位的合法性判据」，并把 §1.3 表格里"P0 脚本期望，可完全确定"改写为可判定口径。原写法与 §2.3（允许 `F=UNKNOWN`）以及数据里 15 条 `B=UNKNOWN` 直接冲突，A/C 按字面读会把合法的设计性未知当成违规。2026-10-21 追加：§1.4 末尾与 §11.1 第 13 条记录 v0.3 不确定性批次（14 条），当时为 `draft`、待 B 复核，次日签核通过（见 v1.0.2） |
 | v1.0.2 | 2026-10-21 | v0.3 不确定性批次由 `draft` 升 `reviewed`：B 逐对复核 `p0_spot_audit_v0.3_all7.md`（7 对 / 28 框）与 v0.2 抽查 `p0_spot_audit_v0.2_seed20261021.md`（10 对 / 39 框），结论全部通过。签核表改为"已签"状态，`audit_packet.py` 增加拒绝覆盖已签表的闸；§1.4 判据第一次成批检验通过。A/C 盲审与 `split.calibration` 仍未做 |
 | v1.0.3 | 2026-10-21 | 回应 A/C 盲审回条的实测结论：① v0.2 P01 B 臂「还剩两步」是错的（模板硬编码了 v0.1 的三步故事，套到 v0.2 的 4 步骨架上整体差 1；带步数的自述 14 条全错），改为与任务图一致的"三步"，并给 `validate_data.py` 加"人物自述步数必须等于客观剩余步数"的跨字段检查 + 正负例测试；② §2.3 补 P0 `READY` 的可判定口径，252 条 READY 零空证据、零被脚本内事件矛盾，属手册缺条款而非数据错；③ §11.1 新增第 14 条，把 16 条 `B=UNKNOWN` 的信念维缺口挂账待 A 表态。v0.2 字节因此变化，新 SHA256 见 `data/p0/README.md` |
+| v1.0.4 | 2026-10-21 | 转录 C 对 `split.calibration` 的定案（三选一里选 C）：**P0 calibration＝0，未切走任何 `base_story_id`**，train/dev/test 保持 144/48/48 条（72/24/24 家族），不从 train/dev 切数据、不改家族划分；C 侧已按此跑通，未做温度缩放，概率统一标"未校准概率"；枚举取值与代码里的校准接口保留。独立校准集推到 P1 真人数据，质量方案的 30–50 条降为计划。§6.3 与 §11.1 第 13 条同步，标注流程与数据字节均未变动 |
 
 > **仓库迁移说明：** 本手册从 B 岗交付目录迁入主仓库时，仅更新校验/审计脚本路径并补充竞赛边界；16 条数据与标签未改。
 

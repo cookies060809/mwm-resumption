@@ -73,9 +73,9 @@ design = record["p0_design"]                # 设计簿记，绝不是输入
 | dev | 24 | 每个机制 3 个家族 |
 | test | 24 | 每个机制 3 个家族 |
 
-按**任务骨架**分层：同一骨架不跨 split，避免模型记住任务而不是机制；同族 A/B 必在同一 split，`split` 是家族级字段。每机制仍为 9/3/3。校准集暂不单列，C 需要时从 dev 再切。
+按**任务骨架**分层：同一骨架不跨 split，避免模型记住任务而不是机制；同族 A/B 必在同一 split，`split` 是家族级字段。每机制仍为 9/3/3。校准集本轮不单列：**P0 calibration＝0，未切走任何 `base_story_id`**（2026-10-21 C 定案，见[交接文档](../../docs/internal/HANDOFF_2026-10-20_P0_v0.2.md)），`split` 的 `calibration` 枚举值与代码里的校准接口都保留，独立校准集推到 P1。
 
-v0.3 批次引入 7 个新骨架（`W6/S6/D6/W7/S7/D7/W8`），与 v0.2 的骨架零重叠，按家族分为 train 3 / dev 2 / test 2；`split.calibration` 依旧为 0，等 C 定校准协议再分配。
+v0.3 批次引入 7 个新骨架（`W6/S6/D6/W7/S7/D7/W8`），与 v0.2 的骨架零重叠，按家族分为 train 3 / dev 2 / test 2；`split.calibration` 依旧为 0，这是**已决定的空**，不是待补的缺口。
 
 ## 5. 校验
 
@@ -116,7 +116,7 @@ P07 identity failures: 0
 | cutoff 无未来事件 | 240/240（v0.3 另 14/14） |
 | A/B 对照隔离 | 120/120（逐字段 diff，事件条数已对齐）；v0.3：7/7 无意外漂移，但 4 对条数刻意不等（操控变量就是一条证据事件） |
 | P07 输入一致性 | 15/15 PASS |
-| 枚举覆盖（v0.2 + v0.3 合并） | 仅剩 `split.calibration` 未使用 |
+| 枚举覆盖（v0.2 + v0.3 合并） | 仅剩 `split.calibration` 未使用——2026-10-21 C 定案这轮不切校准集，是**已决定的空** |
 | 自述步数一致性 | 三批次含步数的人物自述 14 条，全部等于任务图剩余步数（2026-10-21 修正后由校验强制） |
 | B 人工复核 | v0.2：240/240，`status=reviewed`；v0.3：14/14，`status=reviewed`（2026-10-21） |
 | A/C 盲审 | 未完成（每机制抽 1 条，共 8 条） |
@@ -193,7 +193,7 @@ pair_isolation: 7/7 clean A/B (pair_diff_report --full, no unintended field drif
 paired_event_count_equal: 3/7 - P01-S6 / P05-D6 / P02-D7 / P08-S7 differ by design
 policy_by_mechanism: 1:1 as v0.2; unclear-comprehension arms = suspend_or_wait; no indeterminate here
 splits: train 3 / dev 2 / test 2 families (blueprints W6 S6 D6 W7 S7 D7 W8, disjoint from v0.2)
-enum_gap_remaining: record.split.calibration (needs C's calibration protocol)
+enum_gap_remaining: record.split.calibration (decided empty by C 2026-10-21; no base_story_id moved)
 human_audit: 14/14 (annotator_id=B, status=reviewed)
 self_audit_packet: docs/annotation/p0_spot_audit_v0.3_all7.md (28 boxes, all ticked 通过)
 ```
@@ -204,7 +204,7 @@ self_audit_packet: docs/annotation/p0_spot_audit_v0.3_all7.md (28 boxes, all tic
 |---|---|
 | 当前 | 240 条 v0.2 + 14 条 v0.3 不确定性批次，均 `reviewed`（B 自审签核完成） |
 | 已完成（B） | [`p0_spot_audit_v0.3_all7.md`](../../docs/annotation/p0_spot_audit_v0.3_all7.md)（7 对 / 28 框）与 [`p0_spot_audit_v0.2_seed20261021.md`](../../docs/annotation/p0_spot_audit_v0.2_seed20261021.md)（10 对 / 39 框）已由 B 于 2026-10-21 全部勾为通过，v0.3 随之升 `reviewed` |
-| 下一步（A/C，B 催办） | 每机制抽 1 条盲审（8 条）→ 仲裁 → `adjudicated`；A 加 v0.2/v0.3 适配器分支；C 确认字段映射与 `split.calibration` 协议 |
-| P1 | 另立 schema 与标注流程；当前不纳入竞赛证据 |
+| 下一步（A/C，B 催办） | 每机制抽 1 条盲审（8 条）→ 仲裁 → `adjudicated`；A 加 v0.2/v0.3 适配器分支；C 确认字段映射（`split.calibration` 已由 C 于 2026-10-21 定案：这轮不切校准集） |
+| P1 | 另立 schema 与标注流程；当前不纳入竞赛证据；独立校准集与 30–50 条的量级/分组届时与 A/C 一起定 |
 
 > 详细规则见 [标注手册 v1.0](../../docs/annotation/annotation_handbook_v1.0.md)、[质量方案](../../docs/annotation/label_quality_plan_v0.1.md) 与 [复核表](../../docs/annotation/p0_pair_review_table.md)。
