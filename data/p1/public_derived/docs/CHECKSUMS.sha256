@@ -1,0 +1,55 @@
+# SHA-256 of delivered artifacts (regenerate with `python scripts/checksums.py`)
+
+## delivery
+
+553807195acb61375d188e79b11e16faa2711ecce53b7abc2a407891cae93ca4  processed/ihbench.jsonl  17,825,546 B
+556e0289dd2735aeda7aa209549b7f1b5b78a3243b5766a918aa64d25bc8a79e  processed/interruptbench.jsonl  8,784,842 B
+cb4b5a84d463a39f1b1ad81a2c52ca533e39cb3e6d7c0b9de368d682110c9e0c  processed/p1_combined.jsonl  27,514,207 B
+58e342412458e34b362cff02e4a127b7c19ece148c6beb29aa4672de9cf85f73  processed/reboot.jsonl  903,819 B
+03809f8643db89c3a721efbe97cc3479d78e66338a71c141c37a7ae492918f30  docs/schema.json  14,053 B
+
+## audit docs
+
+73b6f2c9d478e96fb67c2894321c04bd0253be83c186b42e9980efdbdfa2e928  docs/coverage_report.md  4,188 B
+720dfe339ea8dd5c3ebe31dd36368726050a185bee31affe6d17e5a043bdd1b2  docs/dataset_card.md  7,442 B
+7f1ae1afbe1f4e70f03a1163854d1c8459e12af88360db34daccfe2dcbd0ea32  docs/llm_validation_log.md  7,162 B
+e7fddd1eebe5d3531756227582144033476cef79a93bda28c67b34ed004fd3be  docs/raw_inventory.md  2,567 B
+8922a8474783440e139539526e9f1ec7c8ff7d0325e017b9eeeb22f54d71d427  docs/schema.md  4,945 B
+3f034fd07b826802b974ac042bfbec61f791b89757685139fe2f0e80c21b3af3  docs/source_manifest.md  12,792 B
+77217d5f8f782bd02e4ce24e803b51749a85f94d649fc65c5cff7962cefec4c8  docs/transformation_notes.md  14,953 B
+2beff2e0a18bf168ee6106c49921c1b8cac0ec5cf01ba684e3b6506bc47e41db  docs/validation_ihbench.txt  1,386 B
+ec046718bc9e02b05415f1edae6a8fd93198ca853b6cd4aa4cace046212131aa  docs/validation_interruptbench.txt  766 B
+3d757d4745cb9b239e59a0791e22aeaa4cda00b8bdc4f9f4a12003bcf68740a0  docs/validation_reboot.txt  951 B
+e68684961ad11eb4debb7ab416f998068bd289e3373135c9d07d7edff1f87ad8  docs/validation_report.txt  6,437 B
+d4eaa6e757ac7534067c8b8b43d03fe7d23c44e5a272c395b55a1f83981a4aac  README.md  11,428 B
+
+## code
+
+da933aaca87936f471b517ee1c109aed02b24fb98c75afe04805918e4ef03ef8  scripts/check_aux_view.py  4,846 B
+9f8e15669507cfec42f1f8490d6dc3113f839128d2d357a87f029afa034ea397  scripts/checksums.py  1,384 B
+1ef0da88187bebfa24c74b6820d622770e035075bb39265e739eb7f54730408c  scripts/common.py  468 B
+286a69656f93824dc63bf79c04514c594eae376180f9511532034a688e606ea5  scripts/convert_ihbench.py  27,585 B
+55cbaf3772defc773f83513c85339dfab021294e0ecf279ed76a1bcc175ec578  scripts/convert_interruptbench.py  15,855 B
+e19682660e315507155a8e505cc64c62ef73866d8f06ce68a604f0f8d180e0dc  scripts/convert_reboot.py  27,532 B
+7290a72c501609ce8ace85fa51f77a2428b0ecb80884a79dd913cfeb7c9c3027  scripts/eda_ihbench.py  4,471 B
+4f9979ae5aed450bc01ce7faa11a56b7ec7cbdd660cd317981ee0d376de3e625  scripts/export_aux_view.py  6,839 B
+9163c8d2b8fb18dbeebe9ae45e81fe67c8480af8cb4e7422c676b9d9e2c834a9  scripts/fetch_github_paths.py  4,262 B
+fd5335eb52c88f0bfc22621b4815a8499ba3ccd60488ca06b4dc2655938e1411  scripts/fetch_ihbench_text.py  4,311 B
+c011538a60a778b66e8379ff9c8a717e8be9746252d8551aa6c46d4f87c9f74d  scripts/fetch_reboot_meta_v2.py  4,404 B
+2242fd5757350ed8fc23a300a9580c5998f030463befff5bd872bd49bd21caea  scripts/inspect_remote_parquet.py  4,129 B
+668c6df1466a2e2bf6cda0c81ffb4fbb158b411017e22eef4256e07f161c3b4c  scripts/inventory_raw.py  5,856 B
+d54d4ce8d74ccc62b8f4283d171889c96f60d80ceda37819478a5a1fb1c0b80f  scripts/merge_and_validate.py  19,307 B
+341c34505560e75bbd8a1f0f482a06897e91306fbca2cf1bbe7d723e814f695d  scripts/p1_common.py  7,008 B
+96513266bdf1c4b78ae72457436474e1a26720b0bca235bd236014a93fb59747  scripts/record_upstream_blobs.py  3,651 B
+1169daadee669d30b3264342a5a96f281392f43f1e1bbd51c81aacb84967568b  scripts/report_coverage.py  8,914 B
+ce2b96edffa59c48cd1fc2b3ef9a795d3be4fac2a941010cdcd97d427f56aab6  scripts/scan_reboot_phase.py  2,636 B
+ec7417ba1c0ded26c59088b139e5b29a9fb07066dfaa5c2283e72cea1e75302b  run_pipeline.sh  2,417 B
+125fa2ec9fe62db090a3dead8501e1af478bc4c591adfb120983b2fc2e071bb4  scripts/fetch_interruptbench_spec.json  1,779 B
+
+## raw annotations
+
+b7e91c5de43631f1c002af1417e40959ae6d279cff5fa421b8396571f6d077ec  raw/IHBench/_manifest.json  6,795 B
+746038eb84738036cbb2508bba3bf0a83df87a15b2fdb46bd8fcf533be6e99ca  raw/InterruptBench/_manifest.json  16,822 B
+cd9dfd6d7081ea1400c8600d8bcadf577c6762d194e975c2edfafaf8c28b0556  raw/REBOOT/_manifest.json  1,706 B
+26daaf9506c4a690c243401179139fab70fb238f6e3463f19252d537d5b1ef58  raw/InterruptBench/_upstream_blobs.json  14,714 B
+1e1b776b4efe9e84205f3c5f844e85b328fe7495117a48778104682fb59fa86b  raw/InterruptBench/_upstream_tree_subset.json  4,826 B

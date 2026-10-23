@@ -1,0 +1,15 @@
+{
+  "train": {
+    "interruption_response": 288,
+    "state_inference": 150
+  },
+  "dev": {
+    "interruption_response": 71,
+    "state_inference": 52
+  },
+  "test": {
+    "interruption_response": 69,
+    "state_inference": 52
+  }
+}
+PASS: source hashes, deterministic rebuild, grouped splits, cutoff histories, targets and masks {'train': 438, 'dev': 123, 'test': 121}

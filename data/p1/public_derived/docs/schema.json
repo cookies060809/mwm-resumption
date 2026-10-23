@@ -1,0 +1,640 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ecr-mwm.local/schemas/p1.schema.json",
+  "title": "P1 structured evaluation sample (ECR-MWM) - schema p1-0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "sample_id",
+    "source_dataset",
+    "base_story_id",
+    "goal_id",
+    "goal_text",
+    "subject_type",
+    "actor_id",
+    "split_group_id",
+    "split",
+    "task_steps",
+    "observed_events",
+    "cutoff_event_id",
+    "cutoff_kind",
+    "observation_horizon",
+    "outcome_time",
+    "eligible_for_resume_eval",
+    "state_at_cutoff",
+    "state_loss_mask",
+    "label_origin",
+    "state_withdrawn",
+    "objective_progress",
+    "p1_observed_resume",
+    "resume_loss_mask",
+    "p1_resume_step",
+    "step_loss_mask",
+    "p1_censoring_status",
+    "evidence_trace",
+    "label_evidence",
+    "original_annotation_ref"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "p1-0.2"
+    },
+    "sample_id": {
+      "type": "string",
+      "minLength": 3
+    },
+    "source_dataset": {
+      "enum": [
+        "IHBench",
+        "REBOOT",
+        "IndustReal",
+        "InterruptBench"
+      ]
+    },
+    "base_story_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "goal_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "goal_text": {
+      "description": "Model-visible goal statement as the source annotates it. Never a label.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "subject_type": {
+      "description": "Whose behaviour the row actually documents. No row in this package is a real human subject.",
+      "enum": [
+        "synthetic_dialogue",
+        "software_agent_spec",
+        "robot"
+      ]
+    },
+    "actor_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "split_group_id": {
+      "description": "Contamination unit: the original conversation / episode / task id that all derived cutoffs and second-actor rows share.",
+      "type": "string",
+      "minLength": 1
+    },
+    "split": {
+      "enum": [
+        "train",
+        "val",
+        "test"
+      ]
+    },
+    "task_steps": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "observed_events": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "event_id",
+          "event_type",
+          "step_id",
+          "person_access",
+          "source",
+          "actor",
+          "text",
+          "position"
+        ],
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "event_type": {
+            "enum": [
+              "start_goal",
+              "interruption",
+              "resume",
+              "progress",
+              "completion",
+              "background_fact"
+            ]
+          },
+          "step_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "person_access": {
+            "enum": [
+              "ACCESSED",
+              "NOT_ACCESSED",
+              "UNCERTAIN"
+            ]
+          },
+          "source": {
+            "enum": [
+              "original_annotation",
+              "rule_mapping",
+              "llm_inferred",
+              "UNKNOWN"
+            ]
+          },
+          "actor": {
+            "description": "Who produced or was affected by the event; keeps a human-user field from being read as the assistant's state.",
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1
+          },
+          "text": {
+            "description": "The event content the source annotates (utterance, phase/failure description, goal statement). This is what makes the input more than a list of ids.",
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1
+          },
+          "position": {
+            "description": "Where the event sits in the source's own time/order axis, so outcome_time > cutoff_time is checkable without trusting event order.",
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "required": [
+              "unit",
+              "value"
+            ],
+            "properties": {
+              "unit": {
+                "enum": [
+                  "turn",
+                  "frame",
+                  "spec_order"
+                ]
+              },
+              "value": {
+                "type": "number"
+              },
+              "fps": {
+                "description": "Annotated frame rate, carried so a frame position is a wall-clock time and not only an index.",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "seconds": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              }
+            }
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "evidence_quote": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "source": {
+                  "const": "llm_inferred"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "confidence",
+                "evidence_quote"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "event_type": {
+                  "const": "start_goal"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "person_access": {
+                  "const": "ACCESSED"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "cutoff_event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "cutoff_kind": {
+      "description": "What the cutoff itself is. State slices (recovery/completion) must not be scored as blind recovery prediction.",
+      "enum": [
+        "interruption",
+        "pre_interruption",
+        "recovery",
+        "completion",
+        "goal_spec_update"
+      ]
+    },
+    "observation_horizon": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "unit",
+        "planned",
+        "covered",
+        "window_complete",
+        "note"
+      ],
+      "properties": {
+        "unit": {
+          "enum": [
+            "assistant_turn",
+            "single_response",
+            "episode_tail",
+            "not_observable"
+          ]
+        },
+        "planned": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "covered": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "window_complete": {
+          "type": "boolean"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "outcome_time": {
+      "description": "Position of the event that settles the resume label, or null when nothing was observed. Compared against the cutoff event position to prove the outcome is strictly after the cutoff.",
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "unit",
+        "value",
+        "event_id"
+      ],
+      "properties": {
+        "unit": {
+          "enum": [
+            "turn",
+            "frame",
+            "spec_order"
+          ]
+        },
+        "value": {
+          "type": "number"
+        },
+        "event_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "eligible_for_resume_eval": {
+      "description": "true only for a blind recovery sample: the cutoff is the interruption, the outcome is strictly later, and the observation window is complete.",
+      "type": "boolean"
+    },
+    "state_at_cutoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "V",
+        "F",
+        "A",
+        "B",
+        "C",
+        "Q"
+      ],
+      "properties": {
+        "V": {
+          "enum": [
+            "VALID",
+            "CANCELLED",
+            "FULFILLED",
+            "UNKNOWN"
+          ]
+        },
+        "F": {
+          "enum": [
+            "READY",
+            "BLOCKED",
+            "UNKNOWN"
+          ]
+        },
+        "A": {
+          "enum": [
+            "ACCESSED",
+            "NOT_ACCESSED",
+            "UNCERTAIN",
+            "UNKNOWN"
+          ]
+        },
+        "B": {
+          "enum": [
+            "BELIEVES_VALID",
+            "BELIEVES_INVALID",
+            "UNRESOLVED",
+            "UNKNOWN"
+          ]
+        },
+        "C": {
+          "enum": [
+            "ACTIVE",
+            "SUSPENDED",
+            "ABANDONED",
+            "COMPLETED",
+            "UNKNOWN"
+          ]
+        },
+        "Q": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "state_loss_mask": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "V",
+        "F",
+        "A",
+        "B",
+        "C",
+        "Q"
+      ],
+      "properties": {
+        "V": {
+          "enum": [
+            0,
+            1
+          ]
+        },
+        "F": {
+          "enum": [
+            0,
+            1
+          ]
+        },
+        "A": {
+          "enum": [
+            0,
+            1
+          ]
+        },
+        "B": {
+          "enum": [
+            0,
+            1
+          ]
+        },
+        "C": {
+          "enum": [
+            0,
+            1
+          ]
+        },
+        "Q": {
+          "enum": [
+            0,
+            1
+          ]
+        }
+      }
+    },
+    "label_origin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "V",
+        "F",
+        "A",
+        "B",
+        "C",
+        "Q",
+        "resume",
+        "resume_step"
+      ],
+      "properties": {
+        "V": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "F": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "A": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "B": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "C": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "Q": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "resume": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "resume_step": {
+          "type": [
+            "object",
+            "null"
+          ]
+        }
+      }
+    },
+    "state_withdrawn": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "claimed",
+          "reason",
+          "rule"
+        ],
+        "properties": {
+          "claimed": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 8
+          },
+          "rule": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "objective_progress": {
+      "description": "The workflow position the source does annotate, kept outside the subjective Q factor.",
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "step_id",
+        "origin",
+        "evidence"
+      ],
+      "properties": {
+        "step_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "origin": {
+          "enum": [
+            "annotated_frame_at_cutoff",
+            "annotated_stage_id",
+            "heuristic_token_overlap",
+            "annotated_interruption_order",
+            "not_annotated",
+            "derived_from_future_event"
+          ]
+        },
+        "evidence": {
+          "type": "string"
+        }
+      }
+    },
+    "p1_observed_resume": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "null when the outcome was not observed inside the episode (p1_censoring_status=censored)"
+    },
+    "resume_loss_mask": {
+      "enum": [
+        0,
+        1
+      ]
+    },
+    "p1_resume_step": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "step_loss_mask": {
+      "enum": [
+        0,
+        1
+      ]
+    },
+    "p1_censoring_status": {
+      "enum": [
+        "observed_resume",
+        "observed_not_resume",
+        "censored"
+      ],
+      "description": "censored = window not fully covered and no resume observed; then p1_observed_resume must be null"
+    },
+    "evidence_trace": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "label_evidence": {
+      "description": "Supervision-only content: rubrics, the withheld tail of a truncated utterance, post-cutoff answers. Must never be fed to the model as input.",
+      "type": "object"
+    },
+    "original_annotation_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file",
+        "fields_used"
+      ],
+      "properties": {
+        "file": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fields_used": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}
