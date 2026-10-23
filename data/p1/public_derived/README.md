@@ -16,7 +16,11 @@
 | 样本 | **2,863** 行（`processed/p1_combined.jsonl`，10.2 MB） |
 | 源（要求 ≥2） | **3 个**：IHBench 856（含 428 条 baseline 行为者）· InterruptBench 1,815 · REBOOT 192 |
 | 任务书「IHBench 或 REBOOT 至少一个成功」 | ✅ **两者都成功** |
-| `p1_observed_resume` | true **788** / false **138** / **null 1,937**（censored） |
+| `p1_observed_resume` | true **786** / false **126** / **null 1,951**（censored） |
+
+> **"不恢复"监督上限（2026-10-23 记录）：** 126 条 observed_not_resume **全部来自 IHBench**（REBOOT/InterruptBench 均无），
+> 且真人采集已 descope。因此"不恢复"类别在当前公开数据上只有这一个来源，识别率上限受其规模约束；
+> 模型"不恢复"召回为 0 属于数据属性，不应作为模型缺陷反复迭代，也不得把 1,951 条删失样本改标为不恢复来补负样本。
 | `llm_inferred` 标签 | **0** 条 |
 | 枚举档位覆盖 | **实质档位全部实例化**：V 3/4、F 3/3、A 2/3、B 3/4、C 4/5、censoring 3/3、`event_type` 6/6；未出现的只有 `UNKNOWN`/`UNCERTAIN` 兜底档。`B=BELIEVES_INVALID` 仅 1 条（规则 B15），可核验但不可当可用类别 |
 | 校验 | draft-07 + 跨字段 + 泄漏 + 溯源：**0 violations / 2 warnings**（2 条 `observed_resume` 但步骤无法归因，见下文）|
