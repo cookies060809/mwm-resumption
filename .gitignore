@@ -32,14 +32,31 @@ secrets/
 Thumbs.db
 desktop.ini
 
-# P1 data is access-controlled. Keep only the README in Git.
+# P1 real human data is access-controlled. Keep only the README and the
+# public-derived package in Git.
 data/p1/*
 !data/p1/README.md
+!data/p1/public_derived/
 
 # Raw or private data must not be committed
 data/**/raw/
 data/**/private/
 data/**/restricted/
+
+# Exception: the public-derived P1 package is versioned, but its raw upstream
+# annotations stay out of Git. Only the provenance manifests (URL / sha256 / byte
+# audits) are committed, so the conversions remain traceable without redistributing
+# anyone's data.
+!data/p1/public_derived/raw/
+data/p1/public_derived/raw/**
+!data/p1/public_derived/raw/*/
+!data/p1/public_derived/raw/*/_manifest.json
+!data/p1/public_derived/raw/*/_upstream_blobs.json
+!data/p1/public_derived/raw/*/_upstream_tree_subset.json
+
+# Local dataset-audit scratch space: vendored third-party sources, downloads and
+# large extracts. Not part of the shared repo.
+p1_audit/
 
 # Competition binaries and large deliverables; keep Markdown sources in Git
 competition/artifacts/

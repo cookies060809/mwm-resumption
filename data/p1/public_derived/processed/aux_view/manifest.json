@@ -1,0 +1,204 @@
+{
+  "schema_version": "p1-0.2",
+  "source": "processed/p1_combined.jsonl",
+  "input_keys": [
+    "goal_text",
+    "task_steps",
+    "observed_events"
+  ],
+  "event_input_keys": [
+    "event_id",
+    "event_type",
+    "step_id",
+    "actor",
+    "text",
+    "position",
+    "person_access",
+    "source"
+  ],
+  "supervision_keys": [
+    "actor_id",
+    "base_story_id",
+    "cutoff_event_id",
+    "cutoff_kind",
+    "eligible_for_resume_eval",
+    "goal_id",
+    "label_origin",
+    "objective_progress",
+    "observation_horizon",
+    "outcome_time",
+    "p1_censoring_status",
+    "p1_observed_resume",
+    "p1_resume_step",
+    "resume_loss_mask",
+    "sample_id",
+    "schema_version",
+    "source_dataset",
+    "split",
+    "split_group_id",
+    "state_at_cutoff",
+    "state_loss_mask",
+    "state_withdrawn",
+    "step_loss_mask",
+    "subject_type"
+  ],
+  "dropped_fields": [
+    "tf_rubric",
+    "rq_rubrics",
+    "withheld_tail",
+    "baseline_response",
+    "window_assistant_transcripts",
+    "annotated_language_description",
+    "eval_oracle"
+  ],
+  "leak_check": {
+    "rows_checked": 2863,
+    "violations": 0
+  },
+  "files": {
+    "ihbench.test.jsonl": {
+      "rows": 58,
+      "bytes": 1028220,
+      "sha256": "0ac1151ea6a9b6404d7f051fd81747dc8dbf48b9fdfb971ff70f8853930523cb",
+      "resume_supervised": 51,
+      "eligible_for_resume_eval": 51,
+      "split_groups": 3,
+      "supervised_state_factors": {
+        "V": 58,
+        "F": 0,
+        "A": 0,
+        "B": 0,
+        "C": 58,
+        "Q": 0
+      }
+    },
+    "ihbench.train.jsonl": {
+      "rows": 612,
+      "bytes": 11103030,
+      "sha256": "7e18ce18d06d7cefe9751c6d432c6260cce3ac401f6cceafa93d5816a948545b",
+      "resume_supervised": 565,
+      "eligible_for_resume_eval": 565,
+      "split_groups": 32,
+      "supervised_state_factors": {
+        "V": 612,
+        "F": 0,
+        "A": 0,
+        "B": 0,
+        "C": 612,
+        "Q": 0
+      }
+    },
+    "ihbench.val.jsonl": {
+      "rows": 186,
+      "bytes": 3037727,
+      "sha256": "3cd4d82fdb97ee568b319bc64877c344283c0087854a616f661c768b1bd89398",
+      "resume_supervised": 169,
+      "eligible_for_resume_eval": 169,
+      "split_groups": 10,
+      "supervised_state_factors": {
+        "V": 186,
+        "F": 0,
+        "A": 0,
+        "B": 0,
+        "C": 186,
+        "Q": 0
+      }
+    },
+    "interruptbench.test.jsonl": {
+      "rows": 275,
+      "bytes": 1042203,
+      "sha256": "0bb8040b7f8bcc4ba4a4d4ec1e3aecb9bf6edb1ab59443ed5ed7ae62ea18ac5a",
+      "resume_supervised": 0,
+      "eligible_for_resume_eval": 0,
+      "split_groups": 25,
+      "supervised_state_factors": {
+        "V": 275,
+        "F": 0,
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "Q": 0
+      }
+    },
+    "interruptbench.train.jsonl": {
+      "rows": 1254,
+      "bytes": 4737884,
+      "sha256": "1de2f34c3fc90633e72e493ea52ca12becf600bfb86f7f9499230ba5b0cd49b4",
+      "resume_supervised": 0,
+      "eligible_for_resume_eval": 0,
+      "split_groups": 114,
+      "supervised_state_factors": {
+        "V": 1254,
+        "F": 0,
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "Q": 0
+      }
+    },
+    "interruptbench.val.jsonl": {
+      "rows": 286,
+      "bytes": 1078507,
+      "sha256": "1406cd1f2311e4b7f650ef3aa605c8fbe97067a87ad8d4625d84ba79c5e23764",
+      "resume_supervised": 0,
+      "eligible_for_resume_eval": 0,
+      "split_groups": 26,
+      "supervised_state_factors": {
+        "V": 286,
+        "F": 0,
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "Q": 0
+      }
+    },
+    "reboot.test.jsonl": {
+      "rows": 35,
+      "bytes": 132004,
+      "sha256": "7f4051218c63c329c30c5c861b264386cafcb586097047596b6f7a9f7726353a",
+      "resume_supervised": 11,
+      "eligible_for_resume_eval": 11,
+      "split_groups": 11,
+      "supervised_state_factors": {
+        "V": 35,
+        "F": 11,
+        "A": 13,
+        "B": 13,
+        "C": 24,
+        "Q": 2
+      }
+    },
+    "reboot.train.jsonl": {
+      "rows": 130,
+      "bytes": 496150,
+      "sha256": "878822c369f5a6c31888f3d4926f5c6cf707f2a8b26b3f78945dfd3b00a6d4ff",
+      "resume_supervised": 38,
+      "eligible_for_resume_eval": 38,
+      "split_groups": 41,
+      "supervised_state_factors": {
+        "V": 130,
+        "F": 38,
+        "A": 48,
+        "B": 48,
+        "C": 89,
+        "Q": 10
+      }
+    },
+    "reboot.val.jsonl": {
+      "rows": 27,
+      "bytes": 107181,
+      "sha256": "be533cd3295f9e79129332d6cc1fa9bc7c072fd5f1d15cb0545054fda4b809d4",
+      "resume_supervised": 8,
+      "eligible_for_resume_eval": 8,
+      "split_groups": 8,
+      "supervised_state_factors": {
+        "V": 27,
+        "F": 8,
+        "A": 11,
+        "B": 11,
+        "C": 19,
+        "Q": 3
+      }
+    }
+  }
+}

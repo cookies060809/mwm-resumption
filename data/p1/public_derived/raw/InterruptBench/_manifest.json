@@ -1,0 +1,342 @@
+[
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "f5cea1b8d7a0c19f675f0d3fcad11016731b2fdd",
+    "path_in_repo": "Eval/CITATION.cff",
+    "local_path": "raw/InterruptBench/Eval/CITATION.cff",
+    "bytes": 374,
+    "sha256": "d1207f2c046519d133f4a303f73395b9c68d94924c2b25d91e5c1b1ec54f90b0",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/CITATION.cff"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "75e3041b8f4aad4107d8b9a526e64361253000e5",
+    "path_in_repo": "Eval/LICENSE",
+    "local_path": "raw/InterruptBench/Eval/LICENSE",
+    "bytes": 1128,
+    "sha256": "a05020744efd1a76f94a3788a9ab9798160ac1a94b3e3adc6cea19fba59af39e",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/LICENSE"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "5185f5ab5ac2ae00c989fbad0ef125d76f70c848",
+    "path_in_repo": "Eval/README.md",
+    "local_path": "raw/InterruptBench/Eval/README.md",
+    "bytes": 18476,
+    "sha256": "068bfadc980d3da0296873e32258ea663c7c32caff0d494d282dd8b9d489b725",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/README.md"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "11f0d157e1da2d891dda14f4b3a762a51def8271",
+    "path_in_repo": "Eval/config_files/wa/legacy_test_webarena_lite.json",
+    "local_path": "raw/InterruptBench/Eval/config_files/wa/legacy_test_webarena_lite.json",
+    "bytes": 206921,
+    "sha256": "e4f816e7c0d74231492fbc4da94d4344557fd5ef51574c779f994c9b080deb75",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/config_files/wa/legacy_test_webarena_lite.json"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "b31e4170f7a37d196904b4fc5b44b2abff861c4b",
+    "path_in_repo": "Eval/config_files/wa/legacy_test_webarena_lite.raw.json",
+    "local_path": "raw/InterruptBench/Eval/config_files/wa/legacy_test_webarena_lite.raw.json",
+    "bytes": 204124,
+    "sha256": "f4a5b7e9bdf5f81934ce3a03b03db8a0367c776424fde4feb6e7f37ec3f6b261",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/config_files/wa/legacy_test_webarena_lite.raw.json"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "e2d24c1458623016a83fc4ee1f8e362d24d694e5",
+    "path_in_repo": "Eval/config_files/wa/test_webarena_lite.json",
+    "local_path": "raw/InterruptBench/Eval/config_files/wa/test_webarena_lite.json",
+    "bytes": 207397,
+    "sha256": "f05ad64b8bdcfcac21ac2df3791266dec8f7f02e9c8d52567bfdca6344b8bba2",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/config_files/wa/test_webarena_lite.json"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "0609ad489dba586c3617ba03867474f6b00fd478",
+    "path_in_repo": "Eval/config_files/wa/test_webarena_lite.raw.json",
+    "local_path": "raw/InterruptBench/Eval/config_files/wa/test_webarena_lite.raw.json",
+    "bytes": 204591,
+    "sha256": "685c9cd6e0b4244268faf272a32f173c6fa4f94d4005b313c68ac121c6742402",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/config_files/wa/test_webarena_lite.raw.json"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "053da8a1deb836be6a76dc804139fc854cc2108d",
+    "path_in_repo": "Eval/config_files/wa/test_webarena_lite_transformed_1update.json",
+    "local_path": "raw/InterruptBench/Eval/config_files/wa/test_webarena_lite_transformed_1update.json",
+    "bytes": 220882,
+    "sha256": "f98adae706d41b8e6127c268d9803fce57281200c3b7e5cc8207b8698b67efa3",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/config_files/wa/test_webarena_lite_transformed_1update.json"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "e0fc8639f41b9ce2500f760b440c9a9251081889",
+    "path_in_repo": "Eval/evaluate.sh",
+    "local_path": "raw/InterruptBench/Eval/evaluate.sh",
+    "bytes": 7268,
+    "sha256": "6ee07f70379e693af5707965a2899b192c3a48df5cf742b09b32c39fea576bf7",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/evaluate.sh"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "7c912ffde070028f59cf0cda37296bc2a473e4d3",
+    "path_in_repo": "Eval/interrupt_config/MULTI_INTERRUPT.md",
+    "local_path": "raw/InterruptBench/Eval/interrupt_config/MULTI_INTERRUPT.md",
+    "bytes": 6767,
+    "sha256": "fa2769f7f8840e32da4d1cd17eeee3b3f8856773f92dcd9e26bfe8db6b124a29",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/interrupt_config/MULTI_INTERRUPT.md"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "21a28e28071df0f14f2d7af154cd2eb7c1a06c3d",
+    "path_in_repo": "Eval/interrupt_config/MULTI_INTERRUPT_ZH.md",
+    "local_path": "raw/InterruptBench/Eval/interrupt_config/MULTI_INTERRUPT_ZH.md",
+    "bytes": 6486,
+    "sha256": "7b811d3d67a9b59319fd1510ce21d3ab7f251ff49aa7517589c0ae41d215f6bd",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/interrupt_config/MULTI_INTERRUPT_ZH.md"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "6ffa9255ca78e1bfccf2c2ba7e821e180141816d",
+    "path_in_repo": "Eval/interrupt_config/convert_raw_to_interrupt_spec.py",
+    "local_path": "raw/InterruptBench/Eval/interrupt_config/convert_raw_to_interrupt_spec.py",
+    "bytes": 4915,
+    "sha256": "ed0abe69f0b7b699040cab45450ba8f8ebecc638a54421cd49b741c011ad30c3",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/interrupt_config/convert_raw_to_interrupt_spec.py"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "7fc8939569c61da89fffbfd514f88dabf102cbdd",
+    "path_in_repo": "Eval/interrupt_config/interrupt_spec.json",
+    "local_path": "raw/InterruptBench/Eval/interrupt_config/interrupt_spec.json",
+    "bytes": 181,
+    "sha256": "5926c366b5a5d51d383857fd0e4717cb6dea77a651c5b47f368cfe4ba72b10e7",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/interrupt_config/interrupt_spec.json"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "b8bd9c79fd9d41ff5b1ec76b79bb50b286cbe8b1",
+    "path_in_repo": "Eval/interrupt_config/make_multi_interrupt_stage.py",
+    "local_path": "raw/InterruptBench/Eval/interrupt_config/make_multi_interrupt_stage.py",
+    "bytes": 16178,
+    "sha256": "8e8f145b72ff9f5d16aa37bd3cb9c20d093ff829ea57a564c0602e11c7dcef5e",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/interrupt_config/make_multi_interrupt_stage.py"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "be2b99e13c4342cee27eefdd815219cfd6cbbdb0",
+    "path_in_repo": "Eval/interrupt_config/make_transformed_intent_configs.py",
+    "local_path": "raw/InterruptBench/Eval/interrupt_config/make_transformed_intent_configs.py",
+    "bytes": 4331,
+    "sha256": "99d8132d5f2f59a05bb4b79ee1d96896536357ef010f08a0f18dacc4baeeb1f6",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/interrupt_config/make_transformed_intent_configs.py"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "35a8966cb72af70cbeae884c3d41b94066f1fd81",
+    "path_in_repo": "Eval/interrupt_config/make_transformed_intent_dataset_json.py",
+    "local_path": "raw/InterruptBench/Eval/interrupt_config/make_transformed_intent_dataset_json.py",
+    "bytes": 4162,
+    "sha256": "d99e2051b01c425cadfa727e96f68a19a2995b1e0cd9a0b9f74e48fec679fd9e",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/interrupt_config/make_transformed_intent_dataset_json.py"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "25f854bbd1d99e3d0d2326f9b4ac354fb80bd2c0",
+    "path_in_repo": "Eval/interrupt_config/process/interrupt_spec_1retraction.json",
+    "local_path": "raw/InterruptBench/Eval/interrupt_config/process/interrupt_spec_1retraction.json",
+    "bytes": 33539,
+    "sha256": "f5391f39a301038abc7eee129a47304542b48e70aeb6eccf9f0318790bf2b257",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/interrupt_config/process/interrupt_spec_1retraction.json"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "00ae52b1d8c1efc96537f445ceff796b12886060",
+    "path_in_repo": "Eval/interrupt_config/process/interrupt_spec_1update_06.json",
+    "local_path": "raw/InterruptBench/Eval/interrupt_config/process/interrupt_spec_1update_06.json",
+    "bytes": 27318,
+    "sha256": "9a8bd17ca88468f6e5b3ddb8d827b657bcdc19e0ab5c49c54bc84a079b92b354",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/interrupt_config/process/interrupt_spec_1update_06.json"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "e25fd491d3c61037327f6c6cecacfe6f85ca46c3",
+    "path_in_repo": "Eval/interrupt_config/process/interrupt_spec_2modification.json",
+    "local_path": "raw/InterruptBench/Eval/interrupt_config/process/interrupt_spec_2modification.json",
+    "bytes": 38354,
+    "sha256": "a1620a854134bf2a9154df2df8836c5d7c66de338a5c958e88a7f12a4fd302b2",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/interrupt_config/process/interrupt_spec_2modification.json"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "7473ed12f31b593367cc6f1c6bd23193279a0feb",
+    "path_in_repo": "Eval/interrupt_config/process/interrupt_spec_2retraction.json",
+    "local_path": "raw/InterruptBench/Eval/interrupt_config/process/interrupt_spec_2retraction.json",
+    "bytes": 39456,
+    "sha256": "8b39c553b1ae70522f66395867a866b5f78e921d81fc98e918be87e777f22dbf",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/interrupt_config/process/interrupt_spec_2retraction.json"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "ce2668a6d9df8edda8b9536ec2a188be81c35711",
+    "path_in_repo": "Eval/interrupt_config/process/interrupt_spec_2update_opus.json",
+    "local_path": "raw/InterruptBench/Eval/interrupt_config/process/interrupt_spec_2update_opus.json",
+    "bytes": 30837,
+    "sha256": "0e283f3738fa97710be0dcb090c8bae20153891d6f85af153e82af49b072b014",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/interrupt_config/process/interrupt_spec_2update_opus.json"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "6b7d4bf0d51e6095926d0b5fca0da1c16a770793",
+    "path_in_repo": "Eval/interrupt_config/raw/1retraction.json",
+    "local_path": "raw/InterruptBench/Eval/interrupt_config/raw/1retraction.json",
+    "bytes": 62646,
+    "sha256": "d838e20cc095255621dba46084944f0d11129073e265f5ac1dd032788cd8b52c",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/interrupt_config/raw/1retraction.json"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "e6caf8904be4510f82442b915bc6bc4e2089b116",
+    "path_in_repo": "Eval/interrupt_config/raw/1update.json",
+    "local_path": "raw/InterruptBench/Eval/interrupt_config/raw/1update.json",
+    "bytes": 45558,
+    "sha256": "c501dabc2dfd3f5434a51582a55d0289e9177631a099d1baa3485237e660c17e",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/interrupt_config/raw/1update.json"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "5ff9dc0102a8855485c8a3be40a3a24e277e1bed",
+    "path_in_repo": "Eval/interrupt_config/raw/2modification.json",
+    "local_path": "raw/InterruptBench/Eval/interrupt_config/raw/2modification.json",
+    "bytes": 63509,
+    "sha256": "bc715fdb975ffd3fc6165e832eae55add02ed5154ec4e71f62c6cb0e3b9d24e5",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/interrupt_config/raw/2modification.json"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "02dd465f586e8bf9ee431a42232f9b259cdaabc1",
+    "path_in_repo": "Eval/interrupt_config/raw/2retraction.json",
+    "local_path": "raw/InterruptBench/Eval/interrupt_config/raw/2retraction.json",
+    "bytes": 72767,
+    "sha256": "bfca790049ba0d8dce7fd76fbf70a5b40e396cd4bad1cf6e1f9e80c6069de116",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/interrupt_config/raw/2retraction.json"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "a843dbf2721729b41d3d8175a8348c6300f6fe8e",
+    "path_in_repo": "Eval/interrupt_config/raw/2update.json",
+    "local_path": "raw/InterruptBench/Eval/interrupt_config/raw/2update.json",
+    "bytes": 46241,
+    "sha256": "e458ebc467ff1f7e58d40ef4943fdefa89afa8629cfdac1baf4fd51130055ba9",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/interrupt_config/raw/2update.json"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "8614ac6fb2ebb178221e3dfc01a1e43ac37f3e8f",
+    "path_in_repo": "Eval/interrupt_config/raw/3mixed.json",
+    "local_path": "raw/InterruptBench/Eval/interrupt_config/raw/3mixed.json",
+    "bytes": 78932,
+    "sha256": "3325283ea39734ab820749e2829f8ccfdc4060d8a061110e25ad1f4f859e1ed1",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/interrupt_config/raw/3mixed.json"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "1d5e5799daaba63571391d4166e972b1f28467f6",
+    "path_in_repo": "Eval/metrics/README.md",
+    "local_path": "raw/InterruptBench/Eval/metrics/README.md",
+    "bytes": 6350,
+    "sha256": "18d66fbd3639a64e63237f232404e9ef4192cfe170a8abef122b854e09f8711f",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/metrics/README.md"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "3df5e48ab980eb9af4f9259bb585a99198ce20c0",
+    "path_in_repo": "Eval/metrics/action_diff_by_outcome.py",
+    "local_path": "raw/InterruptBench/Eval/metrics/action_diff_by_outcome.py",
+    "bytes": 12010,
+    "sha256": "0cdd7ce37a34ef49e1b4f6ef4d6f92a3a7f1bee2265d31b375ec13c446dfb6f1",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/metrics/action_diff_by_outcome.py"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "027b45c70663d730d426ba71e14b6a9e9756e67c",
+    "path_in_repo": "Eval/metrics/adapt_action_efficiency.py",
+    "local_path": "raw/InterruptBench/Eval/metrics/adapt_action_efficiency.py",
+    "bytes": 8125,
+    "sha256": "a3f346d97860f7b3084e466e440a1602c4cf55b5c60598ad6a6d8cf2e89bc5ac",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/metrics/adapt_action_efficiency.py"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "5289b4569f666d2c6835b5cc564a5674821c715a",
+    "path_in_repo": "Eval/metrics/score_by_steps.py",
+    "local_path": "raw/InterruptBench/Eval/metrics/score_by_steps.py",
+    "bytes": 11247,
+    "sha256": "62d3e925d337948d8f008aa4bf5aa26b318b22dfebd2ca0a140dabd35b4f9538",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/metrics/score_by_steps.py"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "3f5188fa26a4dc6dcaced9bae14305c9943bef90",
+    "path_in_repo": "Eval/metrics/token_diff_by_outcome.py",
+    "local_path": "raw/InterruptBench/Eval/metrics/token_diff_by_outcome.py",
+    "bytes": 16442,
+    "sha256": "7e0d8391cb4c5d8ac31cb9b87720159e1246c5f7d3f5b8a352d427b85a73f24d",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/metrics/token_diff_by_outcome.py"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "0849cefc17f9888741527d6b38754ec84613121f",
+    "path_in_repo": "Eval/run.py",
+    "local_path": "raw/InterruptBench/Eval/run.py",
+    "bytes": 48911,
+    "sha256": "8d8c668efdc240ae2247425d99b49ae9360d29adab3ced9eeb6c038924086429",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/run.py"
+  },
+  {
+    "repo": "HenryPengZou/InterruptBench",
+    "ref": "main",
+    "sha": "5cae0e44685024abbed1d8c895b1bc19d683b4ef",
+    "path_in_repo": "Eval/score.py",
+    "local_path": "raw/InterruptBench/Eval/score.py",
+    "bytes": 3615,
+    "sha256": "db5ed131194d6b7987c7cb46286a043abe83424d97e00c5ee851696c54d56558",
+    "source_url": "https://github.com/HenryPengZou/InterruptBench/blob/main/Eval/score.py"
+  }
+]

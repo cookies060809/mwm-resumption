@@ -1,0 +1,37 @@
+{
+  "artifacts": [
+    {
+      "repo": "REBOOT26/sample_recovery-demonstration",
+      "path_in_repo": "meta/phase.json",
+      "url": "https://hf-mirror.com/datasets/REBOOT26/sample_recovery-demonstration/resolve/main/meta/phase.json",
+      "local_path": "raw/REBOOT/sample_recovery-demonstration/phase.json",
+      "bytes": 60992,
+      "sha256": "1d61ff591ff9f52628c49e71a0435ab83a62c87a4d607ae91a50478dbaf5813b",
+      "verified_against_previous": true
+    },
+    {
+      "repo": "REBOOT26/sample_recovery-demonstration",
+      "path_in_repo": "meta/info.json",
+      "url": "https://hf-mirror.com/datasets/REBOOT26/sample_recovery-demonstration/resolve/main/meta/info.json",
+      "local_path": "raw/REBOOT/sample_recovery-demonstration/info.json",
+      "bytes": 5194,
+      "sha256": "b0890cbbccd2b4db1e6b897d51ce038e2e40eec6cfd643698b01555b9abc099d",
+      "verified_against_previous": true
+    },
+    {
+      "repo": "REBOOT26/sample_recovery-demonstration",
+      "path_in_repo": "meta/tasks.parquet",
+      "url": "https://hf-mirror.com/datasets/REBOOT26/sample_recovery-demonstration/resolve/main/meta/tasks.parquet",
+      "local_path": "raw/REBOOT/sample_recovery-demonstration/tasks.parquet",
+      "bytes": 2351,
+      "sha256": "a7ea5cf650f3af60e7552e46dcd8deb1a12e24aa364c963cae702c9ff742748a",
+      "verified_against_previous": true
+    }
+  ],
+  "source_dataset": "REBOOT",
+  "org": "REBOOT26",
+  "license": "Apache-2.0 (per-repo HF tag `license:apache-2.0`; project page states CC-BY-4.0)",
+  "gated": false,
+  "policy": "meta/phase.json + meta/info.json + meta/tasks.parquet only; data/*.parquet trajectories and videos/ never requested",
+  "fetched_at": "2026-10-23T09:49:56+0800"
+}
