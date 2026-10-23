@@ -1,0 +1,23 @@
+samples: 1815
+files: ['interruptbench.jsonl']
+
+  interruptbench.jsonl: 1815 unique sample_ids
+
+source_dataset:
+  InterruptBench: 1815
+
+state_at_cutoff.V: VALID=1203, CANCELLED=612  [distinct=2]
+state_at_cutoff.F: READY=1309, UNKNOWN=506  [distinct=2]
+state_at_cutoff.A: ACCESSED=1815  [distinct=1]
+state_at_cutoff.B: BELIEVES_VALID=1815  [distinct=1]
+state_at_cutoff.C: SUSPENDED=650, ABANDONED=612, ACTIVE=553  [distinct=3]
+state_at_cutoff.Q: UNKNOWN=1815  [distinct=1]
+
+p1_censoring_status: censored=1815
+censoring x p1_observed_resume: censored/None=1815
+event source: original_annotation=5929, rule_mapping=1815
+event_type: background_fact=3124, interruption=2805, start_goal=1815
+event person_access: ACCESSED=6435, NOT_ACCESSED=1309
+
+violations: 0
+warnings: 0

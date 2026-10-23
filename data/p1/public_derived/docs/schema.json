@@ -1,0 +1,259 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ecr-mwm.local/schemas/p1.schema.json",
+  "title": "P1 structured evaluation sample (ECR-MWM)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "sample_id",
+    "source_dataset",
+    "base_story_id",
+    "goal_id",
+    "task_steps",
+    "observed_events",
+    "cutoff_event_id",
+    "state_at_cutoff",
+    "p1_observed_resume",
+    "p1_resume_step",
+    "p1_censoring_status",
+    "evidence_trace",
+    "original_annotation_ref"
+  ],
+  "properties": {
+    "sample_id": {
+      "type": "string",
+      "minLength": 3
+    },
+    "source_dataset": {
+      "enum": [
+        "IHBench",
+        "REBOOT",
+        "IndustReal",
+        "InterruptBench"
+      ]
+    },
+    "base_story_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "goal_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_steps": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "observed_events": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "event_id",
+          "event_type",
+          "step_id",
+          "person_access",
+          "source"
+        ],
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "event_type": {
+            "enum": [
+              "start_goal",
+              "interruption",
+              "resume",
+              "progress",
+              "completion",
+              "background_fact"
+            ]
+          },
+          "step_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "person_access": {
+            "enum": [
+              "ACCESSED",
+              "NOT_ACCESSED",
+              "UNCERTAIN"
+            ]
+          },
+          "source": {
+            "enum": [
+              "original_annotation",
+              "rule_mapping",
+              "llm_inferred",
+              "UNKNOWN"
+            ]
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "evidence_quote": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "source": {
+                  "const": "llm_inferred"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "confidence",
+                "evidence_quote"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "event_type": {
+                  "const": "start_goal"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "person_access": {
+                  "const": "ACCESSED"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "cutoff_event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "state_at_cutoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "V",
+        "F",
+        "A",
+        "B",
+        "C",
+        "Q"
+      ],
+      "properties": {
+        "V": {
+          "enum": [
+            "VALID",
+            "CANCELLED",
+            "FULFILLED",
+            "UNKNOWN"
+          ]
+        },
+        "F": {
+          "enum": [
+            "READY",
+            "BLOCKED",
+            "UNKNOWN"
+          ]
+        },
+        "A": {
+          "enum": [
+            "ACCESSED",
+            "NOT_ACCESSED",
+            "UNCERTAIN"
+          ]
+        },
+        "B": {
+          "enum": [
+            "BELIEVES_VALID",
+            "BELIEVES_INVALID",
+            "UNRESOLVED",
+            "UNKNOWN"
+          ]
+        },
+        "C": {
+          "enum": [
+            "ACTIVE",
+            "SUSPENDED",
+            "ABANDONED",
+            "COMPLETED",
+            "UNKNOWN"
+          ]
+        },
+        "Q": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "p1_observed_resume": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "null when the outcome was not observed inside the episode (p1_censoring_status=censored)"
+    },
+    "p1_resume_step": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "p1_censoring_status": {
+      "enum": [
+        "observed_resume",
+        "observed_not_resume",
+        "censored"
+      ],
+      "description": "censored = window not fully covered and no resume observed; then p1_observed_resume must be null"
+    },
+    "evidence_trace": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "original_annotation_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file",
+        "fields_used"
+      ],
+      "properties": {
+        "file": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fields_used": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

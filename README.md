@@ -61,8 +61,8 @@
 │   └── literature/         # 竞品矩阵与原文索引
 ├── schema/                 # P0 记录 JSON Schema（p0-record/v0.1.0）
 ├── data/
-│   ├── p0/                 # 16 条 P0 种子与说明
-│   └── p1/                 # P1 合规说明（尚未采集，默认不入库）
+│   ├── p0/                 # P0 脚本记录（v0.1 16 条 / v0.2 240 条 / v0.3 14 条）与说明
+│   └── p1/                 # P1 合规说明 + public_derived/ 公开数据派生候选集（真实 P1 仍未采集）
 ├── models/
 │   ├── ec_jmf/             # 联合后验更新核心算法契约
 │   └── ecr_mwm/            # 端到端包装与 T1/T2/T3 接口
@@ -89,14 +89,14 @@ python -m pytest
 
 ## 数据与证据边界
 
-1. **P0 与 P1 严格分离。** 当前 P0 为 16 条脚本诊断种子，不能用于声称预测真实人类心理；P1 才对应经许可的真实连续行为证据，目前尚未采集。
-2. **P1 原始数据默认不入库。** 只允许提交经批准的元数据或脱敏派生结果；禁止提交可识别个人的视频、音频、屏幕录制或原始日志。
+1. **P0 与 P1 严格分离。** 当前 P0 为 254 条脚本诊断记录（v0.2 240 条，其中含 v0.1 的 16 条手写种子；另有 v0.3 不确定性批次 14 条），不能用于声称预测真实人类心理；P1 才对应经许可的真实连续行为证据，**目前尚未采集**。`data/p1/public_derived/` 是从公开数据集已有标注重组出的三源辅助任务候选集（语音 agent / 网页 agent 规格 / 机器人装配），不是真人行为证据，也不与 P0 合并统计。
+2. **P1 原始数据默认不入库。** 只允许提交经批准的元数据或脱敏派生结果；禁止提交可识别个人的视频、音频、屏幕录制或原始日志。上游数据集的标注正文同样不入库，仓库只保留 URL + sha256 溯源清单。
 3. **人物能否获知事件必须有独立证据字段。** 不允许把客观世界事实直接复制为人物信念。
 4. **禁止未来泄漏。** 预测时刻 `t` 之后的标签、事件或测试集信息不得进入 `observed_events`。
 5. **不虚构结果。** 任何准确率、优势或新颖性结论必须来自可复现实验；P0 脚本结果不得写成真实人类恢复预测能力。
 6. **竞赛材料合规。** 所有对外材料不得出现学校名称、Logo、指导教师信息；引用他人技术/数据需标注并取得合法授权。
 
-详见 [competition/README.md](competition/README.md)、[P0 数据说明](data/p0/README.md)、[标注手册](docs/annotation/annotation_handbook_v1.0.md)、[质量方案](docs/annotation/label_quality_plan_v0.1.md) 与 [data/README.md](data/README.md)。
+详见 [competition/README.md](competition/README.md)、[P0 数据说明](data/p0/README.md)、[P1 入库边界](data/p1/README.md)、[标注手册](docs/annotation/annotation_handbook_v1.0.md)、[质量方案](docs/annotation/label_quality_plan_v0.1.md) 与 [data/README.md](data/README.md)。
 
 ## 团队角色
 

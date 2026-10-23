@@ -3,7 +3,7 @@
 > **当前规范：** `p0_record_v0.2.schema.json`（Draft-07，`p0-record/v0.2.0`），对应当前 240 条 P0 批次（120 家族）。
 > **冻结版本：** `p0_record.schema.json`（`p0-record/v0.1.0`，16 条种子）——A 的现有适配器仍读它，不要修改。
 > **Owner：** B。**状态：** v0.2 已冻结并由 B 复核（`reviewed`）；A 需加版本分支，C 需确认字段映射。
-> P1 尚未采集，未来需要独立的 P1 schema；不要直接把 P0 schema 当作真实行为数据 schema。
+> P1 真实人类数据尚未采集；P1 schema 已有第一版（见 §7），放在派生包内而不是本目录，**不要直接把 P0 schema 当作真实行为数据 schema**。
 
 ## 1. 文件
 
@@ -93,9 +93,11 @@ A/B 逐字段差异使用 [`scripts/pair_diff_report.py`](../scripts/pair_diff_r
 4. PR 由 B 主责、A/C 至少一人评审；CI 通过后合并。
 5. 批量扩增前先冻结接口，避免字段反复变更造成返工。
 
-## 7. P1 的未来 schema
+## 7. P1 schema
 
-P1 至少还需要：
+**已有第一版：** [`data/p1/public_derived/docs/schema.json`](../data/p1/public_derived/docs/schema.json)（Draft-07，附 [`schema.md`](../data/p1/public_derived/docs/schema.md) 字段说明与 [`merge_and_validate.py`](../data/p1/public_derived/scripts/merge_and_validate.py) 跨字段/泄漏/溯源校验）。它服务于公开数据派生的三源候选集，与 P0 schema 完全分离、不共用记录文件。
+
+真实采集的 P1 还缺以下字段，待采集协议确定后增补：
 
 - ISO 8601 时间戳与时区；
 - 观察窗口起止、右删失/hazard 字段；
@@ -103,15 +105,13 @@ P1 至少还需要：
 - 真实行为证据 ID 与访问级别；
 - 不包含可识别个人信息的元数据规范。
 
-P1 schema 将在数据许可与采集流程确定后单独设计，并与 P0 schema 明确区分。
-
 ## 8. v0.2 变更（2026-10-20）
 
 `p0_record_v0.2.schema.json` 在 v0.1 基础上新增以下字段，`p0-record/v0.1.0` 与 16 条种子保持冻结不动。
 
 | 变更 | 字段 | 作用 | 对下家的影响 |
 |---|---|---|---|
-| 划分 | `split`（train/dev/calibration/test） | 家族级 60/20/20，同族 A/B 不跨集 | C 的评测协议需要；A 不应把它当输入 |
+| 划分 | `split`（train/dev/calibration/test） | 家族级 60/20/20，同族 A/B 不跨集 | C 的评测协议需要；A 不应把它当输入。P0 实际只落三档——**2026-10-21 C 定案这轮不切 `calibration`（calibration＝0，未切走任何 `base_story_id`）**，枚举值保留给 P1 |
 | 机制 | `mechanism`（8 个枚举） | 让家族可按受控机制分层统计与消融 | 报告按机制拆分指标 |
 | 理解 | 事件级 `person_comprehension` | 承载 `U`：接触 ≠ 理解 | A 的 `delivery.comprehension` 可接入；C 的 `understood` 可映射 |
 | 可用语义 | 事件级 `person_available_semantics` | 人物可能获得的消息内容，与世界真值分离 | 解决“人物侧只有一个 ACCESSED”的信息缺口 |

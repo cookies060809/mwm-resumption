@@ -63,6 +63,9 @@ exp(e2): record calibration baseline run
 2. 新增或修改样例必须通过 `python scripts/validate_data.py` 与 `python scripts/pair_diff_report.py`。
 3. `cutoff_event_id` 必须是 `observed_events` 的最后一条；每个非 `UNKNOWN` 状态标签必须提供 `state_evidence_by_factor` 证据，平铺的 `state_evidence_event_ids` 必须等于逐因子证据的按序并集。
 4. P1 原始数据、可识别个人内容、未脱敏日志和受限材料**不得提交**。只提交元数据或经批准派生结果。
+   `data/p1/public_derived/`（2026-10-23 第一版）按 [`data/p1/README.md`](data/p1/README.md) 的入库边界表执行：
+   派生 JSONL 与文档入库，上游标注正文与音视频不入库；许可证未确认的 InterruptBench 分片仅限三人内部评测，
+   对外分发前必须先剔除或取得授权（该表由 B 维护，C 复核访问与泄漏风险）。
 5. Schema 变更遵循语义化版本：破坏性变更提升主版本，并在 PR 中附迁移说明；不得静默改变既有标签含义。
 6. P0 的脚本标签与 P1 的真实行为标签必须在记录中明确区分，不得合并统计后宣称真实预测能力。
 7. 当前 P0 种子 16 条（P01–P08）的 `annotation.status=draft`；B 完成人工审计、A/C 盲审并仲裁后才能改为 `reviewed/adjudicated`。
