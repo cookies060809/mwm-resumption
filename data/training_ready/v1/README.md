@@ -2,7 +2,7 @@
 
 **推荐从本目录开始训练。无需下载、人工标注或审批，读取检查和小型基线只需 Python 标准库。**
 
-这是一个统一格式的两任务训练包：项目正式 P0 提供六变量脚本监督，IHBench 已发布的 GPT-4o Audio 回答提供中断后续答蒸馏监督。没有用词重叠生成恢复真值，也没有把机器人停顿当成信念标签。真人 P1 记录为 **0**；不能用本包宣称已验证真人恢复预测。
+这是一个统一格式的两任务训练包：项目正式 P0 提供六变量脚本监督，IHBench 已发布的 GPT-4o Audio 回答提供中断后续答蒸馏监督。没有用词重叠生成恢复真值，也没有把机器人停顿当成信念标签。真人 P1 记录为 **0**（2026-10-23 决策：项目不做真人采集与标注，P1 以公开数据集交付）；对外口径是公开数据派生的辅助任务，不涉及真人恢复预测。
 
 ## 直接开始
 
@@ -60,6 +60,6 @@ P0 沿用正式版 150/52/52 的划分，127 个故事家族全部保持分组�
 - IHBench：Salimi 等，*IHBench: Evaluating Post-Interruption Recovery in Voice Agents with Structured Workflows*，2026，https://huggingface.co/datasets/bosonai/IHBench ，https://arxiv.org/abs/2606.19595 。数据许可 CC BY 4.0：https://creativecommons.org/licenses/by/4.0/ 。保留上游卡 `sources/dataset_card.md` 和抓取清单 `sources/upstream_manifest.json`。
 - 本次改动：抽取文本列、按原对话分组、把已发布回答映射为续答目标、统一接口；没有生成新的人工或模型标签。未含音频、真人原始日志、InterruptBench 或 REBOOT。
 - 冻结的文本来源随包提供，`manifest.json` 记录输入/输出 SHA256。`python data/training_ready/v1/build.py` 可离线重建 JSONL；不依赖上游 main 后续变化。
-- 本包是可训练的数据交付，不是完整真人 P1；六变量监督数量和标签真实性不能由辅助对话数量替代。
+- 本包是可训练的数据交付，也是 P1 的最终数据形态（2026-10-23 决策：无真人采集）；六变量监督数量和标签真实性不能由辅助对话数量替代。
 
 审查日期：2026-10-23。检查和 CPU 基线实测记录见 `validation.txt`、`cpu_smoke.json`。

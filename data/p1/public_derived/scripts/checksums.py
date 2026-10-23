@@ -12,7 +12,13 @@ GROUPS = {
     "delivery": ["processed/*.jsonl", "docs/*.json"],
     "audit docs": ["docs/*.md", "docs/*.txt", "README.md"],
     "code": ["scripts/*.py", "run_pipeline.sh", "scripts/*.json"],
-    "raw annotations": ["raw/*/*.json", "raw/*/*.md"],
+    # Only the provenance manifests are versioned (see .gitignore); hashing the
+    # upstream files themselves would break verification on a fresh clone.
+    "raw annotations": [
+        "raw/*/_manifest.json",
+        "raw/*/_upstream_blobs.json",
+        "raw/*/_upstream_tree_subset.json",
+    ],
 }
 
 
