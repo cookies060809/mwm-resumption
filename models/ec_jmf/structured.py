@@ -172,7 +172,8 @@ class StructuredModel:
         elif kind == "step_completed" and step and world["source"] != "person_report":
             done = goal.world_done | {step}
             values["world_done"] = done
-            if set(self.graphs[goal.goal_id]["steps"]) <= done:
+            if (self.graphs[goal.goal_id].get("steps_complete", True) and
+                    set(self.graphs[goal.goal_id]["steps"]) <= done):
                 values["validity"] = "FULFILLED"
         elif kind in ("resource_available", "resource_missing") and world["source"] != "person_report":
             values["feasibility"] = "READY" if kind == "resource_available" else "BLOCKED"

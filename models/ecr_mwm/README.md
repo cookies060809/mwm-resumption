@@ -12,3 +12,11 @@
 当前仅一种完整模型；旧模型文件、中央差分/独立SMC入口、旧配置和历史结果已移出。
 原A分支与main不变。骨干是新模型的必要组成，冻结残差训练不是从零训练整个网络。
 P0为脚本诊断，不代表真实人物预测效果。
+
+
+## P1 READY 适配
+
+`ready_data.py`、`ready_model.py`和`ready_training.py`接入B正式ready-v1.0的两任务格式。
+六状态保留冻结Context模型，新增attention-GRU文本辅助模块实际训练/生成IHBench公开续答。
+推理只读取task/input；对话答案不当心智或恢复真值。上下文截断、OOV及实际效果见
+[READY正式结果](../../results/p1/a_ready_response/README.md)与[接口](../../docs/internal/a/A_INTERFACES.md)。

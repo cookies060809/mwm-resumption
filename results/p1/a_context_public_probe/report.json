@@ -1,0 +1,747 @@
+{
+  "protocol": "a-p1-public-structural-probe/v1",
+  "config": {
+    "protocol": "a-p1-public-structural-probe/v1",
+    "source_main": "87d5eb4",
+    "model": "results/p0/c_visible_context/model.pt",
+    "expected_model_sha256": "705372a44fe2bfa234be09652f3c9cb5b6c1265cfb2e37c4d54ab71a7b6c573a",
+    "data": "data/p1/public_derived/processed/p1_combined.jsonl",
+    "expected_data_sha256": "cb4b5a84d463a39f1b1ad81a2c52ca533e39cb3e6d7c0b9de368d682110c9e0c",
+    "aux_view": "data/p1/public_derived/processed/aux_view",
+    "schema": "data/p1/public_derived/docs/schema.json",
+    "evaluation_split": "test",
+    "model_selection": "frozen C visible_context seed0; no P1 fitting, selection or calibration",
+    "primary_metrics": "V/C per-factor accuracy, balanced accuracy, macro-F1, NLL and zero support; source/actor/cutoff separated",
+    "secondary_metrics": "F/A/B/Q only under supplied state_loss_mask; rule/retrospective annotation agreement, not mental truth",
+    "state_mask": "state_loss_mask[f] == 1; UNKNOWN never supervised; no label restoration from state_withdrawn",
+    "probe_opportunities": 1,
+    "t1_evaluation": false,
+    "t2_evaluation": false,
+    "disabled_reason": "P1 turn/frame/episode-tail windows are not calibrated P0 decision opportunities; no verified pending-step/graph mapping",
+    "adapter_policy": {
+      "steps": "1..8 only; never truncate or create dummy steps",
+      "dependencies": "None; never invent edges",
+      "background_facts": "world only; source access may refer to user rather than modeled assistant",
+      "external_event_access": "UNCERTAIN; no receipt/comprehension inferred from observer annotation",
+      "comprehension": "unknown for external events; no text parser or UNDERSTOOD fabrication",
+      "completion": "reject unsupported own-goal completion; never reinterpret as completion by another actor",
+      "progress": "own phase entry -> step_started; no earlier steps marked complete",
+      "text": "not encoded by this model; no keyword/label heuristic"
+    },
+    "output": "results/p1/a_context_public_probe"
+  },
+  "branch": "feat/a-p1-public-derived-eval",
+  "code_commit": "3c7e72d9949f4c1894851a999062940e4088d2ee",
+  "working_tree_dirty": true,
+  "environment": {
+    "python": "3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 16:37:03) [MSC v.1929 64 bit (AMD64)]",
+    "torch": "2.11.0+cpu",
+    "device": "cpu",
+    "threads": 1
+  },
+  "validation": {
+    "schema_rows": 2863,
+    "unique_ids": 2863,
+    "group_units": 270,
+    "group_split_violations": 0,
+    "aux_projection_rows": 2863,
+    "aux_files": 9
+  },
+  "train_smoke_rows": 2,
+  "sources": {
+    "IHBench": {
+      "data": {
+        "rows": 856,
+        "splits": {
+          "train": 612,
+          "val": 186,
+          "test": 58
+        },
+        "groups_per_split": {
+          "train": 32,
+          "val": 10,
+          "test": 3
+        },
+        "cutoffs": {
+          "interruption": 856
+        },
+        "state_mask_counts": {
+          "V": 856,
+          "F": 0,
+          "A": 0,
+          "B": 0,
+          "C": 856,
+          "Q": 0
+        },
+        "recovery_mask_count": 785,
+        "step_mask_count": 658,
+        "censored_count": 71
+      },
+      "admission": {
+        "compatible": 494,
+        "test_compatible": 10,
+        "excluded": {
+          "P1_STEP_BUDGET_EXCEEDED": 362
+        },
+        "test_excluded": {
+          "P1_STEP_BUDGET_EXCEEDED": 48
+        }
+      },
+      "test": {
+        "n_rows": 10,
+        "independent_groups": 1,
+        "gold_classes": {
+          "V": {
+            "VALID": 10
+          },
+          "F": {},
+          "A": {},
+          "B": {},
+          "C": {
+            "SUSPENDED": 10
+          },
+          "Q": {}
+        },
+        "predicted_classes": {
+          "V": {
+            "VALID": 10
+          },
+          "F": {},
+          "A": {},
+          "B": {},
+          "C": {
+            "SUSPENDED": 10
+          },
+          "Q": {}
+        },
+        "t3": {
+          "V": {
+            "accuracy": 1,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "n": 10,
+            "nll": 0.0,
+            "zero_support": 0
+          },
+          "F": {
+            "accuracy": null,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "n": 0,
+            "nll": null,
+            "zero_support": 0
+          },
+          "A": {
+            "accuracy": null,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "n": 0,
+            "nll": null,
+            "zero_support": 0
+          },
+          "B": {
+            "accuracy": null,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "n": 0,
+            "nll": null,
+            "zero_support": 0
+          },
+          "C": {
+            "accuracy": 1,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "n": 10,
+            "nll": 0.5893372201621351,
+            "zero_support": 0
+          },
+          "Q": {
+            "accuracy": null,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "n": 0,
+            "nll": null,
+            "zero_support": 0
+          }
+        }
+      },
+      "test_by_actor_cutoff": {
+        "assistant/interruption": {
+          "n_rows": 5,
+          "independent_groups": 1,
+          "gold_classes": {
+            "V": {
+              "VALID": 5
+            },
+            "F": {},
+            "A": {},
+            "B": {},
+            "C": {
+              "SUSPENDED": 5
+            },
+            "Q": {}
+          },
+          "predicted_classes": {
+            "V": {
+              "VALID": 5
+            },
+            "F": {},
+            "A": {},
+            "B": {},
+            "C": {
+              "SUSPENDED": 5
+            },
+            "Q": {}
+          },
+          "t3": {
+            "V": {
+              "accuracy": 1,
+              "macro_f1": 1.0,
+              "balanced_accuracy": 1.0,
+              "n": 5,
+              "nll": 0.0,
+              "zero_support": 0
+            },
+            "F": {
+              "accuracy": null,
+              "macro_f1": null,
+              "balanced_accuracy": null,
+              "n": 0,
+              "nll": null,
+              "zero_support": 0
+            },
+            "A": {
+              "accuracy": null,
+              "macro_f1": null,
+              "balanced_accuracy": null,
+              "n": 0,
+              "nll": null,
+              "zero_support": 0
+            },
+            "B": {
+              "accuracy": null,
+              "macro_f1": null,
+              "balanced_accuracy": null,
+              "n": 0,
+              "nll": null,
+              "zero_support": 0
+            },
+            "C": {
+              "accuracy": 1,
+              "macro_f1": 1.0,
+              "balanced_accuracy": 1.0,
+              "n": 5,
+              "nll": 0.5893372201621351,
+              "zero_support": 0
+            },
+            "Q": {
+              "accuracy": null,
+              "macro_f1": null,
+              "balanced_accuracy": null,
+              "n": 0,
+              "nll": null,
+              "zero_support": 0
+            }
+          }
+        },
+        "gpt4o_audio_baseline/interruption": {
+          "n_rows": 5,
+          "independent_groups": 1,
+          "gold_classes": {
+            "V": {
+              "VALID": 5
+            },
+            "F": {},
+            "A": {},
+            "B": {},
+            "C": {
+              "SUSPENDED": 5
+            },
+            "Q": {}
+          },
+          "predicted_classes": {
+            "V": {
+              "VALID": 5
+            },
+            "F": {},
+            "A": {},
+            "B": {},
+            "C": {
+              "SUSPENDED": 5
+            },
+            "Q": {}
+          },
+          "t3": {
+            "V": {
+              "accuracy": 1,
+              "macro_f1": 1.0,
+              "balanced_accuracy": 1.0,
+              "n": 5,
+              "nll": 0.0,
+              "zero_support": 0
+            },
+            "F": {
+              "accuracy": null,
+              "macro_f1": null,
+              "balanced_accuracy": null,
+              "n": 0,
+              "nll": null,
+              "zero_support": 0
+            },
+            "A": {
+              "accuracy": null,
+              "macro_f1": null,
+              "balanced_accuracy": null,
+              "n": 0,
+              "nll": null,
+              "zero_support": 0
+            },
+            "B": {
+              "accuracy": null,
+              "macro_f1": null,
+              "balanced_accuracy": null,
+              "n": 0,
+              "nll": null,
+              "zero_support": 0
+            },
+            "C": {
+              "accuracy": 1,
+              "macro_f1": 1.0,
+              "balanced_accuracy": 1.0,
+              "n": 5,
+              "nll": 0.5893372201621351,
+              "zero_support": 0
+            },
+            "Q": {
+              "accuracy": null,
+              "macro_f1": null,
+              "balanced_accuracy": null,
+              "n": 0,
+              "nll": null,
+              "zero_support": 0
+            }
+          }
+        }
+      }
+    },
+    "InterruptBench": {
+      "data": {
+        "rows": 1815,
+        "splits": {
+          "train": 1254,
+          "test": 275,
+          "val": 286
+        },
+        "groups_per_split": {
+          "train": 114,
+          "val": 26,
+          "test": 25
+        },
+        "cutoffs": {
+          "goal_spec_update": 1815
+        },
+        "state_mask_counts": {
+          "V": 1815,
+          "F": 0,
+          "A": 0,
+          "B": 0,
+          "C": 0,
+          "Q": 0
+        },
+        "recovery_mask_count": 0,
+        "step_mask_count": 0,
+        "censored_count": 1815
+      },
+      "admission": {
+        "compatible": 0,
+        "test_compatible": 0,
+        "excluded": {
+          "P1_NO_TASK_STEPS": 1815
+        },
+        "test_excluded": {
+          "P1_NO_TASK_STEPS": 275
+        }
+      }
+    },
+    "REBOOT": {
+      "data": {
+        "rows": 192,
+        "splits": {
+          "train": 130,
+          "test": 35,
+          "val": 27
+        },
+        "groups_per_split": {
+          "train": 41,
+          "val": 8,
+          "test": 11
+        },
+        "cutoffs": {
+          "completion": 15,
+          "pre_interruption": 60,
+          "interruption": 60,
+          "recovery": 57
+        },
+        "state_mask_counts": {
+          "V": 192,
+          "F": 57,
+          "A": 72,
+          "B": 72,
+          "C": 132,
+          "Q": 15
+        },
+        "recovery_mask_count": 57,
+        "step_mask_count": 57,
+        "censored_count": 65
+      },
+      "admission": {
+        "compatible": 177,
+        "test_compatible": 33,
+        "excluded": {
+          "P1_GOAL_COMPLETION_NOT_REPRESENTABLE": 15
+        },
+        "test_excluded": {
+          "P1_GOAL_COMPLETION_NOT_REPRESENTABLE": 2
+        }
+      },
+      "test": {
+        "n_rows": 33,
+        "independent_groups": 11,
+        "gold_classes": {
+          "V": {
+            "VALID": 33
+          },
+          "F": {
+            "READY": 11
+          },
+          "A": {
+            "ACCESSED": 11
+          },
+          "B": {
+            "BELIEVES_VALID": 11
+          },
+          "C": {
+            "ACTIVE": 22
+          },
+          "Q": {}
+        },
+        "predicted_classes": {
+          "V": {
+            "VALID": 33
+          },
+          "F": {
+            "READY": 11
+          },
+          "A": {
+            "UNCERTAIN": 11
+          },
+          "B": {
+            "BELIEVES_VALID": 11
+          },
+          "C": {
+            "ACTIVE": 22
+          },
+          "Q": {}
+        },
+        "t3": {
+          "V": {
+            "accuracy": 1,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "n": 33,
+            "nll": 0.0,
+            "zero_support": 0
+          },
+          "F": {
+            "accuracy": 1,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "n": 11,
+            "nll": 0.0019357449934437666,
+            "zero_support": 0
+          },
+          "A": {
+            "accuracy": 0,
+            "macro_f1": 0.0,
+            "balanced_accuracy": 0.0,
+            "n": 11,
+            "nll": 27.631021115928547,
+            "zero_support": 11
+          },
+          "B": {
+            "accuracy": 1,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "n": 11,
+            "nll": 5.2996705580870313e-05,
+            "zero_support": 0
+          },
+          "C": {
+            "accuracy": 1,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "n": 22,
+            "nll": 0.0,
+            "zero_support": 0
+          },
+          "Q": {
+            "accuracy": null,
+            "macro_f1": null,
+            "balanced_accuracy": null,
+            "n": 0,
+            "nll": null,
+            "zero_support": 0
+          }
+        }
+      },
+      "test_by_actor_cutoff": {
+        "robot/interruption": {
+          "n_rows": 11,
+          "independent_groups": 11,
+          "gold_classes": {
+            "V": {
+              "VALID": 11
+            },
+            "F": {},
+            "A": {},
+            "B": {},
+            "C": {},
+            "Q": {}
+          },
+          "predicted_classes": {
+            "V": {
+              "VALID": 11
+            },
+            "F": {},
+            "A": {},
+            "B": {},
+            "C": {},
+            "Q": {}
+          },
+          "t3": {
+            "V": {
+              "accuracy": 1,
+              "macro_f1": 1.0,
+              "balanced_accuracy": 1.0,
+              "n": 11,
+              "nll": 0.0,
+              "zero_support": 0
+            },
+            "F": {
+              "accuracy": null,
+              "macro_f1": null,
+              "balanced_accuracy": null,
+              "n": 0,
+              "nll": null,
+              "zero_support": 0
+            },
+            "A": {
+              "accuracy": null,
+              "macro_f1": null,
+              "balanced_accuracy": null,
+              "n": 0,
+              "nll": null,
+              "zero_support": 0
+            },
+            "B": {
+              "accuracy": null,
+              "macro_f1": null,
+              "balanced_accuracy": null,
+              "n": 0,
+              "nll": null,
+              "zero_support": 0
+            },
+            "C": {
+              "accuracy": null,
+              "macro_f1": null,
+              "balanced_accuracy": null,
+              "n": 0,
+              "nll": null,
+              "zero_support": 0
+            },
+            "Q": {
+              "accuracy": null,
+              "macro_f1": null,
+              "balanced_accuracy": null,
+              "n": 0,
+              "nll": null,
+              "zero_support": 0
+            }
+          }
+        },
+        "robot/pre_interruption": {
+          "n_rows": 11,
+          "independent_groups": 11,
+          "gold_classes": {
+            "V": {
+              "VALID": 11
+            },
+            "F": {},
+            "A": {},
+            "B": {},
+            "C": {
+              "ACTIVE": 11
+            },
+            "Q": {}
+          },
+          "predicted_classes": {
+            "V": {
+              "VALID": 11
+            },
+            "F": {},
+            "A": {},
+            "B": {},
+            "C": {
+              "ACTIVE": 11
+            },
+            "Q": {}
+          },
+          "t3": {
+            "V": {
+              "accuracy": 1,
+              "macro_f1": 1.0,
+              "balanced_accuracy": 1.0,
+              "n": 11,
+              "nll": 0.0,
+              "zero_support": 0
+            },
+            "F": {
+              "accuracy": null,
+              "macro_f1": null,
+              "balanced_accuracy": null,
+              "n": 0,
+              "nll": null,
+              "zero_support": 0
+            },
+            "A": {
+              "accuracy": null,
+              "macro_f1": null,
+              "balanced_accuracy": null,
+              "n": 0,
+              "nll": null,
+              "zero_support": 0
+            },
+            "B": {
+              "accuracy": null,
+              "macro_f1": null,
+              "balanced_accuracy": null,
+              "n": 0,
+              "nll": null,
+              "zero_support": 0
+            },
+            "C": {
+              "accuracy": 1,
+              "macro_f1": 1.0,
+              "balanced_accuracy": 1.0,
+              "n": 11,
+              "nll": 0.0,
+              "zero_support": 0
+            },
+            "Q": {
+              "accuracy": null,
+              "macro_f1": null,
+              "balanced_accuracy": null,
+              "n": 0,
+              "nll": null,
+              "zero_support": 0
+            }
+          }
+        },
+        "robot/recovery": {
+          "n_rows": 11,
+          "independent_groups": 11,
+          "gold_classes": {
+            "V": {
+              "VALID": 11
+            },
+            "F": {
+              "READY": 11
+            },
+            "A": {
+              "ACCESSED": 11
+            },
+            "B": {
+              "BELIEVES_VALID": 11
+            },
+            "C": {
+              "ACTIVE": 11
+            },
+            "Q": {}
+          },
+          "predicted_classes": {
+            "V": {
+              "VALID": 11
+            },
+            "F": {
+              "READY": 11
+            },
+            "A": {
+              "UNCERTAIN": 11
+            },
+            "B": {
+              "BELIEVES_VALID": 11
+            },
+            "C": {
+              "ACTIVE": 11
+            },
+            "Q": {}
+          },
+          "t3": {
+            "V": {
+              "accuracy": 1,
+              "macro_f1": 1.0,
+              "balanced_accuracy": 1.0,
+              "n": 11,
+              "nll": 0.0,
+              "zero_support": 0
+            },
+            "F": {
+              "accuracy": 1,
+              "macro_f1": 1.0,
+              "balanced_accuracy": 1.0,
+              "n": 11,
+              "nll": 0.0019357449934437666,
+              "zero_support": 0
+            },
+            "A": {
+              "accuracy": 0,
+              "macro_f1": 0.0,
+              "balanced_accuracy": 0.0,
+              "n": 11,
+              "nll": 27.631021115928547,
+              "zero_support": 11
+            },
+            "B": {
+              "accuracy": 1,
+              "macro_f1": 1.0,
+              "balanced_accuracy": 1.0,
+              "n": 11,
+              "nll": 5.2996705580870313e-05,
+              "zero_support": 0
+            },
+            "C": {
+              "accuracy": 1,
+              "macro_f1": 1.0,
+              "balanced_accuracy": 1.0,
+              "n": 11,
+              "nll": 0.0,
+              "zero_support": 0
+            },
+            "Q": {
+              "accuracy": null,
+              "macro_f1": null,
+              "balanced_accuracy": null,
+              "n": 0,
+              "nll": null,
+              "zero_support": 0
+            }
+          }
+        }
+      }
+    }
+  },
+  "T1_metrics": null,
+  "T2_metrics": null,
+  "P1_training": false,
+  "scope": "Frozen-model masked state agreement under a conservative lossy bridge; not recovery prediction or human performance"
+}

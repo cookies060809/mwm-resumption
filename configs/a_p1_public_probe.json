@@ -1,0 +1,30 @@
+{
+  "protocol": "a-p1-public-structural-probe/v1",
+  "source_main": "87d5eb4",
+  "model": "results/p0/c_visible_context/model.pt",
+  "expected_model_sha256": "705372a44fe2bfa234be09652f3c9cb5b6c1265cfb2e37c4d54ab71a7b6c573a",
+  "data": "data/p1/public_derived/processed/p1_combined.jsonl",
+  "expected_data_sha256": "cb4b5a84d463a39f1b1ad81a2c52ca533e39cb3e6d7c0b9de368d682110c9e0c",
+  "aux_view": "data/p1/public_derived/processed/aux_view",
+  "schema": "data/p1/public_derived/docs/schema.json",
+  "evaluation_split": "test",
+  "model_selection": "frozen C visible_context seed0; no P1 fitting, selection or calibration",
+  "primary_metrics": "V/C per-factor accuracy, balanced accuracy, macro-F1, NLL and zero support; source/actor/cutoff separated",
+  "secondary_metrics": "F/A/B/Q only under supplied state_loss_mask; rule/retrospective annotation agreement, not mental truth",
+  "state_mask": "state_loss_mask[f] == 1; UNKNOWN never supervised; no label restoration from state_withdrawn",
+  "probe_opportunities": 1,
+  "t1_evaluation": false,
+  "t2_evaluation": false,
+  "disabled_reason": "P1 turn/frame/episode-tail windows are not calibrated P0 decision opportunities; no verified pending-step/graph mapping",
+  "adapter_policy": {
+    "steps": "1..8 only; never truncate or create dummy steps",
+    "dependencies": "None; never invent edges",
+    "background_facts": "world only; source access may refer to user rather than modeled assistant",
+    "external_event_access": "UNCERTAIN; no receipt/comprehension inferred from observer annotation",
+    "comprehension": "unknown for external events; no text parser or UNDERSTOOD fabrication",
+    "completion": "reject unsupported own-goal completion; never reinterpret as completion by another actor",
+    "progress": "own phase entry -> step_started; no earlier steps marked complete",
+    "text": "not encoded by this model; no keyword/label heuristic"
+  },
+  "output": "results/p1/a_context_public_probe"
+}
