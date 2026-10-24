@@ -10,6 +10,7 @@ OUT = ROOT / "docs" / "CHECKSUMS.sha256"
 
 GROUPS = {
     "delivery": ["processed/*.jsonl", "docs/*.json"],
+    "eval view": ["eval/*.jsonl", "eval/*.md"],
     "audit docs": ["docs/*.md", "docs/*.txt", "README.md"],
     "code": ["scripts/*.py", "run_pipeline.sh", "scripts/*.json"],
     # Only the provenance manifests are versioned (see .gitignore); hashing the

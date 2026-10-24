@@ -68,7 +68,7 @@
 | 代码 | `https://github.com/TimSchoonbeek/IndustReal` — GitHub API `license.spdx_id = Apache-2.0`，仓库仅 20 个文件 / 138 KB（AR/ASD/PSR 代码 + readme），**不含任何 CSV 标注** |
 | 数据 | `https://data.4tu.nl/datasets/b008dd74-020d-4ea4-a8ba-7bb60769d224`（readme 原文指向）。目录结构显示标注为 per-recording `PSR_labels.csv` / `PSR_labels_with_errors.csv` / `PSR_labels_raw.csv`，与 rgb/stereo/depth 流同包 |
 | 跳过原因 | ① `data.4tu.nl` 在本机**连接失败**（http=000，多次重试），无法核验数据集许可证、无法列出可单独下载的 CSV、无法测量标注体积；② 即使可达，其分发形式是含视频的整包，需要仅标注子集的确认可再分发许可证 |
-| 为何值得后续跟进 | 它是四源中唯一能同时提供 **omission/error 步骤级标注** 与 **真人操作** 的源：`PSR_labels_raw.csv` 的组件状态 `-1` 语义可派生真实的「出错/漏做后是否补做」，即当前只有 23 条的 `observed_not_resume` 类别 |
+| 为何值得后续跟进 | 它是四源中唯一能同时提供 **omission/error 步骤级标注** 与 **真人操作** 的源：`PSR_labels_raw.csv` 的组件状态 `-1` 语义可派生真实的「出错/漏做后是否补做」，即当前只有 126 条的 `observed_not_resume` 类别 |
 | 同名混淆提醒 | NVIDIA 的 **IndustReal**（sim-to-real 机器人装配算法与工具）与此无关，检索时须区分 |
 
 ### 2.4 InterruptBench — used_with_caveat（许可证）

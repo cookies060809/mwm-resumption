@@ -23,7 +23,7 @@ EVENT_TYPES = ["start_goal", "interruption", "resume", "progress", "completion",
 TIERS = {
     "V": ["VALID", "CANCELLED", "FULFILLED", "UNKNOWN"],
     "F": ["READY", "BLOCKED", "UNKNOWN"],
-    "A": ["ACCESSED", "NOT_ACCESSED", "UNCERTAIN"],
+    "A": ["ACCESSED", "NOT_ACCESSED", "UNCERTAIN", "UNKNOWN"],
     "B": ["BELIEVES_VALID", "BELIEVES_INVALID", "UNRESOLVED", "UNKNOWN"],
     "C": ["ACTIVE", "SUSPENDED", "ABANDONED", "COMPLETED", "UNKNOWN"],
     "Q": [],
@@ -91,6 +91,12 @@ def main():
             f"| {s} | {censor[s]['observed_resume']} | {censor[s]['censored']} | "
             f"{censor[s]['observed_not_resume']} | {resume_step_null[s]} ({pct(resume_step_null[s], c)}) |"
         )
+    totals = Counter(r["p1_censoring_status"] for r in rows)
+    n_step_null = sum(1 for r in rows if r.get("p1_resume_step") is None)
+    L.append(
+        f"| **total** | **{totals['observed_resume']}** | **{totals['censored']}** | "
+        f"**{totals['observed_not_resume']}** | {n_step_null} ({pct(n_step_null, n)}) |"
+    )
     L.append("")
     L.append("Observed recoveries come from two sources with different evidence strength: IHBench "
              "derives them from the released episode text (rule R8 - re-delivery of the withheld "
@@ -138,14 +144,38 @@ def main():
              f"{prov.get('llm_inferred', 0)} — no label in this delivery depends on model inference.")
     L.append("")
 
+    L.append("## Withdrawn rule-mapped claims (state_withdrawn)")
+    L.append("")
+    withdrawn = Counter()
+    withdrawn_rules = defaultdict(Counter)
+    withdrawn_reason = {}
+    for r in rows:
+        for factor, detail in (r.get("state_withdrawn") or {}).items():
+            withdrawn[factor] += 1
+            withdrawn_rules[factor][detail.get("rule")] += 1
+            withdrawn_reason.setdefault(factor, detail.get("reason", ""))
+    L.append("| factor | withdrawn rows | rules | example reason |")
+    L.append("|---|---:|---|---|")
+    for factor, count in withdrawn.most_common():
+        rules = ", ".join(f"{rule} x{amount}" for rule, amount in withdrawn_rules[factor].most_common())
+        L.append(f"| {factor} | {count} | {rules} | {withdrawn_reason[factor]} |")
+    L.append("")
+    rows_with_withdrawal = sum(1 for r in rows if r.get("state_withdrawn"))
+    L.append(f"{sum(withdrawn.values())} withdrawn claims across {rows_with_withdrawal} rows. The claimed value is kept in "
+             "`state_withdrawn.<factor>.claimed` for audit; the live `state_at_cutoff` field is `UNKNOWN`. "
+             "Never treat a withdrawn value as a gold label or relabel it back.")
+    L.append("")
+
     L.append("## Enum tiers not reached by these sources")
     L.append("")
     reason = {
         "V=UNKNOWN": "every source annotates enough to decide validity at the cutoff",
-        "A=UNCERTAIN": "unused fallback: access is either evidenced (barge-in truncation, "
-                       "injected message) or explicitly absent (pre-failure cutoff)",
-        "C=UNKNOWN": "unused fallback",
-        "event_type=completion (0)": "REBOOT now supplies completion events",
+        "F=BLOCKED": "REBOOT BLOCKED rule withdrawn (B7) in the 2026-10-23 revision",
+        "A=NOT_ACCESSED": "REBOOT NOT_ACCESSED rule withdrawn (B8) in the 2026-10-23 revision",
+        "A=UNCERTAIN": "unused fallback: access is either evidenced or explicitly absent",
+        "B=UNRESOLVED": "belief rules withdrawn (R6/B9) in the 2026-10-23 revision",
+        "B=BELIEVES_INVALID": "withdrawn with the rest of REBOOT's B values (B9)",
+        "C=ABANDONED": "InterruptBench commitment mapping withdrawn (T8); a cancellation is the user's act",
     }
     absent = []
     for fld, values in TIERS.items():
@@ -165,10 +195,10 @@ def main():
         absent.append(("event_type=resume", 0))
     qvals = {str(r["state_at_cutoff"]["Q"]) for r in rows} - {"UNKNOWN", "NOT_APPLICABLE"}
     reached = {
-        f: len({str(r["state_at_cutoff"][f]) for r in rows})
+        f: len({str(r["state_at_cutoff"][f]) for r in rows} & set(TIERS[f]))
         for f in ("V", "F", "A", "B", "C")
     }
-    total_tiers = {"V": 4, "F": 3, "A": 3, "B": 4, "C": 5}
+    total_tiers = {f: len(values) for f, values in TIERS.items()}
     L.append(
         "Reached by at least one sample: "
         + ", ".join(f"{f} {reached[f]}/{total_tiers[f]}" for f in ("V", "F", "A", "B", "C"))
@@ -184,12 +214,16 @@ def main():
     else:
         L.append("Every enum tier in the schema is instantiated by at least one sample.")
     L.append("")
-    L.append("Thin tiers worth flagging: `B=BELIEVES_INVALID` comes from a single REBOOT row whose "
-             "`failure_mode='freeze'` annotates the robot ceasing to act on a goal the same "
-             "annotation marks completable (rule B15) - treat it as a proof of the mapping, not as "
-             "a statistically usable class. "
-             f"`V=FULFILLED`/`C=COMPLETED`/`Q=NOT_APPLICABLE` ({nful} each) "
-             "come only from REBOOT episodes whose description asserts completion. "
+    thin = [
+        f"{fld}={v}"
+        for fld in ("V", "F", "A", "B", "C")
+        for v in TIERS[fld]
+        if sum(1 for r in rows if str(r["state_at_cutoff"][fld]) == v) == 1
+    ]
+    L.append("Thin tiers (n=1, prove the mapping only, not a usable class): "
+             + (", ".join(f"`{item}`" for item in thin) if thin else "none") + ".")
+    L.append(f"`V=FULFILLED`/`C=COMPLETED`/`Q=NOT_APPLICABLE` ({nful} each) come only from REBOOT "
+             "episodes whose description asserts completion. "
              f"`observed_not_resume` ({nr}) comes only from IHBench.")
     L.append("")
 
