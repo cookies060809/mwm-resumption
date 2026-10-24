@@ -2,13 +2,13 @@
 
 > **状态：初始索引，非全文精读结论。** 本表用于组织 B 的文献核查工作，不替代原文阅读。
 > 三份核查底稿已建立：[competitors.md](competitors.md)、[core_papers.md](core_papers.md)、[mwm_audit.md](mwm_audit.md)。
-> 当前阅读等级：#1/#4/#7/#8/#9/#16 与 #20–#23 为已读（全文文本，机器辅助，待 B 复核）；#18/#19 为此前人工已读；#24–#26 仅摘要；其余未读。逐篇证据见 [reading_notes.md](reading_notes.md)，成稿见 [related_work_draft.md](related_work_draft.md)。
+> 当前阅读等级：#1/#2/#4/#7/#8/#9/#16 与 #20–#26 为已读（全文文本，机器辅助，待 B 复核）；#18/#19 为此前人工已读；Ratwani 2008 / Brumby 2013（不在本表）为付费墙摘要级；其余未读。逐篇证据见 [reading_notes.md](reading_notes.md)，成稿见 [related_work_draft.md](related_work_draft.md)。
 > 原则：不能宣称“首次提出概率滤波/信念更新/目标暂停恢复”；创新只能落在本项目明确实现并可消融的差异上。
 
 | # | 研究 / 年份 | 原文 | 已有贡献 | 本项目不能再宣称 | 本项目需实现的差异 | 核查状态 |
 |---|---|---|---|---|---|---|
 | 1 | MWM / MENTIS，2026 | [arXiv](https://arxiv.org/abs/2607.27201) · [代码](https://github.com/mental-world/Mentis) | 物理—心智联合状态、第一人称观察、动作条件化转移 | “首次在世界模型加入目标/意图” | 跨时刻联合状态信念、认知访问控制、恢复点追踪 | 已读（全文文本，2026-10-24） |
-| 2 | Memory for Goals，2002 | [原文](https://www.interruptions.net/literature/Altmann-CogSci02.pdf) | 目标激活、干扰、联想线索与恢复 | “首次设计意图衰减/恢复” | 将认知线索作为状态更新约束/特征 | 待核查 |
+| 2 | Memory for Goals，2002 | [原文](https://www.interruptions.net/literature/Altmann-CogSci02.pdf) | 目标激活、干扰、联想线索与恢复 | “首次设计意图衰减/恢复” | 将认知线索作为状态更新约束/特征 | 已读（全文文本，2026-10-24） |
 | 3 | Timecourse of Recovery，2007 | [原文](https://link.springer.com/content/pdf/10.3758/BF03193094.pdf) | 中断后多次反应的恢复时间过程 | “首次研究恢复时间过程” | 恢复事件 + 恢复步骤的联合预测；多步轨迹为后续 | 待核查 |
 | 4 | Suspending and Resuming Tasks in BDI，2008 | [AAMAS](https://www.ifaamas.org/Proceedings/aamas08/proceedings/pdf/paper/AAMAS08_0056.pdf) | 目标暂停、重新考虑条件、计划恢复 | “首次设计 active/suspended/cancelled” | 从外部观察推断隐藏状态，而非代理管理自身目标 | 已读（全文文本，2026-10-24） |
 | 5 | Monk et al.，2008 | [原文](https://interruptions.net/literature/Monk-JEPA08.pdf) | 中断时长、负荷与恢复成本 | 把时长/负荷当新变量 | 作为强对照与分层因素 | 待核查 |
@@ -31,9 +31,9 @@
 | 21 | DuplexLedger，2026 | [arXiv](https://arxiv.org/abs/2610.27581) | 全双工语音 agent 的事件级持久记忆；WRITE/UPDATE/IGNORE/RETAIN；1,094 会话 | “首次事件级记忆基准”“首次提出 retain/ignore” | 对象是人物而非 agent；加承诺/进度/恢复步骤 | 已读（全文文本，2026-10-24） |
 | 22 | MMEA / Mental World Model，2026 | [arXiv](https://arxiv.org/abs/2610.23722) | 显式“Mental World Model”与分层心理演化架构；DynToM/RecToM | “首次提出 mental world model” | 外部观察者 + 中断恢复步骤预测 | 已读（全文文本，2026-10-24） |
 | 23 | SymbolicToM，2023 | [ACL](https://doi.org/10.18653/v1/2023.acl-long.780) | 多角色嵌套信念图；解码时插件；无需训练 | “首次做多角色信念跟踪” | 事件流上的六因子滤波，含 C/Q/T2 | 已读（全文文本，2026-10-24） |
-| 24 | NAQD Env，2026 | [arXiv](https://arxiv.org/abs/2609.38460) | 语言 agent 的选择性撤回：暂停受影响动作、保留其余、修复后恢复 | 把“暂停/恢复”本身当新贡献 | 从外部证据推断人物承诺状态 | 仅摘要 |
-| 25 | ProAgentBench，2026 | [arXiv](https://arxiv.org/abs/2602.04482) | 连续工作流上的主动辅助真人数据 | 把主动辅助时机当恢复预测 | 中断后是否恢复/恢复哪一步 | 仅摘要 |
-| 26 | BeliefTrack / CBM，2026 | [arXiv](https://arxiv.org/abs/2605.30219) | 模型何时更新/保留信念的基准 | 把“信念更新”单项当创新 | 承诺—进度—恢复位置联合推断 | 仅摘要 |
+| 24 | NAQD Env，2026 | [arXiv](https://arxiv.org/abs/2609.38460) | 语言 agent 的选择性撤回：暂停受影响动作、保留其余、修复后恢复 | 把“暂停/恢复”本身当新贡献 | 从外部证据推断人物承诺状态 | 已读（全文文本，2026-10-24） |
+| 25 | ProAgentBench，2026 | [arXiv](https://arxiv.org/abs/2602.04482) | 连续工作流上的主动辅助真人数据 | 把主动辅助时机当恢复预测 | 中断后是否恢复/恢复哪一步 | 已读（全文文本，2026-10-24） |
+| 26 | BeliefTrack / CBM，2026 | [arXiv](https://arxiv.org/abs/2605.30219) | 模型何时更新/保留信念的基准 | 把“信念更新”单项当创新 | 承诺—进度—恢复位置联合推断 | 已读（全文文本，2026-10-24） |
 
 ## HRI 失败恢复数据（2026）：能否替代 P1
 

@@ -32,7 +32,7 @@
 | [literature/competitors.md](literature/competitors.md) | 竞争工作逐条核查（阅读等级如实标注） | B | 底稿 |
 | [literature/core_papers.md](literature/core_papers.md) | 核心理论论文与设计决定映射 | B | 底稿 |
 | [literature/mwm_audit.md](literature/mwm_audit.md) | MWM/MENTIS 公开实现与接入边界专项 | B | 底稿（论文全文文本已读）|
-| [literature/reading_notes.md](literature/reading_notes.md) | 9 篇全文文本通读笔记（逐篇方法/实验/局限） | B | v1.0 |
+| [literature/reading_notes.md](literature/reading_notes.md) | 13 篇全文文本通读笔记（逐篇方法/实验/局限） | B | v1.0 |
 | [literature/related_work_draft.md](literature/related_work_draft.md) | 可直接并入技术方案的 Related Work 草稿 | B | 工作稿 |
 | [literature/references.bib](literature/references.bib) | 已核实元数据的 BibTeX（正文 9 篇 + 背景 3 篇） | B | v1.0 |
 

@@ -67,7 +67,7 @@
 - [x] 建立 `competitors.md`、`core_papers.md`、`mwm_audit.md` 三份核查底稿（阅读等级如实标注；全文精读仍待 B 本人）
 - [x] 仲裁 14 条 `contact_cancellation` B 臂（`UNKNOWN`→`BELIEVES_VALID`，P0 v0.4）并写明 P02 时序优先规则
 - [x] T3 逐因子证据映射（`docs/data/t3_evidence_mapping.md`，待 C 确认指标实现）
-- [x] 文献全文文本通读 9 篇 + Related Work 草稿（`docs/literature/reading_notes.md`、`related_work_draft.md`；待 A 并入技术方案、B 抽查数字）
+- [x] 文献全文文本通读 13 篇 + Related Work 草稿（`docs/literature/reading_notes.md`、`related_work_draft.md`；待 A 并入技术方案、B 抽查数字）
 - [ ] A/C 盲审 8 条并仲裁，`annotation.status` 升至 `adjudicated`
 
 ### C

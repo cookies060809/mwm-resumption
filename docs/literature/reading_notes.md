@@ -18,9 +18,12 @@
 | R7 | Dynamic Goal Recognition Using Windowed Action Sequences | AAAI-17 Workshop | 全文（窗口策略/实验/结论） |
 | R8 | Online Bayesian Goal Inference (SIPS) | NeurIPS 2020 | 全文（模型/在线推断/实验/局限） |
 | R9 | SymbolicToM belief tracker | ACL 2023 | 全文（方法/实验/局限） |
-| R10 | Memory for Goals | Cognitive Science 2002 | 仅二手引用（由 R4/R8/R9 及检索片段转引，未读原文） |
-| R11 | Spatial memory guides task resumption | Visual Cognition 2008 | 仅元数据（题名/DOI 已核实） |
-| R12 | Speed–accuracy trade-offs in task resumption | JEP Applied 2013 | 仅元数据 |
+| R10 | Memory for Goals | Cognitive Science 2002 | 全文（模型三约束/仿真/讨论） |
+| R11 | Spatial memory guides task resumption | Visual Cognition 2008 | 仅摘要（付费墙，全文不可获取） |
+| R12 | Speed–accuracy trade-offs in task resumption | JEP Applied 2013 | 仅摘要（付费墙，全文不可获取） |
+| R13 | NAQD Env | arXiv 2609.38460 | 全文（环境/评分/结果/失败分类/局限） |
+| R14 | ProAgentBench | arXiv 2602.04482 | 全文（数据/任务/指标/结论） |
+| R15 | BeliefTrack (CBM) | arXiv 2605.30219 | 全文（方法/指标/主结果/结论） |
 
 ## 1. 逐篇笔记
 
@@ -119,11 +122,56 @@
 - 与本项目关系：`B` 维“人物相信什么”的强参照；但它是**故事问答**，不是事件流上的状态滤波，也没有 `C/Q`。
 - 不能宣称：首次做多角色信念跟踪、首次把符号结构用于 ToM。
 
-### R10–R12（仅二手/元数据，未读原文）
+### R10 Memory for Goals（Cognitive Science 2002）
 
-- R10 Memory for Goals（Altmann & Trafton, 2002）：目标激活—衰减—线索恢复的认知模型。本轮只从 R4/R8/R9 与检索片段转引，**未读原文**；技术方案若要写公式，必须先读原文。
-- R11 Spatial memory guides task resumption（2008, Visual Cognition）：题名与 DOI 已核实，摘要未读；只能作“存在该方向”的引用。
-- R12 Recovering from an interruption: speed–accuracy trade-offs（2013, JEP Applied）：题名与 DOI 已核实，摘要未读；只能作背景引用。
+- 作者：Erik M. Altmann（Michigan State）、J. Gregory Trafton（NRL）。
+- 主张：目标不需要“目标栈”这种特殊结构；用一般记忆的**激活 + 联想启动**就能解释目标导向认知。
+- 三个预测约束：① **干扰水平**（旧目标残留记忆造成的干扰）；② **强化约束**（编码新目标所需时间）；③ **启动约束**（线索在取回待办目标中的作用）。
+- 方法：把三约束写成代数形式，并用**汉诺塔**（大量暂停/恢复）的延迟与错误数据做仿真。
+- 对本项目：`C`（承诺/暂停）与 `Q`（恢复位置）的认知动机；线索对恢复的作用可支撑“为什么事件证据能预测恢复”。公式细节见原文 Appendix A；本项目目前不实现该激活模型，技术方案不得写成“基于激活模型”除非真的实现。
+- 不能宣称：首次提出目标激活/线索恢复。
+
+### R11 Spatial memory guides task resumption（Visual Cognition 2008，仅摘要）
+
+- 作者：Raj M. Ratwani、J. Gregory Trafton。
+- 摘要级事实：实验 1 用注视模式显示人物在中断后能回到非常接近中断前的位置；实验 2 中**空间性**打断比非空间打断更损害恢复。结论：空间记忆是恢复的机制之一。
+- 全文不可获取（Semantic Scholar/OpenAlex 均标 closed；本机无订阅）。因此只能写“摘要级：空间线索影响恢复位置”，不能写具体效应量或实验细节。
+
+### R12 Speed–accuracy trade-offs in task resumption（JEP Applied 2013，仅摘要）
+
+- 作者：Duncan P. Brumby、Anna Louise Cox、Jonathan Back、Sandy J. J. Gould。
+- 摘要级事实：中断造成恢复延迟（resumption lag）并提高出错概率；两个实验用二次心算打断常规数据录入任务；当错误的**时间代价**高时，参与者更少出错但恢复更慢——恢复速度与准确性存在权衡。
+- 全文不可获取（closed）。只能作“存在速度—准确性权衡”的背景引用。
+
+### R13 NAQD Env（2026，arXiv）
+
+- 作者：Mohamed Abouzahra（CSU Monterey Bay）。
+- 任务：语言 agent 在证据变化、权限撤销或收到停止指令时，做**选择性撤回**：暂停受影响动作、保留不受影响的工作、修复后恢复。
+- 环境：场景 = (domain, premises, actions, events, policy)；11 个依赖族；agent 只做评估，不执行；参考策略是确定性模拟器，不是真实世界真值。
+- 指标：尝试违规 vs 被门控允许的违规、策略一致率、任务价值、撤回、恢复、事件报告；不使用 LLM judge，也不做加权总分。
+- 结果（论文自报）：三种开放权重模型在策略应用上有大量失败；失败分类含 persistence、hedging、misplaced withdrawal、delegation blindness 等。
+- 局限（作者自述）：合成模板可能被 shortcut；证据状态与授权标志由模拟器给定，测的是策略应用而非从原始文本验证来源；只实现一种保守策略。
+- 与本项目：与 `C` 的暂停/恢复语义接近，但对象是 agent 的策略执行，不是人物的承诺状态；可作为“agent 侧选择性撤回”的对照。
+- 不能宣称：首次提出暂停/恢复或选择性撤回。
+
+### R14 ProAgentBench（2026，arXiv）
+
+- 作者：Yuanbo Tang、Huaze Tang 等（清华等）。
+- 任务：在连续真实工作流上评估**主动辅助 agent**（何时介入、如何辅助）。
+- 数据：500+ 用户、28,000+ 事件、741 小时真实活动；对比真实数据与 LLM 合成数据训练。
+- 指标：Accuracy、Precision、Recall、F1；强调误报导致 alert fatigue、漏报导致工作流碎片化。
+- 结论（论文自报）：真实数据与长期记忆对主动辅助性能关键；层次化框架评估时机预测与内容生成。
+- 局限：关注“是否/何时主动介入”，不预测人物中断后是否恢复原任务；无六因子状态。
+- 与本项目：邻近的真实工作流数据与主动辅助任务，不是恢复预测；不能拿它替代 P1。
+
+### R15 BeliefTrack / Contextual Belief Management（2026，arXiv）
+
+- 作者：Haoming Xu、Weihong Xu 等（浙江大学等）。
+- 问题：长程交互中，模型何时更新信念、何时保留、何时忽略无关信息。
+- 方法：把问题定义为 Contextual Belief Management（CBM）；构建 BeliefTrack 闭环基准（Rule Discovery、Circuit Diagnosis）；有限信念空间 + 符号验证器；指标 FSR/FUR/FIR；用 verifier-guided RL 训练。
+- 结果（论文自报）：vanilla 模型在两类环境失败率约 97–99%；BT-Prompt 不能可靠修复；RL 将 FIR 降低约 63–83%（域内/域外，视模型而定）。
+- 局限：闭环符号任务；不是中断—恢复任务；没有承诺/恢复步骤标签。
+- 与本项目：T3 的“何时更新/保留信念”邻近工作；差异是我们做事件流上的六因子滤波与恢复步骤预测。
 
 ## 2. 交叉结论（可直接写进 Related Work）
 
@@ -135,7 +183,7 @@
 
 ## 3. 仍需 B 本人做的核对
 
-- 抽查 R1–R9 的关键数字（本文件已标来源节），确认没有转述误差。
-- 读 R10 原文，确认“激活—衰减”公式与线索机制，再决定是否在技术方案里写公式。
-- 给 R11/R12 补摘要或全文，否则只保留题名级引用。
+- 抽查 R1–R10、R13–R15 的关键数字（本文件已标来源节），确认没有转述误差。
+- R11/R12 为付费墙论文，本轮只到摘要级；若要在技术方案里写具体实验，需通过机构订阅取全文。
+- 若要在技术方案里写“激活—衰减”公式，直接引用 R10 Appendix A，并按原文符号核对。
 - 读完后把本文件与 [competitor_matrix.md](competitor_matrix.md) 的等级同步升级。

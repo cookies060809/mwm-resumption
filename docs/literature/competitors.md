@@ -15,7 +15,7 @@
 | 仅元数据 | 只核实了标题、作者、年份、链接存在 |
 | 未读 | 只有索引，不得引用具体结论 |
 
-**当前事实（2026-10-24）：** 已有 9 篇达到“已读（全文文本，机器辅助，待 B 复核）”：MWM/MENTIS、BDI 2008、2017 滑窗、SIPS、GODR、EchoChain、DuplexLedger、MMEA、SymbolicToM；RFM-HRI 与 REPAIR-Bench 为此前人工已读；其余仍是“未读”。任何“首次”“优于”类表述都不得基于本文件作出。逐篇细节见 [reading_notes.md](reading_notes.md)，成稿见 [related_work_draft.md](related_work_draft.md)。
+**当前事实（2026-10-24）：** 已有 13 篇达到“已读（全文文本，机器辅助，待 B 复核）”：MWM/MENTIS、BDI 2008、2017 滑窗、SIPS、GODR、EchoChain、DuplexLedger、MMEA、SymbolicToM、Memory for Goals、NAQD Env、ProAgentBench、BeliefTrack；RFM-HRI 与 REPAIR-Bench 为此前人工已读；Ratwani 2008 与 Brumby 2013 为付费墙，仅摘要级；其余仍是“未读”。任何“首次”“优于”类表述都不得基于本文件作出。逐篇细节见 [reading_notes.md](reading_notes.md)，成稿见 [related_work_draft.md](related_work_draft.md)。
 
 ## 1. 逐条记录
 
@@ -33,11 +33,11 @@
 
 ### C2 Memory for Goals，2002
 
-- 原文：Altmann & Trafton, CogSci 2002（链接见矩阵）。
-- 阅读范围：**未读**。
-- 索引级主张：目标激活、干扰、线索与恢复。
-- 与本项目关系：认知机制背景；不能宣称“首次设计意图衰减/恢复”。
-- 待核实：激活函数形式、恢复时延预测、实验任务。
+- 原文：Altmann & Trafton, Cognitive Science 26(1):39–83。
+- 阅读范围：**已读（全文文本，2026-10-24；模型/仿真/讨论节）**。
+- 主张：不需要“目标栈”结构；用一般记忆的激活 + 联想启动解释目标导向认知。三约束：旧目标残留的干扰水平、编码新目标的强化时间、线索对取回待办目标的启动作用。
+- 方法：三约束写成代数形式，用汉诺塔（大量暂停/恢复）的延迟与错误数据仿真；Appendix A 给出代数版本。
+- 与本项目关系：`C`/`Q` 的认知机制背景；不能宣称“首次设计意图衰减/恢复”。若要写公式，按 Appendix A 核对。
 
 ### C3 Timecourse of Recovery，2007
 
@@ -226,20 +226,27 @@
 - 局限：假设故事按时间顺序；抽取依赖外部模型。
 - 与本项目关系：`B` 维强参照，但为故事问答，无 `C/Q/恢复步骤`。
 
-#### C24 NAQD Env，2026（仅摘要）
+#### C24 NAQD Env，2026
 
-- 原文：arXiv 2609.38460；选择性撤回（suspend affected actions, preserve unaffected work, resume after repair）基准。
-- 阅读范围：**仅摘要**。
-- 与本项目关系：与 `C` 的暂停/恢复语义接近；需读全文后再引用细节。
+- 原文：arXiv 2609.38460；Mohamed Abouzahra。
+- 阅读范围：**已读（全文文本，2026-10-24）**。
+- 任务：语言 agent 的选择性撤回——暂停受影响动作、保留不受影响的工作、修复后恢复；11 个依赖族；合成环境 + 确定性参考策略；指标含尝试违规、策略一致、任务价值、撤回、恢复、事件报告。
+- 失败分类：persistence / hedging / misplaced withdrawal / delegation blindness 等。
+- 局限（作者自述）：合成模板可能被 shortcut；证据与授权由模拟器给定；只实现一种保守策略。
+- 与本项目关系：与 `C` 的暂停/恢复语义接近，但对象是 agent 策略执行，不是人物承诺。
 
-#### C25 ProAgentBench，2026（仅摘要）
+#### C25 ProAgentBench，2026
 
-- 原文：arXiv 2602.04482；连续工作流上的主动辅助真人数据。
-- 阅读范围：**仅摘要**。
-- 与本项目关系：邻近数据/任务，但不是中断后恢复预测。
+- 原文：arXiv 2602.04482；Yuanbo Tang、Huaze Tang 等。
+- 阅读范围：**已读（全文文本，2026-10-24）**。
+- 数据：500+ 用户、28,000+ 事件、741 小时真实活动；对比真实数据与 LLM 合成数据训练。
+- 指标：Accuracy / Precision / Recall / F1；关注误报导致的 alert fatigue 与漏报导致的工作流碎片化。
+- 与本项目关系：邻近的真实工作流与主动辅助任务，但不是中断后恢复预测。
 
-#### C26 BeliefTrack / Contextual Belief Management，2026（仅摘要）
+#### C26 BeliefTrack / Contextual Belief Management，2026
 
-- 原文：arXiv 2605.30219；研究模型何时更新/保留信念，含 BeliefTrack 基准。
-- 阅读范围：**仅摘要**。
-- 与本项目关系：T3 邻近；需读全文后再比较。
+- 原文：arXiv 2605.30219；Haoming Xu、Weihong Xu 等。
+- 阅读范围：**已读（全文文本，2026-10-24）**。
+- 任务：长程交互中何时更新/保留/忽略信息；BeliefTrack 闭环基准（Rule Discovery、Circuit Diagnosis）；指标 FSR/FUR/FIR；verifier-guided RL。
+- 结果（论文自报）：vanilla 失败率约 97–99%；BT-Prompt 不能可靠修复；RL 将 FIR 降低约 63–83%（域内/域外，视模型而定）。
+- 与本项目关系：T3 邻近；差异是事件流六因子滤波 + 承诺/进度 + 恢复步骤。
