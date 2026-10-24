@@ -116,7 +116,7 @@ def csv_template(reviewer: str) -> str:
         rows.append([f"B{index:02d}", reviewer, *[""] * 6, "", "", "", ""])
     path = OUT / f"blind_review_v0.4_returns_{reviewer}.csv"
     with path.open("w", encoding="utf-8", newline="") as handle:
-        csv.writer(handle).writerows(rows)
+        csv.writer(handle, lineterminator=chr(10)).writerows(rows)
     return path.name
 
 
