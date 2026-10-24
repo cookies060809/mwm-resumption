@@ -1,37 +1,37 @@
 {
-  "version": "ready-v1.0",
+  "version": "ready-v1.1",
   "purpose": "P0 state supervision and synthetic dialogue response distillation",
   "human_P1_records": 0,
   "sources": {
     "baseline_text.json": "58e24796bd77bfe26a7f1387169d37446c939df5f59b61d8c35eef3e7542cea8",
     "conversations_text.json": "2c5486744c1ceac8c442655e50d432fc71d2b6ffeb3f59d714dfbe89c7f3789a",
-    "p0.json": "93ca37e93442495039950c0f8c4c618fee4b8b178cfc52c3269b33cb9f0f7739",
+    "p0.json": "80bdc8edef1040e8c12df56e314a31ec99ad8accb4aaa0dee50c59d92972c3d8",
     "upstream_manifest.json": "b7e91c5de43631f1c002af1417e40959ae6d279cff5fa421b8396571f6d077ec"
   },
   "files": {
     "train.jsonl": {
       "rows": 438,
-      "sha256": "c5743da7242827d336c4a363f95304ef23ddaca2a44ebde65caed68026f9dda9"
+      "sha256": "666dce02290e413e30be18702e69bc6bd8ab219d2c80d7b95d6841c2a2b90ae4"
     },
     "train_sft.jsonl": {
       "rows": 438,
-      "sha256": "231e7335a1799bd78a0e733b010bb4b0e82a303fb98b9f92740a5d69a0298ef8"
+      "sha256": "25bd57b4c39e6195d2bc60201d969974647a269b027bad4d4cc8e7d77d0c540b"
     },
     "dev.jsonl": {
       "rows": 123,
-      "sha256": "61a245d8b81e06c211760527b478451101db20695061c45a2baecfa2d5bec705"
+      "sha256": "fae2ecacad6765fbcfd98d646f4c74b4fb6581976539318d55e6cd98eecf77e5"
     },
     "dev_sft.jsonl": {
       "rows": 123,
-      "sha256": "cbf640978fcb16bfc6f2f3381e0c96682b9cd2039415137a0bf077d9bb09adfe"
+      "sha256": "62dce6dab511c78effc5692c525248455969f228a696f85eafb3384d31cb2582"
     },
     "test.jsonl": {
       "rows": 121,
-      "sha256": "b18d9ca70768a650906e13d7d2e13d76e4e5487cc13533b38b251afe1376c12a"
+      "sha256": "4f29d82ac62e074fc59461c520dada8f84ad4bc97da9c9d25aee6a76ad4b6a2a"
     },
     "test_sft.jsonl": {
       "rows": 121,
-      "sha256": "459485f19b37aff18adf226a10dcb6bb6cd67b8f4b7276506ad18b4fbd0927bf"
+      "sha256": "9ea9c5b996587534b3bafe6752d902e89e90f2230e9d98e88900957f6764dd6d"
     }
   },
   "groups": {

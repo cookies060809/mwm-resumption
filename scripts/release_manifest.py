@@ -20,7 +20,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "data" / "RELEASE.json"
 
-P0_DIR = ROOT / "data" / "p0" / "v0.3"
+P0_DIR = ROOT / "data" / "p0" / "v0.4"
+P0_FROZEN_DIR = ROOT / "data" / "p0" / "v0.3"
 READY_DIR = ROOT / "data" / "training_ready" / "v1"
 P1_DIR = ROOT / "data" / "p1" / "public_derived"
 
@@ -51,8 +52,8 @@ def rel(path: Path) -> str:
     return path.relative_to(ROOT).as_posix()
 
 
-def p0_block() -> dict:
-    records = load_json(P0_DIR / "p0_samples.json")
+def p0_block(directory: Path = P0_DIR, release_version: str = "p0-release/v0.4.0") -> dict:
+    records = load_json(directory / "p0_samples.json")
     require(len(records) == 254, f"P0 record count {len(records)} != 254")
     ids = [record["sample_id"] for record in records]
     require(len(ids) == len(set(ids)), "P0 has duplicate sample_id")
@@ -75,8 +76,8 @@ def p0_block() -> dict:
     splits = Counter(record["split"] for record in records)
     require(dict(splits) == {"train": 150, "dev": 52, "test": 52}, f"P0 splits drift: {dict(splits)}")
 
-    inputs = load_jsonl(P0_DIR / "eval" / "inputs.jsonl")
-    labels = load_jsonl(P0_DIR / "eval" / "labels.jsonl")
+    inputs = load_jsonl(directory / "eval" / "inputs.jsonl")
+    labels = load_jsonl(directory / "eval" / "labels.jsonl")
     require(len(inputs) == len(labels) == 254, "P0 eval export is not 254/254")
     require({row["sample_id"] for row in inputs} == set(ids) == {row["sample_id"] for row in labels}, "P0 eval id drift")
     require(all(label["dataset_layer"] == "P0" for label in labels), "P0 eval layer drift")
@@ -96,8 +97,8 @@ def p0_block() -> dict:
         "eval/labels.jsonl",
     ]
     return {
-        "path": rel(P0_DIR),
-        "release_version": "p0-release/v0.3.0",
+        "path": rel(directory),
+        "release_version": release_version,
         "record_schema": "p0-record/v0.2.0",
         "dataset_layer": "P0",
         "records": len(records),
@@ -107,14 +108,14 @@ def p0_block() -> dict:
         "calibration_records": 0,
         "annotation": {"status": "reviewed", "adjudicated": False},
         "supervised_factors": factors,
-        "eval_view": {"path": rel(P0_DIR / "eval"), "records": len(inputs), "protocol": "c-evaluation-draft-1"},
-        "files": {name: {"sha256": sha256(P0_DIR / name)} for name in files},
+        "eval_view": {"path": rel(directory / "eval"), "records": len(inputs), "protocol": "c-evaluation-draft-1"},
+        "files": {name: {"sha256": sha256(directory / name)} for name in files},
     }
 
 
 def ready_block(p0: dict) -> dict:
     manifest = load_json(READY_DIR / "manifest.json")
-    require(manifest["version"] == "ready-v1.0", "ready-v1 version drift")
+    require(manifest["version"] == "ready-v1.1", "ready-v1 version drift")
     require(manifest["human_P1_records"] == 0, "ready-v1 claims human P1 records")
     require(manifest["sources"]["p0.json"] == p0["files"]["p0_samples.json"]["sha256"], "ready-v1 P0 source differs from P0 release")
 
@@ -274,6 +275,7 @@ def p1_block() -> dict:
 
 def build() -> dict:
     p0 = p0_block()
+    p0_frozen = p0_block(P0_FROZEN_DIR, "p0-release/v0.3.0")
     ready = ready_block(p0)
     p1 = p1_block()
 
@@ -284,9 +286,9 @@ def build() -> dict:
     return {
         "manifest_version": "data-release/v1",
         "generated_by": "scripts/release_manifest.py",
-        "artifacts": {"p0_v03": p0, "ready_v1": ready, "p1_public_derived": p1},
+        "artifacts": {"p0_v04": p0, "p0_v03_frozen": p0_frozen, "ready_v1": ready, "p1_public_derived": p1},
         "routing": {
-            "six_factor_supervision": "p0_v03 (SFT bundle: ready_v1)",
+            "six_factor_supervision": "p0_v04 (SFT bundle: ready_v1)",
             "resume_evaluation": "p1_public_derived/eval (842 observed rows; report per source)",
             "interruption_response_sft": "ready_v1",
             "state_prediction_cutoffs": "p1_public_derived native rows with resume_loss_mask=0",
@@ -301,8 +303,14 @@ def build() -> dict:
             "claims": {
                 "human_p1_records": 0,
                 "double_blind_adjudication": False,
-                "six_factor_supervision_source": "P0 scripted data only",
+                "six_factor_supervision_source": "P0 v0.4 scripted data only",
                 "not_resume_ceiling": "126 rows, all IHBench text-agent",
+            },
+            "p0_history": {
+                "current": "p0-release/v0.4.0",
+                "frozen": "p0-release/v0.3.0",
+                "arbitration": "14 contact-cancellation B arms: UNKNOWN -> BELIEVES_VALID with e06 evidence",
+                "stale_results": "any result trained or evaluated on v0.3 or ready-v1.0 must be rerun",
             },
             "licenses": {
                 "P0": "project-generated; repository private",
@@ -331,7 +339,7 @@ def main() -> int:
     committed = json.loads(OUT.read_text(encoding="utf-8"))
     if committed != manifest:
         fail("data/RELEASE.json is stale; run python scripts/release_manifest.py --write")
-    print("OK: data/RELEASE.json matches all three artifacts and their invariants")
+    print("OK: data/RELEASE.json matches every artifact and its invariants")
     return 0
 
 

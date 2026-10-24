@@ -1,11 +1,11 @@
 # 数据卡
 
-> **状态：P0 v0.3 发布版（254 条）与 ready-v1.0 已入库；P1 以公开数据派生交付，真人记录为 0。**
+> **状态：P0 v0.4 仲裁版（254 条）与 ready-v1.1 已入库；P1 以公开数据派生交付，真人记录为 0。**
 > B 人工复核完成（`annotation.status=reviewed`），A/C 盲审与仲裁未做（不是 `adjudicated`）。
 > 2026-10-23 团队决定不再进行真人 P1 采集与标注；P1 交付为三源公开数据派生包
 > `data/p1/public_derived/`（2,863 条）与训练包 `data/training_ready/v1/`。
 > 竞赛提交阶段：P0 只能写作受控脚本诊断，P1 只能写作公开数据派生的辅助任务评测，二者都不得写成真实人类恢复预测。
-> Owner：B。版本：v0.4（2026-10-24；A/C 入口与机器可读清单见 [`data/README.md`](../../data/README.md) 与 [`data/RELEASE.json`](../../data/RELEASE.json)）。
+> Owner：B。版本：v0.5（2026-10-24；A/C 入口与机器可读清单见 [`data/README.md`](../../data/README.md) 与 [`data/RELEASE.json`](../../data/RELEASE.json)）。
 
 ## 1. 数据集概述
 
@@ -15,7 +15,7 @@
 | 任务 | 外部观察者预测中断后是否恢复原目标（T1）、恢复步骤（T2）、状态信念（T3） |
 | 语言 | 中文为主；P1 公开源为英文 |
 | 模态 | 结构化文本事件；P1 无音频/视频，只有文本与元数据 |
-| 版本 | P0 `p0-record/v0.2.0`（254 条发布版 `p0-release/v0.3.0`）+ 冻结种子 `v0.1.0`（16 条）；P1 `p1-public-derived/v1.5.1`（2,863 条） |
+| 版本 | P0 `p0-record/v0.2.0`（254 条发布版 `p0-release/v0.4.0`；v0.3 冻结保留）+ 冻结种子 `v0.1.0`（16 条）；P1 `p1-public-derived/v1.5.1`（2,863 条） |
 | 访问方式 | P0 / ready-v1 内部研发用；P1 公开派生包内部评测（InterruptBench 分片仅内部，不可再分发） |
 
 ## 2. P0：受控协议诊断集
@@ -26,13 +26,13 @@
 |---|---|
 | 基础故事家族 | **127 个**（v0.2 的 120 个 + v0.3 的 7 个不确定性家族） |
 | 每个家族变体 | A/B 各 1 条最小对照（127 + 127） |
-| 总量 | **254 条、1,908 条事件**（`data/p0/v0.3/p0_samples.json`） |
+| 总量 | **254 条、1,908 条事件**（`data/p0/v0.4/p0_samples.json`） |
 | 领域 | `work` 86 条、`collaboration_service` 88 条、`daily_life` 80 条（记录数） |
 | 分层因素 | 8 个受控机制：contact_cancellation 36、comprehension 34、long_term_commitment 32、resource_availability 32、resume_position 30、other_completion 30、nested_interruption 30、future_leak 30 |
 | 划分 | train 150 / dev 52 / test 52 / calibration 0；按家族分层，同一骨架与同族 A/B 均不跨集合 |
 | 标签来源 | 明确脚本策略 + B 人工复核 |
 | 标注状态 | `reviewed`；A/C 盲审（每机制 1 条）与仲裁待完成 |
-| 校验 | `python scripts/build_p0_release.py --check` 与 `python scripts/validate_data.py --file data/p0/v0.3/p0_samples.json`：254/254 通过 |
+| 校验 | `python scripts/build_p0_v04.py --check` 与 `python scripts/validate_data.py --file data/p0/v0.4/p0_samples.json`：254/254 通过 |
 
 ### P0 必含场景
 
@@ -61,7 +61,7 @@ P01 取消认知、P02 旧目标承诺、P03 恢复位置、P04 他人代完成�
 - 每条记录保存 `state_evidence_by_factor` 与平铺的 `state_evidence_event_ids`；P1 的未来观察证据不得进入预测输入。
 - P0 的 B 复核记录与 A/B 对照可追溯；P1 没有人工标注，规则映射值撤回后以 `state_loss_mask` 遮蔽损失。
 - P0 脚本标签与 P1 公开派生标签分表保存、分表报告；P0 的 `p0_expected` 不是真实行为标签。
-- 当前 P0 数据：`data/p0/v0.3/p0_samples.json`（发布版；`data/p0/p0_samples.json` 是 16 条冻结种子）；
+- 当前 P0 数据：`data/p0/v0.4/p0_samples.json`（v0.4 仲裁版；v0.3 冻结；`data/p0/p0_samples.json` 是 16 条冻结种子）；
   A/B 逐字段审计：`python scripts/pair_diff_report.py`。
 - P1 的规则映射值撤回后，有效监督以 `state_loss_mask` 为准；`state_withdrawn` 保存原值与规则号，
   只用于审计，不得当金标或改回。
@@ -74,7 +74,7 @@ P01 取消认知、P02 旧目标承诺、P03 恢复位置、P04 他人代完成�
 4. P1 的恢复行为归因可能存在歧义；无法辨认时记 `UNKNOWN`，不得强行标注。
 5. 真实时间预测需要可靠时间戳与删失建模；P1 没有时间戳，评测视图的 `time` 是事件序号。
 6. 跨人物/跨任务泛化需要按人物与任务族划分；随机打散会造成泄漏。
-7. A 的适配器接受 `p0-record/v0.1.0`/`v0.2.0`，v0.3 记录按 v0.2.0 读取；C 的 `c-evaluation-draft-1` 导出已生成，
+7. A 的适配器接受 `p0-record/v0.1.0`/`v0.2.0`，v0.4 记录按 v0.2.0 读取；C 的 `c-evaluation-draft-1` 导出已生成，
    布尔 `understood` 仍合并 MISUNDERSTOOD/NOT_UNDERSTOOD，完整 U 区分须读原生记录。
 8. **v0.2 批次在 2026-10-21 就地修正过一次内容**：A/C 盲审抓到 14 条 P01 B 臂人物自述的剩余步数比任务图少 1，`data/p0/p0_samples_v0.2.json` 的 SHA256 由 `fb58cf74…` 变为 `3ca55cc5…`（只有这 14 句 `description` 变化，标签/事件条数/划分未变），`validate_data.py` 同步加了自述步数一致性检查。按旧哈希留档的下游需要重取。
 9. **一个已知的标签口径分歧尚未解决、且不在 B 单方面权限内**：19 条 `B=UNKNOWN` 里 16 条在关键事件之后仍存在未计入 B 证据的人物陈述或返回行动，与标注手册 §2.5 的判定顺序冲突（详见手册 §11.1 第 14 条）。A 已表示认可按 §2.5 逐条仲裁，但数据仍保持原样；引用这批数据做信念维结论时要带上这一条。
@@ -82,7 +82,8 @@ P01 取消认知、P02 旧目标承诺、P03 恢复位置、P04 他人代完成�
     （有效行数 57/72/72/988/15，Q 无具体步骤）。P1 只能支撑恢复标签与 V 维，不能当六变量金标。
 11. **"不恢复"负例上限 126 条且全部来自 IHBench 文本 agent**（其中 115 条是数据集自带的 GPT-4o Audio 参照回答）。
     真人采集已 descope，没有第二来源；负例召回低是数据属性，禁止把 1,951 条删失改标为负例。
-12. **P0 的 254 条只有 B 自审**（`reviewed`），没有 A/C 盲审与仲裁（`adjudicated`）；对外不得写成双人复核。
+12. **P0 的 254 条只有 B 自审**（`reviewed`），没有 A/C 盲审与独立仲裁（`adjudicated`）；对外不得写成双人复核。
+13. **v0.4 是 B 侧标签仲裁版**：14 条 `contact_cancellation` B 臂的 `B` 由 `UNKNOWN` 升为 `BELIEVES_VALID`（证据 `e06`），其余不变；在 v0.3 或 ready-v1.0 上得到的结果作废，须在 v0.4 / ready-v1.1 上重跑。
 
 ## 6. 许可与伦理
 

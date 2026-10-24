@@ -9,7 +9,7 @@
 > **先读这一句：** P0 是脚本化的受控诊断数据，标签是“按脚本规则应出现的状态”，不是真实人类心理测量。P1 原计划为真实行为数据；2026-10-23 决策后不再做真人采集，P1 改为公开数据派生包，六变量中只有 V 全量有效，其余规则映射值已按 `state_withdrawn` 撤回。没有证据的 `B/C/Q` 仍必须标 `UNKNOWN` 或遮蔽，不得用猜测补齐。
 
 > **竞赛阶段说明（2026-10-24）：**
-> - 当前 P0 发布版为 `p0-record/v0.2.0` 记录、`p0-release/v0.3.0` 打包，127 个家族 × A/B = 254 条（150/52/52），B 已完成人工复核（`annotation.status=reviewed`）；A/C 盲审与仲裁尚未完成，不得写成 `adjudicated`。
+> - 当前 P0 发布版为 `p0-record/v0.2.0` 记录、`p0-release/v0.4.0` 打包（v0.3 + 14 条 B 标签仲裁），127 个家族 × A/B = 254 条（150/52/52），B 已完成人工复核（`annotation.status=reviewed`）；A/C 盲审与独立仲裁尚未完成，不得写成 `adjudicated`。
 > - P1 为公开数据派生包（`data/p1/public_derived/`，2,863 条，真人记录 0）。竞赛方案中只能写作“公开数据派生的辅助任务评测”，不得写真实人类恢复预测；P0 标签也不得用于声称真实人类恢复能力。
 > - 对外材料（技术方案/PPT/视频）不得出现学校名称、Logo、指导教师信息；提交要求见 [`competition/README.md`](../../competition/README.md)。
 
@@ -162,6 +162,7 @@ P0 的标签确实"可完全确定"，但**确定的对象是脚本设定，不�
 - 不能从 `V` 复制 `B`。P01-B 是核心反例：`V=CANCELLED`、`B=UNKNOWN`。
 - 不能从 `C` 反推 `B`。人物可以相信目标有效但主动放弃（P02-B），也可以相信目标无效但尚未明确承诺状态。
 - 人物说“暂缓”通常表示 `BELIEVES_VALID` + `C=SUSPENDED`，不是 `BELIEVES_INVALID`（P08-B）。
+- 明确的继续陈述（如“回来接着弄”）按第 2 条判 `BELIEVES_VALID`，即使人物没有接触取消通知；单纯的 `return_to_task` 不构成信念证据。2026-10-24 据此把 14 条 `contact_cancellation` B 臂从 `UNKNOWN` 升为 `BELIEVES_VALID`（证据 e06，P0 v0.4）；`P01-B` 只有返回动作，维持 `UNKNOWN`。
 
 ### 2.6 `C`：原目标承诺
 
@@ -171,6 +172,8 @@ P0 的标签确实"可完全确定"，但**确定的对象是脚本设定，不�
 2. 有明确放弃陈述或等价决定 → `ABANDONED`。
 3. 正在推进，或刚被中断但仍表达继续意图 → `ACTIVE` / `SUSPENDED`。
 4. 没有证据 → `UNKNOWN`。
+
+**时序优先规则（2026-10-24 仲裁）：** 显式放弃陈述优先于其后的一般性 `step_started`/`step_attempted`；后者不自动构成重新承诺。只有新的 `commitment_expressed` 或明确的继续陈述才重新打开目标。P02 的 14 条 B 臂据此维持 `C=ABANDONED`、`not_resume`。
 
 **`ACTIVE` 与 `SUSPENDED`：**
 
@@ -437,7 +440,7 @@ v0.2 把八组对照升级为八个 `mechanism`，每个家族都要声明自己
 11. **字段名冲突（未解决）：** B 的 `person_access_evidence` 是自由文本，C 的同名字段是 `{status, understood}` 对象。三方合并前必须改名或改类型；建议 C 改名为 `person_access_note`，或在映射层做显式转换。
 12. **A 适配器当前只认 `p0-record/v0.1.0`：** 传入 v0.2 会显式报 `UNSUPPORTED_SCHEMA_VERSION`（这是期望行为，不是缺陷）。A 需新增版本分支后，B 才能把 v0.2 作为正式训练输入交付。
 13. **11 个不确定性档位已覆盖并验收：** v0.2 的 240 条里 `A=UNCERTAIN`、`V/F=UNKNOWN`、`B=UNRESOLVED`、`C∈{ACTIVE,UNKNOWN}`、事件级 `person_access=UNCERTAIN`、`person_comprehension∈{NOT_UNDERSTOOD,UNCERTAIN}`、`certainty∈{PROBABLE,UNCERTAIN}` 一次都没出现。`data/p0/p0_samples_v0.3.json`（7 家族 / 14 条）按 §1.4 判据各覆盖至少一次，B 已于 2026-10-21 逐对复核并升 `reviewed`，可以交 A/C 盲审。`split.calibration` 仍为空，要 C 先定校准协议。
-14. **`contact_cancellation` B 臂的 `B=UNKNOWN` 与 §2.5 冲突，待 A 表态（2026-10-21 盲审提出，未解决）：** §2.5 判定顺序第 1 条允许"明确行动"、第 2 条把"仍然有效/继续"的表达判为 `BELIEVES_VALID`，而实测 19 条 `B=UNKNOWN` 里有 **16 条**（v0.2 的 P01-B + 14 个 `contact_cancellation` B 臂 + v0.1 的 P01-B）在取消事件之后仍存在人物陈述或 `return_to_task` 行动、却没有计入 `state_evidence_by_factor.B`。同批次 215 条 `BELIEVES_VALID` 正是拿 `step_started`/人物自述当 B 证据（P08-W1-B 甚至把 e03 与 e06 都计入），只有 P01 B 臂例外。另 3 条（v0.3 的 P01-W6-A/B、P08-S7-B）实测在关键事件之后人物再无任何事件，`UNKNOWN` 合法、不动。出路只有把这 16 条升为 `BELIEVES_VALID` 并补证据引用（改文案以保住 `UNKNOWN` 不可行：§2.6 第 3 步要求 `C=SUSPENDED` 必须有"仍表达继续意图"，删了会连带废掉 C 的证据）。**B 不单方面改：** 这动的是 A 在信念维的监督信号，且含 v0.1 冻结基线里的 1 条；§1.4/§2.4/§2.5 现在还把"P01-B 的 `B=UNKNOWN`"当正面例子讲，改标要同步改这三处。
+14. **`contact_cancellation` B 臂的 `B=UNKNOWN` 与 §2.5 冲突（2026-10-21 盲审提出，2026-10-24 已解决）：** 14 条 B 臂按 §2.5 第 2 条升 `BELIEVES_VALID` 并补证据 `e06`，发布为 P0 v0.4；`P01-B`（仅返回动作）与 3 条取消后无事件的记录维持 `UNKNOWN`。以下为原始记录： §2.5 判定顺序第 1 条允许"明确行动"、第 2 条把"仍然有效/继续"的表达判为 `BELIEVES_VALID`，而实测 19 条 `B=UNKNOWN` 里有 **16 条**（v0.2 的 P01-B + 14 个 `contact_cancellation` B 臂 + v0.1 的 P01-B）在取消事件之后仍存在人物陈述或 `return_to_task` 行动、却没有计入 `state_evidence_by_factor.B`。同批次 215 条 `BELIEVES_VALID` 正是拿 `step_started`/人物自述当 B 证据（P08-W1-B 甚至把 e03 与 e06 都计入），只有 P01 B 臂例外。另 3 条（v0.3 的 P01-W6-A/B、P08-S7-B）实测在关键事件之后人物再无任何事件，`UNKNOWN` 合法、不动。出路只有把这 16 条升为 `BELIEVES_VALID` 并补证据引用（改文案以保住 `UNKNOWN` 不可行：§2.6 第 3 步要求 `C=SUSPENDED` 必须有"仍表达继续意图"，删了会连带废掉 C 的证据）。**B 不单方面改：** 这动的是 A 在信念维的监督信号，且含 v0.1 冻结基线里的 1 条；§1.4/§2.4/§2.5 现在还把"P01-B 的 `B=UNKNOWN`"当正面例子讲，改标要同步改这三处。
 
 ### 11.2 变更记录
 
@@ -449,6 +452,7 @@ v0.2 把八组对照升级为八个 `mechanism`，每个家族都要声明自己
 | v1.0.2 | 2026-10-21 | v0.3 不确定性批次由 `draft` 升 `reviewed`：B 逐对复核 `p0_spot_audit_v0.3_all7.md`（7 对 / 28 框）与 v0.2 抽查 `p0_spot_audit_v0.2_seed20261021.md`（10 对 / 39 框），结论全部通过。签核表改为"已签"状态，`audit_packet.py` 增加拒绝覆盖已签表的闸；§1.4 判据第一次成批检验通过。A/C 盲审与 `split.calibration` 仍未做 |
 | v1.0.3 | 2026-10-21 | 回应 A/C 盲审回条的实测结论：① v0.2 P01 B 臂「还剩两步」是错的（模板硬编码了 v0.1 的三步故事，套到 v0.2 的 4 步骨架上整体差 1；带步数的自述 14 条全错），改为与任务图一致的"三步"，并给 `validate_data.py` 加"人物自述步数必须等于客观剩余步数"的跨字段检查 + 正负例测试；② §2.3 补 P0 `READY` 的可判定口径，252 条 READY 零空证据、零被脚本内事件矛盾，属手册缺条款而非数据错；③ §11.1 新增第 14 条，把 16 条 `B=UNKNOWN` 的信念维缺口挂账待 A 表态。v0.2 字节因此变化，新 SHA256 见 `data/p0/README.md` |
 | v1.0.4 | 2026-10-24 | 状态口径同步：P0 更新为 v0.3 发布版（254 条 / 127 家族 / 150-52-52，`reviewed` 未 `adjudicated`）；P1 因 2026-10-23 descope 改为公开数据派生包（2,863 条，真人记录 0），六变量只有 V 全量有效，F/A/B/C/Q 的规则映射值已按 `state_withdrawn` 撤回；P1 结论口径从"真实人类恢复预测"改为"公开数据派生辅助任务评测"。标注规则与判据条款未改 |
+| v1.0.5 | 2026-10-24 | B 侧仲裁落地：① §11.1 第 14 条关闭——14 条 `contact_cancellation` B 臂按 §2.5 第 2 条升 `BELIEVES_VALID` 并补 `e06`，发布 P0 v0.4；`P01-B` 与 3 条无后续事件记录维持 `UNKNOWN`。② §2.6 增加时序优先规则——显式放弃优先于其后一般步骤动作，P02 的 14 条维持 `C=ABANDONED`。数据只改这 14 个 B 值，其余 240 条逐字节不变；v0.3 冻结 |
 
 > **仓库迁移说明：** 本手册从 B 岗交付目录迁入主仓库时，仅更新校验/审计脚本路径并补充竞赛边界；16 条数据与标签未改。
 

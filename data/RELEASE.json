@@ -2,7 +2,65 @@
   "manifest_version": "data-release/v1",
   "generated_by": "scripts/release_manifest.py",
   "artifacts": {
-    "p0_v03": {
+    "p0_v04": {
+      "path": "data/p0/v0.4",
+      "release_version": "p0-release/v0.4.0",
+      "record_schema": "p0-record/v0.2.0",
+      "dataset_layer": "P0",
+      "records": 254,
+      "families": 127,
+      "events": 1908,
+      "splits": {
+        "train": 150,
+        "test": 52,
+        "dev": 52
+      },
+      "calibration_records": 0,
+      "annotation": {
+        "status": "reviewed",
+        "adjudicated": false
+      },
+      "supervised_factors": {
+        "V": 253,
+        "F": 253,
+        "A": 254,
+        "B": 250,
+        "C": 253,
+        "Q": 254
+      },
+      "eval_view": {
+        "path": "data/p0/v0.4/eval",
+        "records": 254,
+        "protocol": "c-evaluation-draft-1"
+      },
+      "files": {
+        "p0_samples.json": {
+          "sha256": "80bdc8edef1040e8c12df56e314a31ec99ad8accb4aaa0dee50c59d92972c3d8"
+        },
+        "manifest.json": {
+          "sha256": "de8fbaa13b9286e651311d11406925dc884efc43c7efa13cb3ff980f9a8ea36c"
+        },
+        "splits/train.json": {
+          "sha256": "8a2794ddd28a10e96e85b2f3d4cbd6c015f5e864f0ed144bb980a17f550f9a3b"
+        },
+        "splits/dev.json": {
+          "sha256": "ae80a8c3f2d5c5fe0a36db623f084b06acba8fbd8750e4e51898f533acc459ef"
+        },
+        "splits/test.json": {
+          "sha256": "f4d5e3b90a9003c442ee7dd4ab9c18f20ff52bed22bc0a4ce32a206e6a24a0ab"
+        },
+        "splits/calibration.json": {
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        },
+        "eval/inputs.jsonl": {
+          "sha256": "ef76fb02f5ba680524a9a21f23c2a1522758383be1d47c233bb0d94f97c04005"
+        },
+        "eval/labels.jsonl": {
+          "sha256": "77391d440d845780a085a5db41cbc44d63bfecaa83382b3b3b6a15b2df7787f9"
+        }
+      }
+    },
+    "p0_v03_frozen": {
       "path": "data/p0/v0.3",
       "release_version": "p0-release/v0.3.0",
       "record_schema": "p0-record/v0.2.0",
@@ -62,7 +120,7 @@
     },
     "ready_v1": {
       "path": "data/training_ready/v1",
-      "release_version": "ready-v1.0",
+      "release_version": "ready-v1.1",
       "dataset_layer": "P0 + auxiliary dialogue",
       "human_P1_records": 0,
       "tasks": {
@@ -72,30 +130,30 @@
       "files": {
         "train.jsonl": {
           "rows": 438,
-          "sha256": "c5743da7242827d336c4a363f95304ef23ddaca2a44ebde65caed68026f9dda9"
+          "sha256": "666dce02290e413e30be18702e69bc6bd8ab219d2c80d7b95d6841c2a2b90ae4"
         },
         "train_sft.jsonl": {
           "rows": 438,
-          "sha256": "231e7335a1799bd78a0e733b010bb4b0e82a303fb98b9f92740a5d69a0298ef8"
+          "sha256": "25bd57b4c39e6195d2bc60201d969974647a269b027bad4d4cc8e7d77d0c540b"
         },
         "dev.jsonl": {
           "rows": 123,
-          "sha256": "61a245d8b81e06c211760527b478451101db20695061c45a2baecfa2d5bec705"
+          "sha256": "fae2ecacad6765fbcfd98d646f4c74b4fb6581976539318d55e6cd98eecf77e5"
         },
         "dev_sft.jsonl": {
           "rows": 123,
-          "sha256": "cbf640978fcb16bfc6f2f3381e0c96682b9cd2039415137a0bf077d9bb09adfe"
+          "sha256": "62dce6dab511c78effc5692c525248455969f228a696f85eafb3384d31cb2582"
         },
         "test.jsonl": {
           "rows": 121,
-          "sha256": "b18d9ca70768a650906e13d7d2e13d76e4e5487cc13533b38b251afe1376c12a"
+          "sha256": "4f29d82ac62e074fc59461c520dada8f84ad4bc97da9c9d25aee6a76ad4b6a2a"
         },
         "test_sft.jsonl": {
           "rows": 121,
-          "sha256": "459485f19b37aff18adf226a10dcb6bb6cd67b8f4b7276506ad18b4fbd0927bf"
+          "sha256": "9ea9c5b996587534b3bafe6752d902e89e90f2230e9d98e88900957f6764dd6d"
         }
       },
-      "sources_p0_sha256": "93ca37e93442495039950c0f8c4c618fee4b8b178cfc52c3269b33cb9f0f7739"
+      "sources_p0_sha256": "80bdc8edef1040e8c12df56e314a31ec99ad8accb4aaa0dee50c59d92972c3d8"
     },
     "p1_public_derived": {
       "path": "data/p1/public_derived",
@@ -169,7 +227,7 @@
     }
   },
   "routing": {
-    "six_factor_supervision": "p0_v03 (SFT bundle: ready_v1)",
+    "six_factor_supervision": "p0_v04 (SFT bundle: ready_v1)",
     "resume_evaluation": "p1_public_derived/eval (842 observed rows; report per source)",
     "interruption_response_sft": "ready_v1",
     "state_prediction_cutoffs": "p1_public_derived native rows with resume_loss_mask=0"
@@ -196,8 +254,14 @@
     "claims": {
       "human_p1_records": 0,
       "double_blind_adjudication": false,
-      "six_factor_supervision_source": "P0 scripted data only",
+      "six_factor_supervision_source": "P0 v0.4 scripted data only",
       "not_resume_ceiling": "126 rows, all IHBench text-agent"
+    },
+    "p0_history": {
+      "current": "p0-release/v0.4.0",
+      "frozen": "p0-release/v0.3.0",
+      "arbitration": "14 contact-cancellation B arms: UNKNOWN -> BELIEVES_VALID with e06 evidence",
+      "stale_results": "any result trained or evaluated on v0.3 or ready-v1.0 must be rerun"
     },
     "licenses": {
       "P0": "project-generated; repository private",

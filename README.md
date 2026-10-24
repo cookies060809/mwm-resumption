@@ -1,6 +1,6 @@
 # ECR-MWM / EC-JMF
 
-> **P0 v0.3 完整数据入口（2026-10-21）：** [data/p0/v0.3/README.md](data/p0/v0.3/README.md)，254 条 / 127 家族，train/dev/test = **150/52/52**。旧 `p0_samples_v0.3.json` 是 14 条补充原稿；A/C 使用完整发布版 `data/p0/v0.3/p0_samples.json`。运行 `python scripts/build_p0_release.py --check` 可验证交付一致性。
+> **P0 v0.4 完整数据入口（2026-10-24）：** [data/p0/v0.4/README.md](data/p0/v0.4/README.md)，254 条 / 127 家族，train/dev/test = **150/52/52**。v0.4 = v0.3 + 14 条 B 标签仲裁；v0.3 冻结保留。A/C 使用 `data/p0/v0.4/p0_samples.json`（或 ready-v1.1）。运行 `python scripts/build_p0_v04.py --check` 可验证交付一致性。
 
 **面向任务中断与恢复预测的认知可达性约束动态心智世界模型**
 
@@ -8,8 +8,8 @@
 
 > **参赛信息**：第八届全球校园人工智能算法精英大赛 · 算法创新赛 · 赛题 1「算法模型创新」
 > **官方页面**：[aicomp.cn/tracks/tracks-2/3788.html](https://www.aicomp.cn/tracks/tracks-2/3788.html)
-> **仓库状态：P0 v0.3 发布版（254 条）+ P1 公开数据派生包（2026-10-24）**　〔数据入口见 [data/README.md](data/README.md)，机器可读清单见 [data/RELEASE.json](data/RELEASE.json)〕
-> 数据侧已交付 P0 v0.3（254 条 / 127 家族）、ready-v1.0 训练包与 P1 公开数据派生包（2,863 条，真人记录 0）；2026-10-23 团队决定不做真人 P1 采集。算法与实验状态见 [results/](results/) 与 [baselines/](baselines/)；`results/` 中不得出现未经真实实验产生的数字。
+> **仓库状态：P0 v0.4 仲裁版（254 条）+ ready-v1.1 + P1 公开数据派生包（2026-10-24）**　〔数据入口见 [data/README.md](data/README.md)，机器可读清单见 [data/RELEASE.json](data/RELEASE.json)〕
+> 数据侧已交付 P0 v0.4（254 条 / 127 家族，14 条 B 标签仲裁）、ready-v1.1 训练包与 P1 公开数据派生包（2,863 条，真人记录 0）；2026-10-23 团队决定不做真人 P1 采集。算法与实验状态见 [results/](results/) 与 [baselines/](baselines/)；`results/` 中不得出现未经真实实验产生的数字。
 
 ## 一句话定义
 
@@ -37,7 +37,7 @@
 - [x] 仓库结构、协作规范与 CI
 - [x] P0 schema `p0-record/v0.1.0` 与 P01–P08 共 16 条种子数据
 - [x] P0 v0.2 扩展至 120 家族 / 240 条（8 机制 × 15 骨架），含 `split` 与事件级理解字段
-- [x] P0 v0.3 发布版 254 条 / 127 家族（150/52/52）与 ready-v1.0 训练包
+- [x] P0 v0.4 仲裁版 254 条 / 127 家族（150/52/52）与 ready-v1.1 训练包
 - [x] P1 公开数据派生包 v1.5.1（2,863 条）+ C 协议评测视图（842 条）；真人记录 0
 - [x] 数据校验、A/B diff、可复现构建脚本与标注质量方案
 - [x] B 对全部 P0 批次完成人工复核（`annotation.status=reviewed`）
@@ -49,7 +49,7 @@
 - [ ] 技术方案 PDF、答辩 PPT、演示视频
 - [ ] 提交前合规与复现审查
 
-当前 P0 发布版：127 个家族 × A/B = 254 条、1,908 条事件；`work` 86 条、`collaboration_service` 88 条、`daily_life` 80 条；`split` 为 150/52/52；`annotation.status=reviewed`（未 `adjudicated`）。另有 16 条 v0.1 冻结种子供 A 的旧适配器使用。P1 为公开数据派生，六变量只有 V 全量有效，其余按 `state_withdrawn` 撤回。
+当前 P0 发布版：127 个家族 × A/B = 254 条、1,908 条事件（v0.4）；`work` 86 条、`collaboration_service` 88 条、`daily_life` 80 条；`split` 为 150/52/52；`annotation.status=reviewed`（未 `adjudicated`）。另有 16 条 v0.1 冻结种子供 A 的旧适配器使用。P1 为公开数据派生，六变量只有 V 全量有效，其余按 `state_withdrawn` 撤回。
 
 ## 仓库结构
 
@@ -63,8 +63,8 @@
 │   └── literature/         # 竞品矩阵与原文索引
 ├── schema/                 # P0 记录 JSON Schema（p0-record/v0.1.0 与 v0.2.0）
 ├── data/
-│   ├── p0/                 # P0 v0.3 发布版（254 条）、v0.2 批次与 v0.1 冻结种子
-│   ├── training_ready/     # ready-v1.0 可训练包（P0 六变量 + 中断续答）
+│   ├── p0/                 # P0 v0.4 仲裁版（254 条）、v0.3/v0.2 冻结批次与 v0.1 种子
+│   ├── training_ready/     # ready-v1.1 可训练包（P0 v0.4 六变量 + 中断续答）
 │   └── p1/                 # P1 公开数据派生包（无真人记录；InterruptBench 仅内部）
 ├── models/
 │   ├── ec_jmf/             # 联合后验更新核心算法契约
@@ -92,7 +92,7 @@ python -m pytest
 
 ## 数据与证据边界
 
-1. **P0 与 P1 严格分离。** P0 为脚本诊断数据（v0.3 发布版 254 条），不能用于声称预测真实人类心理；P1 为公开数据派生包（2,863 条，无真人记录），只能写"公开数据派生的辅助任务评测"。
+1. **P0 与 P1 严格分离。** P0 为脚本诊断数据（v0.4 仲裁版 254 条），不能用于声称预测真实人类心理；P1 为公开数据派生包（2,863 条，无真人记录），只能写"公开数据派生的辅助任务评测"。
 2. **P1 原始数据默认不入库。** 只允许提交经批准的元数据或脱敏派生结果；禁止提交可识别个人的视频、音频、屏幕录制或原始日志。
 3. **人物能否获知事件必须有独立证据字段。** 不允许把客观世界事实直接复制为人物信念。
 4. **禁止未来泄漏。** 预测时刻 `t` 之后的标签、事件或测试集信息不得进入 `observed_events`。

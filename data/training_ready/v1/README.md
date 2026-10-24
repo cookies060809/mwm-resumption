@@ -1,4 +1,4 @@
-# 给 A/C：可直接使用的训练集 ready-v1.0
+# 给 A/C：可直接使用的训练集 ready-v1.1
 
 **推荐从本目录开始训练。无需下载、人工标注或审批，读取检查和小型基线只需 Python 标准库。**
 
@@ -29,7 +29,9 @@ python data/training_ready/v1/train_cpu.py
 - **训练对话辅助模块：** 选择 `task == interruption_response`。`target` 是上游已发布模型回答；它不是最优答案保证，也不是人的实际行为。六变量掩码全部为 0。
 - **做语言模型 SFT：** 同名 `train_sft.jsonl/dev_sft.jsonl/test_sft.jsonl` 只包含标准 `messages` 列。输入是最后一个 assistant 消息之前的全部消息，目标是最后一个 assistant 消息。建议只对最后一个 assistant 消息计算训练损失。
 - 两任务分别采样、分别报告指标；六变量主训练优先使用 P0，辅助任务可选。结构化模型不要把对话回答拼成六变量标签。
-- 只能对 train 拟合参数；dev 调参；test 最后评测。不要把本包 P0 与 `data/p0/v0.3` 再拼接，二者是同一批数据。
+- 只能对 train 拟合参数；dev 调参；test 最后评测。不要把本包 P0 与 `data/p0/v0.4` 再拼接，二者是同一批数据。
+- **v1.1 变化：** P0 子集换成 v0.4 仲裁版——14 条 `contact_cancellation` B 臂的 `B` 由 `UNKNOWN` 升为
+  `BELIEVES_VALID`（证据 `e06`），其余 240 条与 v1.0 相同。用 v1.0/v0.3 跑出的结果作废，需重跑。
 
 最小读取示例：
 
@@ -56,10 +58,12 @@ P0 沿用正式版 150/52/52 的划分，127 个故事家族全部保持分组�
 
 ## 来源、许可、复现
 
-- P0：本仓库 `data/p0/v0.3/p0_samples.json`，254 条。冻结副本 `sources/p0.json`；不新增对该项目数据的对外许可授权。
+- P0：本仓库 `data/p0/v0.4/p0_samples.json`，254 条（v0.3 + 14 条 B 标签仲裁）。冻结副本 `sources/p0.json`；
+  不新增对该项目数据的对外许可授权。
 - IHBench：Salimi 等，*IHBench: Evaluating Post-Interruption Recovery in Voice Agents with Structured Workflows*，2026，https://huggingface.co/datasets/bosonai/IHBench ，https://arxiv.org/abs/2606.19595 。数据许可 CC BY 4.0：https://creativecommons.org/licenses/by/4.0/ 。保留上游卡 `sources/dataset_card.md` 和抓取清单 `sources/upstream_manifest.json`。
 - 本次改动：抽取文本列、按原对话分组、把已发布回答映射为续答目标、统一接口；没有生成新的人工或模型标签。未含音频、真人原始日志、InterruptBench 或 REBOOT。
 - 冻结的文本来源随包提供，`manifest.json` 记录输入/输出 SHA256。`python data/training_ready/v1/build.py` 可离线重建 JSONL；不依赖上游 main 后续变化。
 - 本包是可训练的数据交付，也是 P1 的最终数据形态（2026-10-23 决策：无真人采集）；六变量监督数量和标签真实性不能由辅助对话数量替代。
 
-审查日期：2026-10-23。检查和 CPU 基线实测记录见 `validation.txt`、`cpu_smoke.json`。
+审查日期：2026-10-24。检查和 CPU 基线实测记录见 `validation.txt`、`cpu_smoke.json`。
+版本历史：v1.0（2026-10-23，P0 v0.3）→ v1.1（2026-10-24，P0 v0.4 仲裁版；行数、划分、任务格式不变）。

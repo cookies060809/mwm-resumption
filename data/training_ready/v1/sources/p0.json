@@ -1007,7 +1007,7 @@
       "V": "CANCELLED",
       "F": "READY",
       "A": "NOT_ACCESSED",
-      "B": "UNKNOWN",
+      "B": "BELIEVES_VALID",
       "C": "SUSPENDED",
       "Q": "buy_groceries"
     },
@@ -1033,7 +1033,9 @@
         "e01",
         "e05"
       ],
-      "B": [],
+      "B": [
+        "e06"
+      ],
       "C": [
         "e01",
         "e03",
@@ -1550,7 +1552,7 @@
       "V": "CANCELLED",
       "F": "READY",
       "A": "NOT_ACCESSED",
-      "B": "UNKNOWN",
+      "B": "BELIEVES_VALID",
       "C": "SUSPENDED",
       "Q": "submit_request"
     },
@@ -1576,7 +1578,9 @@
         "e01",
         "e05"
       ],
-      "B": [],
+      "B": [
+        "e06"
+      ],
       "C": [
         "e01",
         "e03",
@@ -2093,7 +2097,7 @@
       "V": "CANCELLED",
       "F": "READY",
       "A": "NOT_ACCESSED",
-      "B": "UNKNOWN",
+      "B": "BELIEVES_VALID",
       "C": "SUSPENDED",
       "Q": "book_date"
     },
@@ -2119,7 +2123,9 @@
         "e01",
         "e05"
       ],
-      "B": [],
+      "B": [
+        "e06"
+      ],
       "C": [
         "e01",
         "e03",
@@ -2636,7 +2642,7 @@
       "V": "CANCELLED",
       "F": "READY",
       "A": "NOT_ACCESSED",
-      "B": "UNKNOWN",
+      "B": "BELIEVES_VALID",
       "C": "SUSPENDED",
       "Q": "do_exercise"
     },
@@ -2662,7 +2668,9 @@
         "e01",
         "e05"
       ],
-      "B": [],
+      "B": [
+        "e06"
+      ],
       "C": [
         "e01",
         "e03",
@@ -3179,7 +3187,7 @@
       "V": "CANCELLED",
       "F": "READY",
       "A": "NOT_ACCESSED",
-      "B": "UNKNOWN",
+      "B": "BELIEVES_VALID",
       "C": "SUSPENDED",
       "Q": "pack_boxes"
     },
@@ -3205,7 +3213,9 @@
         "e01",
         "e05"
       ],
-      "B": [],
+      "B": [
+        "e06"
+      ],
       "C": [
         "e01",
         "e03",
@@ -3722,7 +3732,7 @@
       "V": "CANCELLED",
       "F": "READY",
       "A": "NOT_ACCESSED",
-      "B": "UNKNOWN",
+      "B": "BELIEVES_VALID",
       "C": "SUSPENDED",
       "Q": "check_policy"
     },
@@ -3748,7 +3758,9 @@
         "e01",
         "e05"
       ],
-      "B": [],
+      "B": [
+        "e06"
+      ],
       "C": [
         "e01",
         "e03",
@@ -4265,7 +4277,7 @@
       "V": "CANCELLED",
       "F": "READY",
       "A": "NOT_ACCESSED",
-      "B": "UNKNOWN",
+      "B": "BELIEVES_VALID",
       "C": "SUSPENDED",
       "Q": "call_customer"
     },
@@ -4291,7 +4303,9 @@
         "e01",
         "e05"
       ],
-      "B": [],
+      "B": [
+        "e06"
+      ],
       "C": [
         "e01",
         "e03",
@@ -4808,7 +4822,7 @@
       "V": "CANCELLED",
       "F": "READY",
       "A": "NOT_ACCESSED",
-      "B": "UNKNOWN",
+      "B": "BELIEVES_VALID",
       "C": "SUSPENDED",
       "Q": "confirm_time"
     },
@@ -4834,7 +4848,9 @@
         "e01",
         "e05"
       ],
-      "B": [],
+      "B": [
+        "e06"
+      ],
       "C": [
         "e01",
         "e03",
@@ -5351,7 +5367,7 @@
       "V": "CANCELLED",
       "F": "READY",
       "A": "NOT_ACCESSED",
-      "B": "UNKNOWN",
+      "B": "BELIEVES_VALID",
       "C": "SUSPENDED",
       "Q": "check_risk"
     },
@@ -5377,7 +5393,9 @@
         "e01",
         "e05"
       ],
-      "B": [],
+      "B": [
+        "e06"
+      ],
       "C": [
         "e01",
         "e03",
@@ -5894,7 +5912,7 @@
       "V": "CANCELLED",
       "F": "READY",
       "A": "NOT_ACCESSED",
-      "B": "UNKNOWN",
+      "B": "BELIEVES_VALID",
       "C": "SUSPENDED",
       "Q": "check_parts"
     },
@@ -5920,7 +5938,9 @@
         "e01",
         "e05"
       ],
-      "B": [],
+      "B": [
+        "e06"
+      ],
       "C": [
         "e01",
         "e03",
@@ -6876,7 +6896,7 @@
       "V": "CANCELLED",
       "F": "READY",
       "A": "NOT_ACCESSED",
-      "B": "UNKNOWN",
+      "B": "BELIEVES_VALID",
       "C": "SUSPENDED",
       "Q": "book_room"
     },
@@ -6902,7 +6922,9 @@
         "e01",
         "e05"
       ],
-      "B": [],
+      "B": [
+        "e06"
+      ],
       "C": [
         "e01",
         "e03",
@@ -7419,7 +7441,7 @@
       "V": "CANCELLED",
       "F": "READY",
       "A": "NOT_ACCESSED",
-      "B": "UNKNOWN",
+      "B": "BELIEVES_VALID",
       "C": "SUSPENDED",
       "Q": "clean_data"
     },
@@ -7445,7 +7467,9 @@
         "e01",
         "e05"
       ],
-      "B": [],
+      "B": [
+        "e06"
+      ],
       "C": [
         "e01",
         "e03",
@@ -7962,7 +7986,7 @@
       "V": "CANCELLED",
       "F": "READY",
       "A": "NOT_ACCESSED",
-      "B": "UNKNOWN",
+      "B": "BELIEVES_VALID",
       "C": "SUSPENDED",
       "Q": "scan_copy"
     },
@@ -7988,7 +8012,9 @@
         "e01",
         "e05"
       ],
-      "B": [],
+      "B": [
+        "e06"
+      ],
       "C": [
         "e01",
         "e03",
@@ -8505,7 +8531,7 @@
       "V": "CANCELLED",
       "F": "READY",
       "A": "NOT_ACCESSED",
-      "B": "UNKNOWN",
+      "B": "BELIEVES_VALID",
       "C": "SUSPENDED",
       "Q": "fill_request"
     },
@@ -8531,7 +8557,9 @@
         "e01",
         "e05"
       ],
-      "B": [],
+      "B": [
+        "e06"
+      ],
       "C": [
         "e01",
         "e03",

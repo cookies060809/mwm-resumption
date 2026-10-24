@@ -27,7 +27,7 @@ def build():
         buckets[r['split']].append({
             'id': 'p0:' + r['sample_id'], 'task': 'state_inference',
             'group_id': 'p0:' + r['base_story_id'], 'split': r['split'],
-            'source': 'project_P0_v0.3', 'label_origin': 'scripted_expectation',
+            'source': 'project_P0_v0.4', 'label_origin': 'scripted_expectation',
             'input': inp, 'target': target,
             'state_loss_mask': {f: int(f in target) for f in FACTORS},
             'messages': [{'role': 'system', 'content': SYSTEM},
@@ -67,7 +67,7 @@ def build():
             'messages': [{'role': 'system', 'content': system}] + history +
                         [{'role': 'assistant', 'content': target}],
         })
-    manifest = {'version': 'ready-v1.0', 'purpose': 'P0 state supervision and synthetic dialogue response distillation',
+    manifest = {'version': 'ready-v1.1', 'purpose': 'P0 state supervision and synthetic dialogue response distillation',
                 'human_P1_records': 0, 'sources': {}, 'files': {}, 'groups': {}}
     for p in sorted((ROOT / 'sources').glob('*.json')):
         manifest['sources'][p.name] = hashlib.sha256(p.read_bytes()).hexdigest()
