@@ -48,10 +48,14 @@ def coverage(model, rows):
             'target_OOV_rate':unknown/targets,'target_truncated_rows':0}
 
 
-def fit(train,dev,context,words,config,seed):
+def fit(train,dev,context,words,config,seed,response_initialization=None):
     seed_everything(seed,config['threads'])
     model=ReadyModel(context['architecture'],words,config)
     model.context.load_state_dict(context['state_dict'],strict=True)
+    if response_initialization is not None:
+        weights,rng_state=response_initialization
+        model.response.load_state_dict(weights,strict=True)
+        torch.set_rng_state(rng_state)
     frozen={k:v.detach().clone() for k,v in model.context.state_dict().items()}
     initial=response_nll(model,dev)
     best_loss,best_epoch,best=initial,0,deepcopy(model.state_dict())

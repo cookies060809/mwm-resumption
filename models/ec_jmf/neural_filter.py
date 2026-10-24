@@ -1,19 +1,21 @@
 """Differentiable finite EC-JMF topology; probabilities are rebuilt by PyTorch.
 
 Only states/edges and references to named gates are cached. No labels or learned
-predictions enter compilation. This branch exposes only the current context model.
+predictions enter compilation. Restores the original A0--A6 neural topology.
 """
 from dataclasses import replace
 
 import torch
 
-from models.ec_jmf.structured import StructuredModel, JointState, Mechanisms
+from models.ec_jmf.structured import StructuredModel, GoalState, JointState, Mechanisms
 from models.ecr_mwm.neural_data import state_features, MENTAL_DIM
 
 GATES = ('access_uncertain', 'understanding_uncertain', 'accept_message',
          'invalid_abandon', 'action_validity', 'world_uncertain', 'recall_next',
          'initial_ready', 'initial_blocked')
 def gate_names(semantic_contract):
+    if semantic_contract == 'legacy-v1': return GATES
+    if semantic_contract == 'b-p0-v03/v2': return GATES + ('recommit_goal',)
     if semantic_contract == 'b-p0-v03/v3': return GATES + ('reengage_goal',)
     raise ValueError('UNKNOWN_SEMANTIC_CONTRACT')
 
@@ -69,14 +71,13 @@ def factor_vector(state, target, graphs):
 
 class TopologyModel(StructuredModel):
     def __init__(self, adapted, variant, semantic_contract):
-        if variant != 'A0':
-            raise ValueError('CONTEXT_TOPOLOGY_REQUIRES_A0')
-        mechanisms = Mechanisms()
+        mechanisms = Mechanisms(access_gate=variant!='A1', comprehension_gate=variant!='A1',
+                                learned_gates=variant!='A6')
         super().__init__(adapted, mechanisms=mechanisms, semantic_contract=semantic_contract)
         self.variant = variant
         self.contexts, self.context_keys = [], {}
         self.stage, self.previous = 0, None
-        self.window_start = 0
+        self.window_start = max(0,len(adapted['events'])-5) if variant == 'A3' else 0
 
     def atom(self, name):
         world = name in ('world_uncertain','initial_ready','initial_blocked')
@@ -92,14 +93,24 @@ class TopologyModel(StructuredModel):
         return Probability(1.0, ((self.context_keys[key],gate_names(self.semantic_contract).index(name),True),))
 
     def chance(self, name):
-        return self.atom(name)
+        return super().chance(name) if self.variant == 'A6' else self.atom(name)
 
     def transition(self, state, event):
         self.previous, self.current = state, event
-        return super().transition(state,event)
+        branches = super().transition(state,event)
+        if self.stage < self.window_start:
+            # A3 discards person memory, but keeps ALL factual world/contact replay.
+            reset = []
+            for new, probability in branches:
+                goals = tuple(GoalState(g.goal_id,validity=g.validity,feasibility=g.feasibility,
+                                       world_done=g.world_done,access=g.access,access_event=g.access_event,
+                                       evidence=tuple(e for e in g.evidence if e[0] in 'VFA')) for g in new.goals)
+                reset.append((JointState(goals),probability))
+            return reset
+        return branches
 
 
-def compile_record(adapted, variant='A0', max_states=10000, semantic_contract='b-p0-v03/v3'):
+def compile_record(adapted, variant='A0', max_states=10000, semantic_contract='legacy-v1'):
     model = TopologyModel(adapted,variant,semantic_contract)
     state = model.initial(); goal = state.goal(model.target)
     ready,blocked = model.atom('initial_ready'),model.atom('initial_blocked')

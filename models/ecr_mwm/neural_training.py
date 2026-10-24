@@ -56,9 +56,12 @@ def loss_terms(output,batch):
             'event_consistency':output['consistency'], 'invariance':output['invariance']}
 
 
-def total_loss(terms, config, selection=False):
-    value = terms['state'] + terms['resume'] + terms['step']
-    if not selection:
+def total_loss(terms, config, selection=False, variant='A0'):
+    # Restore original A4/A5 loss ablations; all variants share dev selection.
+    value = terms['state'] + terms['resume']
+    if selection or variant != 'A5':
+        value = value + terms['step']
+    if not selection and variant != 'A4':
         value = value + config['consistency_weight'] * (terms['event_consistency'] + terms['invariance'])
     return value
 

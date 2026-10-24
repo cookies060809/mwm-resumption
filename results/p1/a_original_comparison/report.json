@@ -1,0 +1,609 @@
+{
+  "protocol": "a-original-p1-paired/v1",
+  "config": {
+    "protocol": "a-original-p1-paired/v1",
+    "source_main": "680e1b0",
+    "data": "data/training_ready/v1",
+    "manifest_sha256": "cf24321e6848a902c5d6317b51062f36fd59d80459d440c1bad6e35bb391b54e",
+    "context_checkpoint": "results/p0/c_visible_context/model.pt",
+    "context_checkpoint_sha256": "705372a44fe2bfa234be09652f3c9cb5b6c1265cfb2e37c4d54ab71a7b6c573a",
+    "seed": 0,
+    "evaluation_seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "epochs": 12,
+    "batch_size": 16,
+    "learning_rate": 0.003,
+    "weight_decay": 0.0001,
+    "gradient_clip": 1.0,
+    "threads": 1,
+    "architecture": {
+      "embedding": 64,
+      "hidden": 96
+    },
+    "vocab_size": 6000,
+    "encoding": {
+      "system_head": 96,
+      "system_tail": 96,
+      "history_tail": 320
+    },
+    "max_generated_tokens": 384,
+    "target_truncation": false,
+    "selection": "minimum dev token-mean teacher-forced NLL; earliest epoch including initialization",
+    "response_metrics": [
+      "token_nll_on_train_vocab_UNK_projection",
+      "perplexity_on_UNK_projection",
+      "casefold_token_exact_match",
+      "unigram_token_f1",
+      "EOS_rate",
+      "target_OOV_rate"
+    ],
+    "state_metrics": "frozen original NeuralECJMF; masked T3 on READY P0 task only, not P1 state supervision",
+    "loss": "response token cross entropy only; frozen context/state model has no optimizer parameters",
+    "context_policy": "role-marked system head/tail and most-recent delivered history; report truncation; never read messages/target at inference",
+    "test_policy": "Previously exposed P1; keep prior metrics/masks and dev selection unchanged, no test tuning.",
+    "output": "results/p1/a_original_comparison",
+    "latest_user_policy": "keep entire latest user interruption, including role boundaries; budget may expand for this turn",
+    "budget_scope": "Match completed C READY response run: seed0, 12 epochs. No claim of 20-seed P1 training.",
+    "state_model": "original",
+    "variant": "A0",
+    "original_ref": "dec55faa28dc54efcf78208c943c11e4ad2baa46",
+    "original_checkpoint": "results/p0/a_neural_v03_v3/a0_seed0.pt",
+    "original_report": "results/p0/a_neural_v03_v3/report.json",
+    "reference_branch_commit": "80b298276cfec1fc3f926dd45b765084ad2f657b",
+    "reference_model": "results/p1/a_ready_response/model.pt",
+    "reference_report": "results/p1/a_ready_response/report.json",
+    "pairing": "Exact C-response initialization and training RNG state; same 12 epochs, seed0, split, vocabulary and objective; no structural output enters response loss.",
+    "ablation_policy": "A1-A6 restored; response mechanism effects non-identifiable because response does not consume state; historical 20-seed P0 results separated, never relabeled P1.",
+    "original_checkpoint_sha256": "d0c04535c7594919cf403306251be16181d8f3482700657e5d17b232f9557044",
+    "reference_model_sha256": "cc3c3976e3b402028fb459c27efcb54cd60165832d37e8fc7caa9e29fe624452",
+    "context_reference_ref": "291e94ad1951001748de32238192e2a06aff234c",
+    "context_reference_summary": "experiments/bill_method/results/method_summary.csv"
+  },
+  "code_commit": "80b298276cfec1fc3f926dd45b765084ad2f657b",
+  "working_tree_dirty": true,
+  "torch": "2.11.0+cpu",
+  "executed_seeds": [
+    0
+  ],
+  "original_run": {
+    "seed": 0,
+    "epochs_executed": 12,
+    "selected_epoch": 12,
+    "initial_dev_token_nll": 7.972241045832108,
+    "selected_dev_token_nll": 4.362643279176851,
+    "first_epoch_training_token_nll": 6.642035271526158,
+    "last_epoch_training_token_nll": 2.5926283896971847,
+    "first_batch_nonzero_gradient_elements": 733589,
+    "frozen_context_unchanged": true,
+    "reload_max_abs_error": 0.0,
+    "response_test": {
+      "n": 69,
+      "independent_conversations": 7,
+      "token_nll_UNK_projection": 4.663025941240027,
+      "perplexity_UNK_projection": 105.95621484116859,
+      "casefold_token_exact_match": 0.0,
+      "unigram_token_f1": 0.23083122908238854,
+      "ended_with_EOS": 0.9710144927536232,
+      "coverage": {
+        "system_tokens": 465872,
+        "system_kept": 13248,
+        "history_tokens": 45521,
+        "history_kept": 19261,
+        "system_truncated": 69,
+        "history_truncated": 48,
+        "latest_user_tokens": 2472,
+        "latest_user_kept": 2472,
+        "rows": 69,
+        "target_tokens": 4631,
+        "target_unknown_tokens": 210,
+        "target_OOV_rate": 0.045346577413085724,
+        "target_truncated_rows": 0
+      }
+    }
+  },
+  "reference_run": {
+    "seed": 0,
+    "epochs_executed": 12,
+    "selected_epoch": 12,
+    "initial_dev_token_nll": 7.972241045832108,
+    "selected_dev_token_nll": 4.362643279176851,
+    "first_epoch_training_token_nll": 6.642035271526158,
+    "last_epoch_training_token_nll": 2.5926283896971847,
+    "first_batch_nonzero_gradient_elements": 733589,
+    "frozen_context_unchanged": true,
+    "reload_max_abs_error": 0.0,
+    "response_test": {
+      "n": 69,
+      "independent_conversations": 7,
+      "token_nll_UNK_projection": 4.663025941240027,
+      "perplexity_UNK_projection": 105.95621484116859,
+      "casefold_token_exact_match": 0.0,
+      "unigram_token_f1": 0.23083122908238854,
+      "ended_with_EOS": 0.9710144927536232,
+      "coverage": {
+        "system_tokens": 465872,
+        "system_kept": 13248,
+        "history_tokens": 45521,
+        "history_kept": 19261,
+        "system_truncated": 69,
+        "history_truncated": 48,
+        "latest_user_tokens": 2472,
+        "latest_user_kept": 2472,
+        "rows": 69,
+        "target_tokens": 4631,
+        "target_unknown_tokens": 210,
+        "target_OOV_rate": 0.045346577413085724,
+        "target_truncated_rows": 0
+      }
+    }
+  },
+  "paired_response_weights_identical": true,
+  "response_metric_differences": {
+    "token_nll_UNK_projection": 0.0,
+    "perplexity_UNK_projection": 0.0,
+    "casefold_token_exact_match": 0.0,
+    "unigram_token_f1": 0.0,
+    "ended_with_EOS": 0.0
+  },
+  "original_state_test_P0_only": {
+    "n": 52,
+    "scope": "previously exposed P0 state task, not new P1 ground truth",
+    "t3": {
+      "V": {
+        "accuracy": 1,
+        "macro_f1": 1.0,
+        "balanced_accuracy": 1.0,
+        "n": 51,
+        "nll": 0.0,
+        "zero_support": 0
+      },
+      "F": {
+        "accuracy": 1,
+        "macro_f1": 1.0,
+        "balanced_accuracy": 1.0,
+        "n": 52,
+        "nll": 0.0015306142536803654,
+        "zero_support": 0
+      },
+      "A": {
+        "accuracy": 1,
+        "macro_f1": 1.0,
+        "balanced_accuracy": 1.0,
+        "n": 52,
+        "nll": 0.0,
+        "zero_support": 0
+      },
+      "B": {
+        "accuracy": 1,
+        "macro_f1": 1.0,
+        "balanced_accuracy": 1.0,
+        "n": 49,
+        "nll": 0.001140027220702641,
+        "zero_support": 0
+      },
+      "C": {
+        "accuracy": 0.9803921568627451,
+        "macro_f1": 0.7467532467532467,
+        "balanced_accuracy": 0.75,
+        "n": 51,
+        "nll": 0.11239330688569,
+        "zero_support": 0
+      },
+      "Q": {
+        "accuracy": 1,
+        "macro_f1": 1.0,
+        "balanced_accuracy": 1.0,
+        "n": 52,
+        "nll": 0.0067541381332604815,
+        "zero_support": 0
+      }
+    },
+    "partial_nested_graph_rows": 6,
+    "missing_parent_policy": "observed child graph retained, parent and unobserved steps unknown; no inferred occupancy stack"
+  },
+  "max_T3_original_reference_delta_P0_only": 0.0,
+  "ablation_checks": {
+    "A0": {
+      "dev_response_logit_max_abs_delta": 0.0,
+      "state_forward_check": true,
+      "P1_structural_retraining": false,
+      "P1_mechanism_effect": "not identifiable"
+    },
+    "A1": {
+      "dev_response_logit_max_abs_delta": 0.0,
+      "state_forward_check": true,
+      "P1_structural_retraining": false,
+      "P1_mechanism_effect": "not identifiable"
+    },
+    "A2": {
+      "dev_response_logit_max_abs_delta": 0.0,
+      "state_forward_check": true,
+      "P1_structural_retraining": false,
+      "P1_mechanism_effect": "not identifiable"
+    },
+    "A3": {
+      "dev_response_logit_max_abs_delta": 0.0,
+      "state_forward_check": true,
+      "P1_structural_retraining": false,
+      "P1_mechanism_effect": "not identifiable"
+    },
+    "A4": {
+      "dev_response_logit_max_abs_delta": 0.0,
+      "state_forward_check": true,
+      "P1_structural_retraining": false,
+      "P1_mechanism_effect": "not identifiable"
+    },
+    "A5": {
+      "dev_response_logit_max_abs_delta": 0.0,
+      "state_forward_check": true,
+      "P1_structural_retraining": false,
+      "P1_mechanism_effect": "not identifiable"
+    },
+    "A6": {
+      "dev_response_logit_max_abs_delta": 0.0,
+      "state_forward_check": true,
+      "P1_structural_retraining": false,
+      "P1_mechanism_effect": "not identifiable"
+    }
+  },
+  "historical_P0_scope": "existing original-branch P0 v3 results, 20 seeds, 40 epochs; not P1 retraining",
+  "historical_P0_ablation": {
+    "A0": {
+      "t1_f1": {
+        "mean": 0.9090909090909091,
+        "sample_sd": 0.0,
+        "n": 20
+      },
+      "t1_auroc": {
+        "mean": 0.9713461538461539,
+        "sample_sd": 0.007740235306730028,
+        "n": 20
+      },
+      "t1_ap": {
+        "mean": 0.964786883663722,
+        "sample_sd": 0.01411281211970469,
+        "n": 20
+      },
+      "t1_brier": {
+        "mean": 0.07355671423673009,
+        "sample_sd": 0.0056317628975398855,
+        "n": 20
+      },
+      "t2_top1": {
+        "mean": 1.0,
+        "sample_sd": 0.0,
+        "n": 20
+      },
+      "t3_macro_f1": {
+        "mean": 0.9577922077922079,
+        "sample_sd": 0.0,
+        "n": 20
+      },
+      "bcq_macro_f1": {
+        "mean": 0.9155844155844156,
+        "sample_sd": 0.0,
+        "n": 20
+      }
+    },
+    "A1": {
+      "t1_f1": {
+        "mean": 0.8292682926829268,
+        "sample_sd": 0.0,
+        "n": 20
+      },
+      "t1_auroc": {
+        "mean": 0.9730769230769231,
+        "sample_sd": 0.0,
+        "n": 20
+      },
+      "t1_ap": {
+        "mean": 0.9692810457516341,
+        "sample_sd": 0.0,
+        "n": 20
+      },
+      "t1_brier": {
+        "mean": 0.09755643437751185,
+        "sample_sd": 0.004225038830415687,
+        "n": 20
+      },
+      "t2_top1": {
+        "mean": 1.0,
+        "sample_sd": 0.0,
+        "n": 20
+      },
+      "t3_macro_f1": {
+        "mean": 0.9577922077922079,
+        "sample_sd": 0.0,
+        "n": 20
+      },
+      "bcq_macro_f1": {
+        "mean": 0.9155844155844156,
+        "sample_sd": 0.0,
+        "n": 20
+      }
+    },
+    "A2": {
+      "t1_f1": {
+        "mean": 0.7727272727272727,
+        "sample_sd": 0.0,
+        "n": 20
+      },
+      "t1_auroc": {
+        "mean": 0.9003365384615385,
+        "sample_sd": 0.01754025878194651,
+        "n": 20
+      },
+      "t1_ap": {
+        "mean": 0.8736070415008108,
+        "sample_sd": 0.031044658503408075,
+        "n": 20
+      },
+      "t1_brier": {
+        "mean": 0.14540569839204454,
+        "sample_sd": 0.0060406417381836395,
+        "n": 20
+      },
+      "t2_top1": {
+        "mean": 1.0,
+        "sample_sd": 0.0,
+        "n": 20
+      },
+      "t3_macro_f1": {
+        "mean": 0.7508002953818841,
+        "sample_sd": 0.059313863741329825,
+        "n": 20
+      },
+      "bcq_macro_f1": {
+        "mean": 0.5016005907637682,
+        "sample_sd": 0.11862772748265964,
+        "n": 20
+      }
+    },
+    "A3": {
+      "t1_f1": {
+        "mean": 0.9011086474501109,
+        "sample_sd": 0.02456888293241611,
+        "n": 20
+      },
+      "t1_auroc": {
+        "mean": 0.9690384615384615,
+        "sample_sd": 0.004227087098452176,
+        "n": 20
+      },
+      "t1_ap": {
+        "mean": 0.9607414301384889,
+        "sample_sd": 0.0022799793197492073,
+        "n": 20
+      },
+      "t1_brier": {
+        "mean": 0.07032256480675789,
+        "sample_sd": 0.00663992643410572,
+        "n": 20
+      },
+      "t2_top1": {
+        "mean": 1.0,
+        "sample_sd": 0.0,
+        "n": 20
+      },
+      "t3_macro_f1": {
+        "mean": 0.8820427505545473,
+        "sample_sd": 0.024681203239962243,
+        "n": 20
+      },
+      "bcq_macro_f1": {
+        "mean": 0.7640855011090946,
+        "sample_sd": 0.04936240647992438,
+        "n": 20
+      }
+    },
+    "A4": {
+      "t1_f1": {
+        "mean": 0.9090909090909091,
+        "sample_sd": 0.0,
+        "n": 20
+      },
+      "t1_auroc": {
+        "mean": 0.9722115384615384,
+        "sample_sd": 0.0068198272412227905,
+        "n": 20
+      },
+      "t1_ap": {
+        "mean": 0.9665825567406451,
+        "sample_sd": 0.012036772892224844,
+        "n": 20
+      },
+      "t1_brier": {
+        "mean": 0.07366557934249918,
+        "sample_sd": 0.005608060696370946,
+        "n": 20
+      },
+      "t2_top1": {
+        "mean": 1.0,
+        "sample_sd": 0.0,
+        "n": 20
+      },
+      "t3_macro_f1": {
+        "mean": 0.9577922077922079,
+        "sample_sd": 0.0,
+        "n": 20
+      },
+      "bcq_macro_f1": {
+        "mean": 0.9155844155844156,
+        "sample_sd": 0.0,
+        "n": 20
+      }
+    },
+    "A5": {
+      "t1_f1": {
+        "mean": 0.9090909090909091,
+        "sample_sd": 0.0,
+        "n": 20
+      },
+      "t1_auroc": {
+        "mean": 0.9713461538461539,
+        "sample_sd": 0.007740235306730028,
+        "n": 20
+      },
+      "t1_ap": {
+        "mean": 0.964786883663722,
+        "sample_sd": 0.01411281211970469,
+        "n": 20
+      },
+      "t1_brier": {
+        "mean": 0.07359803145652577,
+        "sample_sd": 0.005630691357501077,
+        "n": 20
+      },
+      "t2_top1": {
+        "mean": 0.565,
+        "sample_sd": 0.4976523834332979,
+        "n": 20
+      },
+      "t3_macro_f1": {
+        "mean": 0.9577922077922079,
+        "sample_sd": 0.0,
+        "n": 20
+      },
+      "bcq_macro_f1": {
+        "mean": 0.9155844155844156,
+        "sample_sd": 0.0,
+        "n": 20
+      }
+    },
+    "A6": {
+      "t1_f1": {
+        "mean": 0.8971175166297117,
+        "sample_sd": 0.02924281983851627,
+        "n": 20
+      },
+      "t1_auroc": {
+        "mean": 0.9695192307692307,
+        "sample_sd": 0.0012900392177883355,
+        "n": 20
+      },
+      "t1_ap": {
+        "mean": 0.965813492063492,
+        "sample_sd": 0.0015084585562498607,
+        "n": 20
+      },
+      "t1_brier": {
+        "mean": 0.08862479028710468,
+        "sample_sd": 0.007017712686527726,
+        "n": 20
+      },
+      "t2_top1": {
+        "mean": 1.0,
+        "sample_sd": 0.0,
+        "n": 20
+      },
+      "t3_macro_f1": {
+        "mean": 0.9029440106627029,
+        "sample_sd": 0.017082404105432776,
+        "n": 20
+      },
+      "bcq_macro_f1": {
+        "mean": 0.805888021325406,
+        "sample_sd": 0.03416480821086551,
+        "n": 20
+      }
+    }
+  },
+  "model_sha256": "500872753a71b63e712645d6b4f1776f63e02725dd4f1f22d61ca8e96c7152b3",
+  "elapsed_seconds": 755.1216420000001,
+  "conclusion": "P1 response task does not identify original vs C structural improvement; no winner justified",
+  "P1_behavior_or_state_truth_created": false,
+  "historical_C_P0_controls": [
+    {
+      "method": "original_frozen",
+      "name": "原始 A0",
+      "n_warm_start_runs": 1.0,
+      "t1_accuracy_mean": 0.9130434782608695,
+      "t1_accuracy_sample_sd": null,
+      "t1_f1_mean": 0.9090909090909091,
+      "t1_f1_sample_sd": null,
+      "brier_mean": 0.07456376161447138,
+      "brier_sample_sd": null,
+      "auroc_mean": 0.9730769230769231,
+      "auroc_sample_sd": null,
+      "t2_emitted_top1_mean": 1.0,
+      "t2_emitted_top1_sample_sd": null
+    },
+    {
+      "method": "head_continue",
+      "name": "原判断头续训",
+      "n_warm_start_runs": 1.0,
+      "t1_accuracy_mean": 0.9782608695652174,
+      "t1_accuracy_sample_sd": null,
+      "t1_f1_mean": 0.975609756097561,
+      "t1_f1_sample_sd": null,
+      "brier_mean": 0.02816585320422038,
+      "brier_sample_sd": null,
+      "auroc_mean": 0.9923076923076923,
+      "auroc_sample_sd": null,
+      "t2_emitted_top1_mean": 1.0,
+      "t2_emitted_top1_sample_sd": null
+    },
+    {
+      "method": "visible_context",
+      "name": "可见上下文残差",
+      "n_warm_start_runs": 5.0,
+      "t1_accuracy_mean": 0.9782608695652174,
+      "t1_accuracy_sample_sd": 0.0,
+      "t1_f1_mean": 0.975609756097561,
+      "t1_f1_sample_sd": 0.0,
+      "brier_mean": 0.02738401073767202,
+      "brier_sample_sd": 0.001416675225122501,
+      "auroc_mean": 0.9980769230769231,
+      "auroc_sample_sd": 0.0,
+      "t2_emitted_top1_mean": 1.0,
+      "t2_emitted_top1_sample_sd": 0.0
+    },
+    {
+      "method": "visible_context_balanced",
+      "name": "上下文＋机制平衡",
+      "n_warm_start_runs": 5.0,
+      "t1_accuracy_mean": 0.9739130434782609,
+      "t1_accuracy_sample_sd": 0.009722034684781687,
+      "t1_f1_mean": 0.9704878048780488,
+      "t1_f1_sample_sd": 0.011453031104267226,
+      "brier_mean": 0.027338435082876627,
+      "brier_sample_sd": 0.0010819488731178054,
+      "auroc_mean": 0.9980769230769231,
+      "auroc_sample_sd": 0.0,
+      "t2_emitted_top1_mean": 0.99,
+      "t2_emitted_top1_sample_sd": 0.022360679774997918
+    }
+  ],
+  "artifact_metadata_note": "Description-only state_metrics correction and fixed historical C source refs; exported tensors and experimental scores unchanged.",
+  "parameter_counts": {
+    "original_structured": 18377,
+    "reference_structured": 20370,
+    "trainable_response_each": 838869
+  },
+  "validation": {
+    "existing_input_contract_tests_passed": 2,
+    "original_A4_A5_loss_and_common_selection_real_dev_check": true,
+    "standalone_reload_original_tensors_equal_source": true,
+    "response_tensors_equal_reference": true
+  }
+}

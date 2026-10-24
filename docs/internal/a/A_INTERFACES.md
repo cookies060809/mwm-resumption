@@ -1,7 +1,7 @@
-# A 完整上下文模型接口
+# A 原模型与上下文对照接口
 
 当前内部接口为 `a-context-ec-jmf/v1`，不宣称公共M1已三方冻结。
-B维护数据/schema，C维护公共评测/MENTIS。本分支只部署 `ContextECJMF`。
+B维护数据/schema，C维护公共评测/MENTIS。本比较分支恢复原 `NeuralECJMF`，保留 `ContextECJMF` 对照。
 
 ## 输入与状态
 
@@ -36,7 +36,7 @@ prediction = model.predict(Batch(input_only_examples), evidence=True)
 ```
 
 保存格式携带 architecture、完整state_dict、seed、selected_epoch、config、provenance；
-严格加载，未知/旧模型格式拒绝。ContextECJMF是唯一部署模型，私有骨干仅为其实现组件。
+C入口严格加载其格式；原模型由下文READY配对入口加载正式v3参数，未恢复旧中央差分/SMC。
 训练按C方法冻结骨干，重初始化上下文注意力/残差，真实自动微分40轮、dev选模、保存重载。
 不是全骨干从零训练；现有完整权重已包含重建初始冻结骨干所需参数。
 `seed`用于一次训练；`--all-seeds`才展开固定0–19。C原实验只有0–4。
@@ -63,7 +63,7 @@ C：完整理解枚举与嵌套图的无损输入、公共update/MENTIS、T2条�
 P1：按团队2026-10-23决定仅采用公开派生数据，不再规划真人采集。新P1与P0的窗口、
 任务语义及六因子掩码仍需对齐，不能将agent/机器人/规格数据写成真人效果。
 
-旧A独立模型/参考训练/历史结果已移出当前分支，仍可在原A分支查看。
+旧中央差分/SMC及重复历史结果仍未恢复；本比较分支仅恢复正式神经原模型与机制代码。
 B的 `scripts/check_p0_release_a.py` 是历史Git-ref参考模型检查器，保留原样，
 只应用于旧A历史引用；当前模型应使用本文件的新加载/预测入口。
 
@@ -110,3 +110,16 @@ exact/token F1对完整参考token计算。生成用BOS开始、EOS结束，不�
 复现入口：`python -m models.ecr_mwm.ready_training --config configs/a_ready_p1.json`。
 正式实际结果以 `results/p1/a_ready_response/README.md` 与report.json为准，不能用可运行性代替续答质量。
 C若接入此辅助任务应使用上述task路由/response字段；不把response转成p_resume、T1/T2或六状态分数。
+
+## 原A的P1配对比较
+
+`p1_comparison.py`读取固定 `dec55faa` 的 `a_neural_v03_v3/a0_seed0.pt`，
+保留 `b-p0-v03/v3` 语义和READY部分子图完成保护。
+READY模型格式不变，配置 `state_model=original` 选择原 `NeuralECJMF`；旧配置默认 `context`，
+因此上一C分支的完整READY模型仍可严格重载。原模型最终checkpoint同样自包含。
+
+响应模块和训练RNG匹配 `80b2982` 的C分支seed0，种子、12轮预算和dev/test口径不变。
+优化器仍仅更新响应模块；原模型结构参数不使用不存在的P1状态/恢复监督。
+A1–A6完整机制恢复用于受控检查；响应不消费结构状态，其P1响应机制效果不可识别。
+不可把原P0状态数据或旧P0消融均值称为P1实验；实际边界和结果见
+`results/p1/a_original_comparison/README.md`。

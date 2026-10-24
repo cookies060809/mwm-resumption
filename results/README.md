@@ -1,15 +1,14 @@
-# 当前正式模型
+# 当前正式模型与实验
 
-本分支的结构化基础模型为 [C可见上下文完整模型](p0/c_visible_context/README.md)，包括完整参数、
-来源与复现说明；新训练默认输出 `results/runs/`，仅最终选中模型及一份JSON汇总。
-不保留每轮日志、中间checkpoint或重复CSV/图表。
+本比较分支恢复原A正式神经模型，使用固定旧v3参数进行P1续答适配训练；
+C模型及既有P1结果作为固定对照。没有恢复中央差分/SMC、玩具材料或重复历史结果目录。
 
-旧A方法/历史训练结果已从当前版本移除，仍在原A分支 `feat/a-p0-v03-neural@dec55fa`，
-未改写历史。所有P0结果仅为脚本诊断，不是P1真人预测证据。
+- [原A与C的P1配对训练、历史消融及复现](p1/a_original_comparison/README.md)。
+- [已完成C分支P1训练](p1/a_ready_response/README.md)：seed0、12轮。
+- [C结构化基础模型及原始来源](p0/c_visible_context/README.md)：该页为当时集成的历史记录。
+- [此前公开派生P1的冻结状态探针](p1/a_context_public_probe/README.md)：没有P1拟合，T1/T2未评分。
 
-公开派生P1试运行见 [准入、受控状态诊断和限制](p1/a_context_public_probe/README.md)：
-模型冻结，无P1拟合；T1/T2未评分，单类状态高分及REBOOT接触标签零支持均如实报告。
-
-READY正式两任务适配见 [P1神经续答训练与复现](p1/a_ready_response/README.md)：
-保存完整结构化模型与实际训练的文本辅助模块；seed0完成12轮，按dev选择，
-只对公开baseline回答做蒸馏一致性诊断，不代表真人恢复或联合信念学习。
+当前P1续答不消费结构状态，不能从响应指标宣称原/C结构模型优劣。
+READY六状态仍来自P0；历史P0消融和C模块warm-start结果均单独标注，不冒充P1训练。
+正式交付每组仅保留最终模型、报告与复现说明；没有日志、中间checkpoint或CSV/图表副本。
+原A分支及main未修改，历史未改写。

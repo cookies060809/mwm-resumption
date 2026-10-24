@@ -13,7 +13,7 @@ from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence, pad_se
 from torch.nn import functional as F
 
 from models.ecr_mwm.context_residual import ContextECJMF
-from models.ecr_mwm.neural_model import Batch
+from models.ecr_mwm.neural_model import Batch, NeuralECJMF
 from models.ecr_mwm.ready_data import source_tokens, tokens, state_input
 
 FORMAT='a-ready-ec-jmf/v1'
@@ -68,7 +68,11 @@ class ResponseDecoder(nn.Module):
 class ReadyModel(nn.Module):
     def __init__(self, context_architecture, vocabulary, config):
         super().__init__()
-        self.context=ContextECJMF(**context_architecture)
+        self.state_architecture=context_architecture
+        if config.get('state_model','context')=='original':
+            self.context=NeuralECJMF(config.get('variant','A0'),context_architecture['hidden'],context_architecture['semantic_contract'])
+        else:
+            self.context=ContextECJMF(**context_architecture)
         self.context.requires_grad_(False)
         self.vocabulary=vocabulary
         self.index={word:i for i,word in enumerate(vocabulary)}
@@ -101,7 +105,7 @@ class ReadyModel(nn.Module):
             # READY state examples have no horizon contract: expose T3 only.
             adapted=[{'input':state_input(inp)} for inp in inputs]
             return [{'task':task,'state_distributions':p['t3'],'T1':None,'T2':None}
-                    for p in self.context.predict(Batch(adapted))]
+                    for p in self.context.predict(Batch(adapted,self.context.variant,self.context.semantic_contract))]
         if task!='interruption_response': raise ValueError('UNKNOWN_READY_TASK')
         generated=self.response.generate(self.source_batch(inputs),self.config['max_generated_tokens'])
         results=[]
@@ -116,7 +120,7 @@ class ReadyModel(nn.Module):
 
 def checkpoint_bytes(model, metadata):
     buffer=io.BytesIO()
-    torch.save({'format':FORMAT,'context_architecture':model.context.architecture,
+    torch.save({'format':FORMAT,'context_architecture':model.state_architecture,
                 'vocabulary':model.vocabulary,'config':model.config,'metadata':metadata,
                 'state_dict':{k:v.detach().cpu().clone() for k,v in model.state_dict().items()}},buffer)
     return buffer.getvalue()
