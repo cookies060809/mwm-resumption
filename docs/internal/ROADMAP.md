@@ -68,7 +68,7 @@
 - [x] 仲裁 14 条 `contact_cancellation` B 臂（`UNKNOWN`→`BELIEVES_VALID`，P0 v0.4）并写明 P02 时序优先规则
 - [x] T3 逐因子证据映射（`docs/data/t3_evidence_mapping.md`，待 C 确认指标实现）
 - [x] 文献全文文本通读 13 篇 + Related Work 草稿（`docs/literature/reading_notes.md`、`related_work_draft.md`；待 A 并入技术方案、B 抽查数字）
-- [ ] A/C 盲审 8 条并仲裁，`annotation.status` 升至 `adjudicated`
+- [ ] v0.4 盲审 8 条并仲裁，`annotation.status` 升至 `adjudicated`（包与对比工具已就绪，等 A/C 返回）
 
 ### C
 

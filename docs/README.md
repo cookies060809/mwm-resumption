@@ -25,6 +25,8 @@
 | [annotation/annotation_handbook_v1.0.md](annotation/annotation_handbook_v1.0.md) | 事件、状态标签、证据链、事件级理解（U）、八机制、P0/P1 边界与标注 SOP | B | v1.0 已冻结 |
 | [annotation/label_quality_plan_v0.1.md](annotation/label_quality_plan_v0.1.md) | P0 质量门、P1 一致性指标、噪声上限与交接模板 | B | v0.1 |
 | [annotation/p0_pair_review_table.md](annotation/p0_pair_review_table.md) | P01–P08 复核表与机器预检结果（v0.2 的 120 对按同一方法审计） | B | v1.0 |
+| [annotation/blind_review_v0.4_protocol.md](annotation/blind_review_v0.4_protocol.md) | v0.4 盲审协议、合法值与返回格式 | B | 待 A/C |
+| [annotation/blind_review_v0.4_packet.md](annotation/blind_review_v0.4_packet.md) | 8 条去标签盲审样本（每机制 1 条） | B | v0.4 |
 | [data/data_card.md](data/data_card.md) | 数据集说明、P0 v0.4（254 条）与 P1 公开派生包、划分与限制 | B | v0.5 |
 | [data/external_datasets.md](data/external_datasets.md) | 外部数据集核查：HoloAssist / InteRead / Assembly101 / Ego4D Goal-Step / RFM-HRI，含派生规则与实测数字 | B | v0.1 |
 | [data/t3_evidence_mapping.md](data/t3_evidence_mapping.md) | T3 逐因子证据口径（供 A/C 对齐） | B | v1.0 |
