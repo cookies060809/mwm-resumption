@@ -73,6 +73,18 @@
 | A 的适配器接入 v0.4 | 记录 schema 未变（`p0-record/v0.2.0`），适配器可读；但 v0.3 上跑出的结果**全部作废**，需在 v0.4 / ready-v1.1 上重跑 |
 | P1 真人采集 | 2026-10-23 已 descope；P1 以公开派生包交付，六变量只剩 V 全量有效 |
 
+
+### 1.5 状态更新（2026-10-24，文献通读与 Related Work 草稿）
+
+| 事项 | 状态 |
+|---|---|
+| 文献全文文本通读 | 9 篇：MWM/MENTIS、BDI 2008、2017 滑窗、SIPS、GODR、EchoChain、DuplexLedger、MMEA、SymbolicToM；方法/实验/局限节已核对并写入 `docs/literature/reading_notes.md`。**机器辅助，B 未逐段复核** |
+| Related Work | `docs/literature/related_work_draft.md` 已按 5 条脉络写成，含差异化表；待 A 并入技术方案 |
+| 引用元数据 | `docs/literature/references.bib`：正文 9 篇 + 背景 3 篇，均已核实 DOI/arXiv；背景 3 篇未读全文，只能题名/摘要级引用 |
+| 新增候选 | EchoChain、DuplexLedger、MMEA、SymbolicToM、NAQD、ProAgentBench、BeliefTrack；前四篇已读，后三篇仅摘要。矩阵 #20–#26 |
+| “首次”声明 | 已确认不能在“心智世界模型 / 中断后状态更新 / 目标生命周期 / 恢复契约 / 恢复位置”任一单项上使用；可主张的只剩“外部观察者 + 六因子 + 认知可达性门控 + 恢复步骤”的组合 |
+| 仍待 B 本人 | 抽查 9 篇关键数字；读 Memory for Goals 原文（公式）；补 Ratwani 2008 与 Brumby 2013 摘要或全文；读完后升级阅读等级 |
+
 ## 2. 我可以直接补的（已做 / 待做）
 
 **已在本分支完成：**

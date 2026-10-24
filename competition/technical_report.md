@@ -353,7 +353,9 @@ $$
 
 ### 5.3 参考文献
 
-- 竞品矩阵（初版）：[docs/literature/competitor_matrix.md](../docs/literature/competitor_matrix.md)
+- 竞品矩阵（含阅读等级）：[docs/literature/competitor_matrix.md](../docs/literature/competitor_matrix.md)
+- 精读笔记与 Related Work 草稿：[reading_notes.md](../docs/literature/reading_notes.md)、[related_work_draft.md](../docs/literature/related_work_draft.md)
+- BibTeX（已核实元数据）：[references.bib](../docs/literature/references.bib)
 
 > 正式提交前须按官方模板补齐全部原文出处与引用格式；**内部研究方案不作为提交材料，不得出现在参考文献中**。
 

@@ -15,8 +15,7 @@
 | 仅元数据 | 只核实了标题、作者、年份、链接存在 |
 | 未读 | 只有索引，不得引用具体结论 |
 
-**当前事实：** 只有 RFM-HRI 与 REPAIR-Bench 达到“已读”级；MWM、GODR、2017 滑窗达到“仅摘要/仅元数据”；
-其余仍是“未读”。任何“首次”“优于”类表述都不得基于本文件作出。
+**当前事实（2026-10-24）：** 已有 9 篇达到“已读（全文文本，机器辅助，待 B 复核）”：MWM/MENTIS、BDI 2008、2017 滑窗、SIPS、GODR、EchoChain、DuplexLedger、MMEA、SymbolicToM；RFM-HRI 与 REPAIR-Bench 为此前人工已读；其余仍是“未读”。任何“首次”“优于”类表述都不得基于本文件作出。逐篇细节见 [reading_notes.md](reading_notes.md)，成稿见 [related_work_draft.md](related_work_draft.md)。
 
 ## 1. 逐条记录
 
@@ -24,7 +23,7 @@
 
 - 原文：arXiv 2607.27201；代码 `mental-world/Mentis`（见 [mwm_audit.md](mwm_audit.md)）。
 - 元数据核实：2026-07-29 提交；作者 Hao Fei、Yiran Zhao；题名 *Mental World Modeling*。
-- 阅读范围：**仅摘要**（2026-10-24 抓取）。
+- 阅读范围：**已读（全文文本，2026-10-24；方法/实现/评测节）**，详见 §4.1。
 - 摘要级主张：现有世界模型只回答“物理上是什么/在哪/如何演化”，而人类行为由隐藏心智状态驱动；
   需要同时跟踪每个 agent 知道什么、相信什么。
 - 与本项目关系：动机同向；本项目不能宣称“首次把目标/意图加入世界模型”。
@@ -48,7 +47,7 @@
 
 ### C4 Suspending and Resuming Tasks in BDI，2008
 
-- 阅读范围：**未读**。索引级：目标暂停、重新考虑、计划恢复。
+- 阅读范围：**已读（全文文本，2026-10-24）**，详见 §4.1。索引级：目标暂停、重新考虑、计划恢复。
 - 与本项目关系：`ACTIVE/SUSPENDED/ABANDONED` 的概念来源之一；不能宣称“首次设计生命周期”。
 - 关键差异：BDI 是 agent 管理自身目标；本项目是**外部观察者**推断他人隐藏状态。
 - 待核实：暂停/恢复的形式化条件、与承诺语义的对应。
@@ -76,14 +75,14 @@
 
 - 原文：*Dynamic Goal Recognition Using Windowed Action Sequences*，AAAI-17 Workshops。
 - 元数据核实：Menager、Choi、Floyd、Task、Aha（2026-10-24 抓取）。
-- 阅读范围：**仅元数据**（摘要未获取）。
+- 阅读范围：**已读（全文文本，2026-10-24）**，详见 §4.1。
 - 索引级主张：滑窗目标识别、目标切换、旧任务恢复案例。
 - 与本项目关系：最接近“恢复”的目标识别工作之一；不能宣称“首次识别目标切换与恢复”。
 - 待核实：窗口长度、候选目标集、恢复案例的标签定义。
 
 ### C9 SIPS，2020
 
-- 阅读范围：**未读**（原 PDF 抓取超时，2026-10-24）。
+- 阅读范围：**已读（全文文本，2026-10-24）**，详见 §4.1。
 - 索引级：目标/计划后验、粒子滤波与重规划。
 - 与本项目关系：概率化目标推断的强基线来源；不能宣称“首次概率化推断目标”。
 - 待核实：状态空间、粒子数、评测任务、公开实现。
@@ -129,7 +128,7 @@
 - 原文：arXiv 2606.23797。
 - 元数据核实：2026-06-22 提交；作者 Mariano Garralda-Barrio；题名
   *From Task-Guided Conversational Graphs to Goal-Oriented Dialogue Runtimes*。
-- 阅读范围：**仅摘要**（2026-10-24 抓取）。
+- 阅读范围：**已读（全文文本，2026-10-24）**，详见 §4.1。
 - 摘要级主张：图/多 agent 编排解决了生产工作流，但不自动解决用户维护多个相互依赖目标时的对话连续性。
 - 与本项目关系：对话运行时目标生命周期与恢复契约是最接近的工程侧工作；不能宣称“首次设计恢复契约/恢复点”。
 - 关键差异：它从**运行时自身**的目标状态出发；本项目从**不完整外部证据**推断人物主观状态。
@@ -174,3 +173,73 @@
    2017/SIPS/2024 → INSIGHT/MWCRL/EgoToM → GDGR/Assistance。
 2. 每篇读完把本文件的“阅读范围”升级，并把可引用事实写进对应小节。
 3. 只在该文件升级后再改 `competitor_matrix.md` 的“核查状态”列。
+
+
+## 4. 2026-10-24 精读更新
+
+本轮对 C1/C4/C8/C9/C16 做了全文文本通读（方法/实验/局限节），并新增 7 条候选。详细证据与数字见 [reading_notes.md](reading_notes.md)。
+
+### 4.1 已升级的既有条目
+
+- **C1 MWM/MENTIS → 已读（全文文本）**：状态=物理组件+心智组件；MENTIS 用可校验 JSON；Menti-Bench（文本/图像序列/带声视频）；8 个 LLM 世界模型；完整模型 F1 90.7、人类 98.5（论文自报）；oracle 干预显示转移模拟是最大瓶颈（gold transition +3.5 F1）。代码 `mental-world/Mentis`，MIT，main。
+- **C4 BDI 2008 → 已读（全文文本）**：暂停时附重新考虑条件；承诺因素含效用/优先级/截止期/成本/依赖/交互/已投入努力/成功概率；CAN 语言与自顶向下暂停/恢复机制。
+- **C8 2017 滑窗 → 已读（全文文本）**：算法无关的滑窗外挂；底层 SET-PR；三个域（ASM、Rovers、Childsnack）；比不设窗口更快更稳地检测目标变化。
+- **C9 SIPS → 已读（全文文本）**：PDDL + boundedly-rational agent + 序贯蒙特卡洛；作者自述局限为目标集有限、目标非层级、主要确定性转移。
+- **C16 GODR → 已读（全文文本）**：目标结构为有向图（parent/depends_on/blocks/supersedes/resumes/invalidates）；生命周期、恢复契约、失效关系显式化；与 BDI 兼容但更窄，不做完整 BDI agent。
+
+### 4.2 新增条目
+
+#### C20 EchoChain，2026
+
+- 原文：arXiv 2604.16456（2026-04-08）；作者 Modi、Mahajan、Wetter、Welles（Labelbox）。
+- 阅读范围：**已读（全文文本，方法/失败分类/结果/局限）**。
+- 任务：全双工语音助手在被打断后更新任务状态；200 段被打断对话；四个闭源模型；MPR/MCP 两个指标。
+- 结果：四个模型整段通过率（MPR）均低于 50%（论文自报）。
+- 失败分类：Contextual Inertia / Interruption Amnesia / Objective Displacement。
+- 与本项目关系：最接近的“中断后状态更新”评测，但对象是 agent 自身，标签是 rubric。
+- 不能占用：“首次做中断后状态更新基准”。
+
+#### C21 DuplexLedger，2026
+
+- 原文：arXiv 2610.27581（2026-10-20）；Yuxuan Li 等。
+- 阅读范围：**已读（全文文本，任务形式化/监督/结果/失败分析）**。
+- 任务：全双工语音 agent 的持久记忆；事件级 `WRITE/UPDATE/IGNORE/RETAIN`；1,094 个中英会话。
+- 结果：五个系统无一同时占优；最好 latest-value 准确率 25.50% 但 final-state 覆盖 1.06%；最好 final-state 覆盖 2.01%；ACT-Mem 在 219 个留出会话上把 latest-value 从 4.11% 提升到 8.68%，但打断停止变慢（均论文自报）。
+- 与本项目关系：事件级记忆更新与我们的证据更新同构，但对象是 agent 记忆。
+- 不能占用：“首次事件级记忆基准”“首次提出 retain/ignore 语义”。
+
+#### C22 MMEA / Mental World Model，2026
+
+- 原文：arXiv 2610.23722（2026-10-16，v2）；Qingshi Wang、Huiqi Tong。
+- 阅读范围：**已读（全文文本，摘要/相关工作/架构/实验/结论）**。
+- 主张：LLM/ToM 缺少主观世界构建、认知—心理交互、动态演化与历史依赖；提出 MWM 与 MMEA。
+- 结果：DynToM 96.48%、RecToM 94.00%（论文自报）；DynToM 1,420 题、总计 1,820 题。
+- 与本项目关系：直接占用 “Mental World Model” 术语；需引用并区分。
+- 不能占用：“首次提出 mental world model”。
+
+#### C23 SymbolicToM，2023
+
+- 原文：ACL 2023，pp. 13960–13980；DOI 10.18653/v1/2023.acl-long.780；Sclar 等。
+- 阅读范围：**已读（全文文本，方法/实验/局限）**。
+- 方法：解码时插件；从故事逐句构建多角色信念图（支持 k 阶嵌套）；off-the-shelf NLI/OpenIE；不训练。
+- 评测：ToMi 等 false-belief 任务；多基座模型；优于 zero-shot 与 memory 基线。
+- 局限：假设故事按时间顺序；抽取依赖外部模型。
+- 与本项目关系：`B` 维强参照，但为故事问答，无 `C/Q/恢复步骤`。
+
+#### C24 NAQD Env，2026（仅摘要）
+
+- 原文：arXiv 2609.38460；选择性撤回（suspend affected actions, preserve unaffected work, resume after repair）基准。
+- 阅读范围：**仅摘要**。
+- 与本项目关系：与 `C` 的暂停/恢复语义接近；需读全文后再引用细节。
+
+#### C25 ProAgentBench，2026（仅摘要）
+
+- 原文：arXiv 2602.04482；连续工作流上的主动辅助真人数据。
+- 阅读范围：**仅摘要**。
+- 与本项目关系：邻近数据/任务，但不是中断后恢复预测。
+
+#### C26 BeliefTrack / Contextual Belief Management，2026（仅摘要）
+
+- 原文：arXiv 2605.30219；研究模型何时更新/保留信念，含 BeliefTrack 基准。
+- 阅读范围：**仅摘要**。
+- 与本项目关系：T3 邻近；需读全文后再比较。
