@@ -245,4 +245,5 @@ def main():
     else: run(args.config.resolve(),args.all_seeds)
 
 
-if __name__=='__main__': main()
+if __name__ == '__main__':
+    raise SystemExit('Retired mixed/frozen-model entry. Use python -m models.ecr_mwm.p1_training for native P1 EC-JMF training and --predict inference. Historical response-only results are not EC-JMF ablations.')

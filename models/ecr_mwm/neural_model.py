@@ -1,275 +1,225 @@
-"""Small neural EC-JMF: isolated recurrent evidence encoders + finite joint filter."""
-from dataclasses import replace
-from itertools import product
+"""P1-only neural EC-JMF: evidence encoders, joint transitions and filtering.
+
+Text enters transition gates, not a substitute outcome classifier. The outcome
+heads marginalize the filtered latent states. No pretrained state weights.
+"""
+from collections import defaultdict
 
 import torch
 from torch import nn
 from torch.nn import functional as F
+from torch.nn.utils.rnn import pack_padded_sequence,pad_packed_sequence,pad_sequence
 
-from models.ec_jmf.structured import JointState,resolve_person_event_goal
-from models.ecr_mwm.p0_adapter import person_inputs
-from models.ec_jmf.neural_filter import (PackedTopology,compile_record,probability_values,
-                                       LABELS,OFFSETS,gate_names,factor_vector)
-from models.ecr_mwm.neural_data import (event_features,state_features,WORLD_DIM,PERSON_DIM,
-                                       MENTAL_DIM,STATE_DIM)
+from models.ec_jmf.neural_filter import PackedTopology,compile_record,LABELS,OFFSETS,gate_names
+from models.ecr_mwm.neural_data import (event_features,state_features,text_tokens,MAX_STEPS,
+                                       EVENT_TYPES,WORLD_DIM,PERSON_DIM,MENTAL_DIM,STATE_DIM,CURRENT_UNDERSTANDING)
+
+CONTRACT='p1-ec-jmf/v1'
+WINDOWS=('single_response','assistant_turn','episode_tail','unobserved')
 
 
 def mlp(inputs,hidden,outputs):
     return nn.Sequential(nn.Linear(inputs,hidden),nn.Tanh(),nn.Linear(hidden,outputs))
 
 
-class Batch:
-    def __init__(self, examples, variant='A0', semantic_contract='b-p0-v03/v3'):
-        self.examples,self.variant = examples,variant
-        self.semantic_contract = semantic_contract
-        self.topology = PackedTopology([compile_record(x['input'],variant,semantic_contract=semantic_contract) for x in examples])
-        self.n = len(examples)
-        self.lengths = [len(x['input']['events']) for x in examples]
-        self.length = max(self.lengths)
-        self.world = torch.zeros(self.n,self.length,WORLD_DIM)
-        self.person = torch.zeros(self.n,self.length,PERSON_DIM)
-        self.visible = torch.zeros(self.n,self.length,dtype=torch.bool)
-        self.carry = torch.zeros_like(self.visible)
-        self.valid = torch.zeros_like(self.visible)
-        self.regularizers = []
-        for row,example in enumerate(examples):
-            world,person,visible = event_features(example['input'],leak=variant=='A1',semantic_contract=semantic_contract)
-            length = len(world)
-            self.world[row,:length] = torch.tensor(world)
-            self.person[row,:length] = torch.tensor(person)
-            self.visible[row,:length] = torch.tensor(visible)
-            self.valid[row,:length] = True
-            for time,event in enumerate(example['input']['events']):
-                u = event['delivery']['comprehension']; kind=event['semantic']['kind']
-                known = event['delivery']['access_evidence']=='ACCESSED'
-                informational = kind not in ('none','interruption','nested_task_state')
-                self.carry[row,time] = visible[time] and (variant=='A1' or (known and (
-                    not informational or u in ('UNDERSTOOD','MISUNDERSTOOD'))))
-                # Soft, input-derived event alignment; never a state_* label.
-                if known and u in ('UNDERSTOOD','MISUNDERSTOOD') and event['world']['goal_id']==example['input']['goal_id']:
-                    interpretation = event['semantic'].get('interpretation')
-                    factor,label = None,None
-                    if interpretation=='defer': factor,label='B','BELIEVES_VALID'
-                    elif interpretation=='unresolved': factor,label='B','UNRESOLVED'
-                    elif interpretation=='complete': factor,label='C','COMPLETED'
-                    elif kind=='cancellation': factor,label='B','BELIEVES_INVALID'
-                    elif kind=='completion_by_other': factor,label='C','COMPLETED'
-                    elif kind=='commitment': factor,label='C',(('ACTIVE','SUSPENDED') if semantic_contract=='b-p0-v03/v3' else 'SUSPENDED')
-                    elif kind=='abandonment': factor,label='C','ABANDONED'
-                    if factor and not (variant=='A3' and time<max(0,length-5)):
-                        columns=([OFFSETS[factor][0]+LABELS[factor].index(item) for item in label]
-                                 if isinstance(label,tuple) else OFFSETS[factor][0]+LABELS[factor].index(label))
-                        self.regularizers.append((time,row,columns))
-            if variant=='A3':
-                start = max(0,length-5)
-                self.visible[row,:start]=False;self.carry[row,:start]=False
-        self.info_pairs=[]
-        for i,left in enumerate(examples):
-            for j in range(i):
-                right=examples[j]
-                if (left.get('family') and left.get('family')==right.get('family') and
-                    left['input']['observer_graphs']==right['input']['observer_graphs'] and
-                    person_inputs(left['input'],semantic_contract)==person_inputs(right['input'],semantic_contract)):
-                    self.info_pairs.append((j,i))
-        self.final = self.topology.levels[-1]
-        self.state_record = self.final['record']
-        self.state_features = self.final['features']
-        self.final_factors = self.final['factors']
-        self._prepare_candidates(self.topology.final_states)
-        if variant=='A2': self._prepare_independent()
+def word_bags(texts,index):
+    words=[];offsets=[]
+    for text in texts:
+        offsets.append(len(words));words.extend(index.get(w,1) for w in text_tokens(text))
+    return torch.tensor(words,dtype=torch.long),torch.tensor(offsets,dtype=torch.long)
 
-    def _prepare_candidates(self, states):
-        candidates,mask = [],[]
-        for row,group in enumerate(states):
-            adapted = self.examples[row]['input']; target=adapted['goal_id'];graph=adapted['observer_graphs'][target]
-            for state in group:
-                g=state.goal(target); features=[]; valid=[]
-                for position in range(8):
-                    step=graph['steps'][position] if position<len(graph['steps']) else None
-                    ready = step is not None and graph['dependencies'] is not None and set(graph['dependencies'].get(step,()))<=g.world_done
-                    features.append([position/7,float(ready),float(step in g.known_steps),float(step==g.q)])
-                    valid.append(step is not None and step not in g.world_done)
+
+class Batch:
+    def __init__(self,examples,variant='A0',semantic_contract=CONTRACT,vocabulary=None):
+        if semantic_contract!=CONTRACT: raise ValueError('P1_CONTRACT_REQUIRED')
+        if not examples: raise ValueError('EMPTY_BATCH')
+        self.examples,self.variant,self.semantic_contract=examples,variant,semantic_contract
+        self.n=len(examples);self.lengths=[len(e['input']['events']) for e in examples]
+        self.length=max(self.lengths)
+        self.topology=PackedTopology([compile_record(e['input'],variant,semantic_contract=CONTRACT) for e in examples])
+        self.world=torch.zeros(self.n,self.length,WORLD_DIM)
+        self.person=torch.zeros(self.n,self.length,PERSON_DIM)
+        self.visible=torch.zeros(self.n,self.length,dtype=torch.bool)
+        self.valid=torch.zeros_like(self.visible)
+        self.actions=defaultdict(list)
+        self.window=torch.zeros(self.n,len(WINDOWS))
+        world_text=[];person_text=[]
+        for row,example in enumerate(examples):
+            inputs=example['input'];events=inputs['events']
+            w,p,v=event_features(inputs,leak=variant=='A1',semantic_contract=CONTRACT)
+            length=len(events);self.world[row,:length]=torch.tensor(w);self.person[row,:length]=torch.tensor(p)
+            self.visible[row,:length]=torch.tensor(v);self.valid[row,:length]=True
+            start=self.topology.compiled[row]['window_start']
+            if variant=='A3': self.visible[row,:start]=False;self.person[row,:start]=0
+            self.window[row,WINDOWS.index(inputs['window']['kind'])]=1
+            for time in range(self.length):
+                if time>=length:
+                    world_text.append('');person_text.append('');continue
+                event=events[time]
+                world_text.append((inputs.get('goal_text','')+' ' if time==0 else '')+event['world']['description'])
+                text=event['world']['description'] if variant=='A1' else event.get('available_text','')
+                person_text.append(text if bool(self.visible[row,time]) else '')
+                own=event['person']
+                if own and time>0:
+                    step=own['step_id'];steps=inputs['observer_graphs'][inputs['goal_id']]['steps']
+                    level=self.topology.compiled[row]['event_start_levels'][time]
+                    self.actions[level].append((row,time,EVENT_TYPES.index(own['event_type']),steps.index(step) if step in steps else None))
+        index={w:i for i,w in enumerate(vocabulary or ['<pad>','<unk>'])}
+        self.world_words,self.world_offsets=word_bags(world_text,index)
+        self.person_words,self.person_offsets=word_bags(person_text,index)
+        self.carry=self.visible
+        final=self.topology.levels[-1]
+        self.state_record=final['record'];self.state_features=final['features'];self.final_factors=final['factors']
+        candidates=[];mask=[]
+        for row,states in enumerate(self.topology.final_states):
+            inputs=examples[row]['input'];goal=inputs['goal_id'];steps=inputs['observer_graphs'][goal]['steps']
+            for state in states:
+                g=state.goal(goal);features=[];valid=[]
+                for position in range(MAX_STEPS):
+                    step=steps[position] if position<len(steps) else None
+                    # Missing dependencies stay unknown; retries are legal P1 steps.
+                    features.append([position/max(1,len(steps)-1),float(step in g.person_done),
+                                     float(step in g.known_steps),float(step==g.q)])
+                    valid.append(step is not None)
                 candidates.append(features);mask.append(valid)
         self.candidates=torch.tensor(candidates,dtype=torch.float32)
         self.candidate_mask=torch.tensor(mask,dtype=torch.bool)
-
-    def _prepare_independent(self):
-        # A2 replaces the joint BCQ posterior with p(B|h)p(C|h)p(Q|h).
-        # World states are still filtered and never encoded into these factors.
-        world_groups,groups,virtual,rec,bs,cs,qs = [],[],[],[],[],[],[]
-        for row,states in enumerate(self.topology.final_states):
-            adapted=self.examples[row]['input'];target=adapted['goal_id'];graphs=adapted['observer_graphs']
-            worlds={}
-            for state in states:
-                g=state.goal(target);key=(g.validity,g.feasibility,g.world_done,g.access)
-                if key not in worlds: worlds[key]=(len(world_groups),state);world_groups.append(row)
-                groups.append(worlds[key][0])
-            row_virtual=[]
-            for _,(world_index,state) in worlds.items():
-                goal=state.goal(target)
-                own=[e['person'] for e in adapted['events'] if e['person'] and e['person']['goal_id']==target]
-                # Independent observable memory, never an arbitrary latent representative.
-                waiting=False; nested_done={g:set() for g in graphs if g!=target};pending=[]
-                for event in adapted['events']:
-                    received=event['delivery']['access_evidence']=='ACCESSED'
-                    understood=event['delivery']['comprehension'] in ('UNDERSTOOD','MISUNDERSTOOD')
-                    if received and understood and event['semantic'].get('interpretation')=='defer': waiting=True
-                    act=event['person']
-                    if act and act['event_type']=='commitment_expressed': waiting=False
-                    if act and act['goal_id'] in nested_done:
-                        child=act['goal_id']
-                        if act['event_type'] in ('goal_start','step_started','step_completed','step_attempted') and child not in pending: pending.append(child)
-                        if act['event_type']=='step_completed': nested_done[child].add(act['step_id'])
-                        if set(graphs[child]['steps'])<=nested_done[child] and child in pending: pending.remove(child)
-                known=frozenset(e['step_id'] for e in own if e['step_id'])
-                done=frozenset(e['step_id'] for e in own if e['event_type']=='step_completed')
-                for b,c,q in product(range(4),range(5),list(range(len(graphs[target]['steps'])))+[8,9]):
-                    labelq=graphs[target]['steps'][q] if q<8 else LABELS['Q'][q]
-                    newgoal=replace(goal,belief=LABELS['B'][b],commitment=LABELS['C'][c],q=labelq,
-                                    known_steps=known,person_done=done,remembered=bool(own),waiting=waiting,available=(),understanding=())
-                    new=JointState(tuple(newgoal if g.goal_id==target else g for g in state.goals),tuple(pending))
-                    row_virtual.append(new);rec.append(row);bs.append(b);cs.append(c);qs.append(q)
-                    virtual.append(world_index)
-            if row==0: all_virtual=[]
-            all_virtual.append(row_virtual)
-        self.world_group=torch.tensor(groups,dtype=torch.long)
-        self.world_group_count=len(world_groups)
-        self.virtual_world=torch.tensor(virtual,dtype=torch.long)
-        self.virtual_b=torch.tensor(bs);self.virtual_c=torch.tensor(cs);self.virtual_q=torch.tensor(qs)
-        self.state_record=torch.tensor(rec,dtype=torch.long)
-        self.state_features=torch.tensor([state_features(s,self.examples[r]['input']['goal_id'],
-                         self.examples[r]['input']['observer_graphs']) for r,group in enumerate(all_virtual) for s in group])
-        self.final_factors=torch.tensor([factor_vector(s,self.examples[r]['input']['goal_id'],
-                         self.examples[r]['input']['observer_graphs']) for r,group in enumerate(all_virtual) for s in group])
-        self._prepare_candidates(all_virtual)
+        # Runtime needs packed tensors and trace indices, not symbolic graph copies.
+        self.topology.compiled=[{key:item[key] for key in ('event_levels','event_start_levels','window_start')}
+                                for item in self.topology.compiled]
+        del self.topology.final_states
 
 
 class NeuralECJMF(nn.Module):
-    def __init__(self,variant='A0',hidden=24,semantic_contract='legacy-v1'):
-        super().__init__();self.variant,self.hidden=variant,hidden
-        self.semantic_contract = semantic_contract
-        self.world_encoder=nn.GRUCell(WORLD_DIM,hidden)
-        self.person_encoder=nn.GRUCell(PERSON_DIM,hidden)
-        self.person_gates=mlp(hidden+MENTAL_DIM,hidden,len(gate_names(semantic_contract)))
-        self.world_gates=mlp(hidden,hidden,len(gate_names(semantic_contract)))
-        self.independent=nn.ModuleDict({factor:mlp(hidden,hidden,len(LABELS[factor])) for factor in 'BCQ'})
-        self.resume_head=mlp(STATE_DIM,hidden,1)
+    def __init__(self,variant='A0',hidden=24,semantic_contract=CONTRACT,vocabulary_size=2):
+        super().__init__()
+        if semantic_contract!=CONTRACT: raise ValueError('P1_CONTRACT_REQUIRED')
+        self.variant,self.hidden,self.semantic_contract=variant,hidden,semantic_contract
+        self.vocabulary_size=vocabulary_size
+        self.world_text=nn.EmbeddingBag(vocabulary_size,32,mode='mean',padding_idx=0)
+        self.person_text=nn.EmbeddingBag(vocabulary_size,32,mode='mean',padding_idx=0)
+        self.world_projection=nn.Linear(32,WORLD_DIM,bias=False)
+        self.person_projection=nn.Linear(32,PERSON_DIM,bias=False)
+        self.world_encoder=nn.GRU(WORLD_DIM,hidden,batch_first=True)
+        self.person_encoder=nn.GRU(PERSON_DIM,hidden,batch_first=True)
+        self.person_gates=mlp(hidden+MENTAL_DIM,hidden,len(gate_names(CONTRACT)))
+        self.world_gates=mlp(hidden,hidden,len(gate_names(CONTRACT)))
+        self.resume_head=mlp(STATE_DIM+len(WINDOWS),hidden,1)
         self.step_head=mlp(STATE_DIM+4,hidden,1)
-        if variant in ('A2','A6'):
-            self.person_gates.requires_grad_(False)
+        self.event_head=mlp(MENTAL_DIM+hidden,hidden,len(EVENT_TYPES)+MAX_STEPS)
+        if variant=='A6':
+            self.person_gates.requires_grad_(False);self.world_gates.requires_grad_(False)
 
     def encode(self,batch):
-        world=torch.zeros(batch.n,self.hidden);person=torch.zeros_like(world)
-        worlds,persons,memories=[],[],[]
-        for time in range(batch.length):
-            w=self.world_encoder(batch.world[:,time],world)
-            world=torch.where(batch.valid[:,time,None],w,world)
-            proposal=self.person_encoder(batch.person[:,time],person)
-            persons.append(torch.where(batch.visible[:,time,None],proposal,person))
-            person=torch.where(batch.carry[:,time,None],proposal,person)
-            worlds.append(world);memories.append(person)
-        return torch.stack(worlds,1),torch.stack(persons,1),torch.stack(memories,1)
+        wt=self.world_projection(self.world_text(batch.world_words,batch.world_offsets)).reshape(batch.n,batch.length,-1)
+        pt=self.person_projection(self.person_text(batch.person_words,batch.person_offsets)).reshape(batch.n,batch.length,-1)
+        world_input=pack_padded_sequence(batch.world+wt,batch.lengths,batch_first=True,enforce_sorted=False)
+        world,_=self.world_encoder(world_input)
+        world,_=pad_packed_sequence(world,batch_first=True,total_length=batch.length)
+        visible_counts=batch.visible.sum(1)
+        personal=[(batch.person[row]+pt[row])[batch.visible[row]] if visible_counts[row] else
+                  torch.zeros(1,PERSON_DIM) for row in range(batch.n)]
+        padded=pad_sequence(personal,batch_first=True)
+        packed=pack_padded_sequence(padded,visible_counts.clamp_min(1).cpu(),batch_first=True,enforce_sorted=False)
+        encoded,_=self.person_encoder(packed)
+        encoded,_=pad_packed_sequence(encoded,batch_first=True)
+        encoded=torch.cat((torch.zeros(batch.n,1,self.hidden),encoded),1)
+        indices=batch.visible.long().cumsum(1)
+        person=encoded[torch.arange(batch.n)[:,None],indices]
+        return world,person,person
 
-    def independent_probs(self,encoding,batch):
-        result={f:self.independent[f](encoding).softmax(-1) for f in 'BC'}
-        logits=self.independent['Q'](encoding)
-        lengths=torch.tensor([len(e['input']['observer_graphs'][e['input']['goal_id']]['steps']) for e in batch.examples])
-        valid=(torch.arange(10)[None,:]<lengths[:,None]) | (torch.arange(10)[None,:]>=8)
-        result['Q']=logits.masked_fill(~valid,-1e9).softmax(-1)
-        return result
+    def causal_consistency(self,batch,priors,memory):
+        losses=[]
+        for time,targets in batch.actions.items():
+            weights,rows,features=priors[time]
+            active=torch.zeros(batch.n,dtype=torch.bool)
+            active[[r for r,_,_,_ in targets]]=True
+            select=active[rows];r=rows[select];w=weights[select]
+            source_times=torch.zeros(batch.n,dtype=torch.long)
+            for row,source_time,_,_ in targets: source_times[row]=source_time
+            past=memory[r,source_times[r]-1]  # Strictly before each ORIGINAL event.
+            logits=self.event_head(torch.cat((features[select,:MENTAL_DIM],past),-1))
+            types=logits[:,:len(EVENT_TYPES)].softmax(-1)
+            type_probs=torch.zeros(batch.n,len(EVENT_TYPES)).index_add(0,r,w[:,None]*types)
+            step_logits=logits[:,len(EVENT_TYPES):]
+            lengths=torch.tensor([len(e['input']['observer_graphs'][e['input']['goal_id']]['steps']) for e in batch.examples])
+            possible=torch.arange(MAX_STEPS)[None,:]<lengths[r,None]
+            steps=step_logits.masked_fill(~possible,-1e9).softmax(-1)
+            step_probs=torch.zeros(batch.n,MAX_STEPS).index_add(0,r,w[:,None]*steps)
+            for row,_,kind,step in targets:
+                losses.append(-type_probs[row,kind].clamp_min(1e-12).log())
+                if step is not None: losses.append(-step_probs[row,step].clamp_min(1e-12).log())
+        return torch.stack(losses).mean() if losses else memory.sum()*0
 
-    def forward(self,batch):
-        if batch.semantic_contract != self.semantic_contract:
-            raise ValueError("MODEL_BATCH_SEMANTIC_CONTRACT_MISMATCH")
+    def forward(self,batch,trace=False):
+        if batch.semantic_contract!=self.semantic_contract: raise ValueError('MODEL_BATCH_CONTRACT_MISMATCH')
         world,person,memory=self.encode(batch);top=batch.topology
         pc=person[top.ctx_record,top.ctx_time];wc=world[top.ctx_record,top.ctx_time]
         logits=torch.where(top.ctx_world[:,None],self.world_gates(wc),
                            self.person_gates(torch.cat((pc,top.ctx_features),-1)))
         gates=logits.sigmoid()
-        weights,marginals=top.filter(gates)
-        if self.variant=='A2':
-            marginal_copies=[]
-            for time,marginal in enumerate(marginals):
-                factor_probs=self.independent_probs(memory[:,time],batch)
-                pieces=[factor_probs[f] if f in factor_probs else marginal[:,slice(*OFFSETS[f])] for f in LABELS]
-                marginal_copies.append(torch.cat(pieces,-1))
-            marginals=marginal_copies
-            groups=torch.zeros(batch.world_group_count).index_add(0,batch.world_group,weights)
-            factor_probs=self.independent_probs(memory[:,-1],batch)
-            rows=batch.state_record
-            weights=(groups[batch.virtual_world]*factor_probs['B'][rows,batch.virtual_b]
-                     *factor_probs['C'][rows,batch.virtual_c]*factor_probs['Q'][rows,batch.virtual_q])
-        final=torch.zeros(batch.n,sum(len(x) for x in LABELS.values())).index_add(
+        filtered=top.filter(gates,return_priors=True,return_understanding=trace,trace=trace)
+        weights,marginals,priors=filtered[:3];understanding=filtered[3] if trace else []
+        final=torch.zeros(batch.n,sum(len(v) for v in LABELS.values())).index_add(
             0,batch.state_record,weights[:,None]*batch.final_factors)
-        hazard_logit=self.resume_head(batch.state_features).squeeze(-1)
-        horizon=torch.tensor([e['input']['horizon']['value'] for e in batch.examples],dtype=torch.float32)
-        resume=-torch.expm1(-horizon[batch.state_record]*F.softplus(hazard_logit))
-        possible=batch.candidate_mask.any(-1)
-        resume=resume*possible
-        sf=batch.state_features[:,None,:].expand(-1,8,-1)
+        features=torch.cat((batch.state_features,batch.window[batch.state_record]),-1)
+        resume=self.resume_head(features).squeeze(-1).sigmoid()*batch.candidate_mask.any(-1)
+        sf=batch.state_features[:,None,:].expand(-1,MAX_STEPS,-1)
         step_logits=self.step_head(torch.cat((sf,batch.candidates),-1)).squeeze(-1)
         steps=step_logits.masked_fill(~batch.candidate_mask,-1e9).softmax(-1)*batch.candidate_mask
         mass=weights*resume
         p=torch.zeros(batch.n).index_add(0,batch.state_record,mass)
-        qmass=torch.zeros(batch.n,8).index_add(0,batch.state_record,mass[:,None]*steps)
+        qmass=torch.zeros(batch.n,MAX_STEPS).index_add(0,batch.state_record,mass[:,None]*steps)
         q=qmass/p[:,None].clamp_min(1e-12)
-        if batch.regularizers:
-            consistency=torch.stack([-marginals[t][r,column].sum().clamp_min(1e-8).log()
-                                     for t,r,column in batch.regularizers]).mean()
-        else:
-            consistency=p.sum()*0
-        if batch.info_pairs:
-            b0,b1=OFFSETS['B'];c0,c1=OFFSETS['C'];q0,q1=OFFSETS['Q']
-            index=(batch.final_factors[:,b0:b1].argmax(-1)*50+
-                   batch.final_factors[:,c0:c1].argmax(-1)*10+batch.final_factors[:,q0:q1].argmax(-1))
-            joint=torch.zeros(batch.n*200).index_add(0,batch.state_record*200+index,weights).reshape(batch.n,200)
-            divergences=[]
-            for i,j in batch.info_pairs:
-                a,b=joint[i],joint[j];mid=(a+b)/2
-                divergences.append((a*(a.clamp_min(1e-12).log()-mid.clamp_min(1e-12).log())+
-                                    b*(b.clamp_min(1e-12).log()-mid.clamp_min(1e-12).log())).sum()/2)
-            invariance=torch.stack(divergences).mean()
-        else: invariance=p.sum()*0
+        consistency=(self.causal_consistency(batch,priors,memory)
+                     if self.training and self.variant!='A4' else p.sum()*0)
         return {'p':p,'q':q,'factors':final,'weights':weights,'marginals':marginals,
-                'consistency':consistency,'invariance':invariance,'gates':gates}
+                'consistency':consistency,'invariance':p.sum()*0,'gates':gates,
+                'event_targets':sum(len(v) for v in batch.actions.values()),
+                'understanding_marginals':understanding,
+                'understanding':torch.zeros(batch.n,len(CURRENT_UNDERSTANDING)).index_add(0,batch.state_record,weights[:,None]*top.levels[-1]['understanding']),
+                'initial_understanding':torch.zeros(batch.n,len(CURRENT_UNDERSTANDING)).index_add(0,top.initial_record,top.initial_understanding),
+                'initial_factors':torch.zeros(batch.n,sum(len(v) for v in LABELS.values())).index_add(0,top.initial_record,top.initial_factors)}
 
     @torch.no_grad()
     def predict(self,batch,evidence=False):
-        self.eval();out=self(batch);predictions=[]
+        self.eval();out=self(batch,trace=evidence);predictions=[]
+        scope={factor:('Observed-label supervision only where the P1 source mask enables V.'
+                       if factor=='V' else 'Latent diagnostic; no direct P1 state-label supervision.')
+               for factor in (*LABELS,'U')}
+        def factor_distribution(values,factor,steps):
+            values=values[slice(*OFFSETS[factor])].tolist()
+            keys=LABELS[factor]
+            if factor=='Q':
+                keys=steps+['UNKNOWN','NOT_APPLICABLE']
+                values=values[:len(steps)]+values[MAX_STEPS:]
+            total=sum(values)
+            return {k:v/max(total,1e-12) for k,v in zip(keys,values)}
         for row,e in enumerate(batch.examples):
-            steps=e['input']['observer_graphs'][e['input']['goal_id']]['steps'];probability=max(0.0,min(1.0,float(out['p'][row])))
-            t3={}
-            for factor,labels in LABELS.items():
-                values=out['factors'][row,slice(*OFFSETS[factor])].tolist()
-                keys=steps+['UNKNOWN','NOT_APPLICABLE'] if factor=='Q' else labels
-                if factor=='Q': values=values[:len(steps)]+values[8:]
-                t3[factor]={k:v for k,v in zip(keys,values)}
-            for distribution in t3.values():
-                total=sum(distribution.values())
-                for key in distribution: distribution[key]/=total
-            qvalues=out['q'][row,:len(steps)].tolist()
-            qtotal=sum(qvalues)
-            predictions.append({'t1':probability,
-                                't2':{s:v/qtotal for s,v in zip(steps,qvalues)} if qtotal>0 else None,
-                                't3':t3})
-        if evidence:
-            for row,example in enumerate(batch.examples):
-                trace=[];steps=example['input']['observer_graphs'][example['input']['goal_id']]['steps']
-                for time,event in enumerate(example['input']['events']):
-                    marginal=out['marginals'][time][row]
-                    states={}
-                    for factor,labels in LABELS.items():
-                        vals=marginal[slice(*OFFSETS[factor])].tolist()
-                        keys=steps+['UNKNOWN','NOT_APPLICABLE'] if factor=='Q' else labels
-                        if factor=='Q': vals=vals[:len(steps)]+vals[8:]
-                        states[factor]=dict(zip(keys,vals))
-                    resolved=resolve_person_event_goal(event,example['input']['observer_graphs'],example['input']['goal_id'],self.semantic_contract)
-                    trace.append({'event_id':event['event_id'],'delivery':event['delivery'],
-                                  'source_goal_id':event['world']['goal_id'],'resolved_person_goal_id':resolved,
-                                  'unassigned_information':event['semantic'] if resolved is None and event['delivery']['access_evidence']!='NOT_ACCESSED' else None,
-                                  'state_after':states,'evidence_role':'conditioned_transition; no duplicate action likelihood'})
-                predictions[row]['evidence_trace']=trace
+            steps=e['input']['observer_graphs'][e['input']['goal_id']]['steps']
+            t3={factor:factor_distribution(out['factors'][row],factor,steps) for factor in LABELS}
+            u=out['understanding'][row]
+            probability=max(0.0,min(1.0,float(out['p'][row])))
+            distribution=out['q'][row,:len(steps)].tolist();total=sum(distribution)
+            pred={'t1':probability if steps else None,'t2':{s:v/total for s,v in zip(steps,distribution)} if total else None,
+                  't3':t3,'understanding':dict(zip(CURRENT_UNDERSTANDING,u.tolist())),
+                  'state_supervision_scope':scope,'window':e['input']['window'],
+                  'latent_state_warning':'Only masked V has direct P1 state supervision; F/A/B/C/Q/U are latent diagnostics.'}
+            if evidence:
+                trace=[]
+                for time,event in enumerate(e['input']['events']):
+                    level=batch.topology.compiled[row]['event_levels'][time]
+                    factors=out['marginals'][level][row] if level>=0 else out['initial_factors'][row]
+                    u=out['understanding_marginals'][level][row] if level>=0 else out['initial_understanding'][row]
+                    trace.append({'event_id':event['event_id'],'access':event['delivery']['access_evidence'],
+                        'observed_understanding':event['delivery']['comprehension'],
+                        'understanding_marginal':dict(zip(CURRENT_UNDERSTANDING,u.tolist())),
+                        'factor_marginals':{f:factor_distribution(factors,f,steps) for f in LABELS},
+                        'state_supervision_scope':scope,
+                        'role':'conditioned transition; merged hypotheses, not a representative path'})
+                pred['evidence_trace']=trace
+            predictions.append(pred)
         return predictions
 
-# Compatibility name used by the C comparator; the original model is public.
-_ECJMFBackbone = NeuralECJMF
+
+_ECJMFBackbone=NeuralECJMF

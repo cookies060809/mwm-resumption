@@ -88,7 +88,7 @@ class StructuredModel:
     """
     def __init__(self, adapted, parameters=None, mechanisms=Mechanisms(),
                  person_graphs=None, max_goals=8, max_depth=4, semantic_contract="legacy-v1"):
-        if semantic_contract not in ("legacy-v1", "b-p0-v03/v2", "b-p0-v03/v3"):
+        if semantic_contract not in ("legacy-v1", "b-p0-v03/v2", "b-p0-v03/v3", "p1-ec-jmf/v1"):
             raise ValueError("UNKNOWN_SEMANTIC_CONTRACT")
         self.semantic_contract = semantic_contract
         self.graphs = adapted["observer_graphs"]
@@ -112,6 +112,8 @@ class StructuredModel:
             self.parameters["recommit_goal"] = 0.0
         elif self.semantic_contract == "b-p0-v03/v3":
             self.parameters["reengage_goal"] = 0.0
+        if self.semantic_contract == 'p1-ec-jmf/v1':
+            self.parameters={name:0.0 for name in ('access_uncertain','understanding_uncertain','misunderstanding_uncertain','accept_message','belief_valid','belief_invalid','belief_unresolved','invalid_abandon','action_validity','world_keep','world_valid','world_cancel','world_fulfill')}
         if parameters:
             if set(parameters) - set(self.parameters):
                 raise ValueError("UNKNOWN_TRANSITION_PARAMETER")
@@ -119,6 +121,7 @@ class StructuredModel:
 
     def chance(self, name):
         if not self.mechanisms.learned_gates:
+            if self.semantic_contract == 'p1-ec-jmf/v1': return 0.5
             return {"accept_message": 1.0, "action_validity": 0.5,
                     "invalid_abandon": 0.5}.get(name, 0.5)
         return sigmoid(self.parameters[name])
@@ -279,7 +282,138 @@ class StructuredModel:
                     for state,w in outcomes] + [(state,w*(1-p)) for state,w in outcomes]
         return outcomes
 
+    def p1_phase(self, state, event, phase):
+        """One normalized P1 transition phase, conditioned on its prior state.
+
+        Four phases separate objective validity, reception/comprehension, belief
+        adoption, and personal action/commitment. Temporary markers identify this
+        event only and are removed before the next event. Observed actions are
+        conditioned transitions, never an additional observation likelihood.
+        """
+        gid = event['world']['goal_id']
+        if gid not in self.graphs:
+            return [(state, 1.0)]
+        prior = state.goal(gid)
+        kind = event['world']['event_type']
+        own = event['person']
+        event_id = event['event_id']
+        outcomes = []
+        if phase == 0:
+            if kind == 'goal_start':
+                outcomes = [(replace(prior, validity='VALID'), 1.0)]
+            elif kind == 'task_completed':
+                outcomes = [(replace(prior, validity='FULFILLED',
+                                     world_done=frozenset(self.graphs[gid]['steps'])), 1.0)]
+            elif (kind in ('interruption_started', 'person_statement')
+                  and event.get('native_kind') != 'background_fact'):
+                keep = self.chance('world_keep')
+                valid, cancel, full = (self.chance(n) for n in
+                                      ('world_valid', 'world_cancel', 'world_fulfill'))
+                outcomes = [(prior, keep),
+                    (replace(prior, validity='VALID'), (1-keep)*valid),
+                    (replace(prior, validity='CANCELLED'), (1-keep)*(1-valid)*cancel),
+                    (replace(prior, validity='FULFILLED'), (1-keep)*(1-valid)*(1-cancel)*full),
+                    (replace(prior, validity='UNKNOWN'), (1-keep)*(1-valid)*(1-cancel)*(1-full))]
+            else:
+                outcomes = [(prior, 1.0)]
+        elif phase == 1:
+            base = replace(prior, evidence=(), access_event=None)
+            if own:
+                outcomes = [(replace(base, access='ACCESSED', access_event=event_id,
+                                     available=(('received',),),
+                                     understanding=(('observed', 'UNKNOWN'),)), 1.0)]
+            else:
+                access = event['delivery']['access_evidence']
+                pa = (1.0 if access == 'ACCESSED' else 0.0 if access == 'NOT_ACCESSED'
+                      else self.chance('access_uncertain'))
+                if not self.mechanisms.access_gate:
+                    pa = 1.0
+                outcomes = [(base, 1-pa)]
+                if pa:
+                    received = replace(base, access='ACCESSED', access_event=event_id,
+                                       available=(('received',),))
+                    if not self.mechanisms.comprehension_gate:
+                        meanings = [('UNDERSTOOD', 1.0)]
+                    else:
+                        u = self.chance('understanding_uncertain')
+                        mis = self.chance('misunderstanding_uncertain')
+                        meanings = [('UNDERSTOOD', u), ('MISUNDERSTOOD', (1-u)*mis),
+                                    ('NOT_UNDERSTOOD', (1-u)*(1-mis))]
+                    outcomes.extend((replace(received, understanding=(('unknown', label),)), pa*pu)
+                                    for label, pu in meanings)
+        elif phase == 2:
+            understood = prior.understanding and prior.understanding[-1][-1] in (
+                'UNDERSTOOD', 'MISUNDERSTOOD')
+            if own or prior.access_event != event_id or not understood:
+                outcomes = [(prior, 1.0)]
+            else:
+                accepted = self.chance('accept_message')
+                vb, ib, ub = (self.chance(n) for n in
+                              ('belief_valid', 'belief_invalid', 'belief_unresolved'))
+                beliefs = [('BELIEVES_VALID', vb), ('BELIEVES_INVALID', (1-vb)*ib),
+                           ('UNRESOLVED', (1-vb)*(1-ib)*ub),
+                           ('UNKNOWN', (1-vb)*(1-ib)*(1-ub))]
+                outcomes = [(prior, 1-accepted)]
+                outcomes.extend((replace(prior, belief=belief,
+                                         evidence=(('adopted', event_id),)), accepted*pb)
+                                for belief, pb in beliefs)
+        elif phase == 3:
+            if own:
+                act, step = own['event_type'], own['step_id']
+                updates = dict(remembered=True)
+                if act == 'goal_start':
+                    updates['commitment'] = 'ACTIVE'
+                elif act == 'task_completed':
+                    updates.update(commitment='COMPLETED', q='NOT_APPLICABLE',
+                                   person_done=frozenset(self.graphs[gid]['steps']))
+                elif act in ('step_started', 'step_attempted', 'step_completed') and step:
+                    updates['known_steps'] = prior.known_steps | {step}
+                    if (event.get('native_kind') == 'resume'
+                            or prior.commitment not in ('ABANDONED', 'COMPLETED')):
+                        updates.update(commitment='ACTIVE', q=step)
+                    if act == 'step_completed':
+                        updates['person_done'] = prior.person_done | {step}
+                acted = replace(prior, **updates)
+                if acted.belief == 'UNKNOWN' and act in ('goal_start', 'step_started', 'step_attempted'):
+                    pb = self.chance('action_validity')
+                    outcomes = [(replace(acted, belief='BELIEVES_VALID'), pb), (acted, 1-pb)]
+                else:
+                    outcomes = [(acted, 1.0)]
+            else:
+                person = prior
+                if (prior.access_event == event_id and kind == 'interruption_started'
+                        and person.commitment == 'ACTIVE'):
+                    person = replace(person, commitment='SUSPENDED')
+                if (('adopted', event_id) in prior.evidence
+                        and person.belief == 'BELIEVES_INVALID'):
+                    stop = self.chance('invalid_abandon')
+                    outcomes = [(replace(person, commitment='ABANDONED', q='NOT_APPLICABLE'), stop),
+                                (person, 1-stop)]
+                else:
+                    outcomes = [(person, 1.0)]
+            outcomes = [(replace(goal, evidence=(), access_event=None), probability)
+                        for goal, probability in outcomes]
+        else:
+            raise ValueError('UNKNOWN_P1_TRANSITION_PHASE')
+        return [(JointState(tuple(goal if g.goal_id == gid else g for g in state.goals), state.stack), p)
+                for goal, p in outcomes if p]
+
+    def p1_transition(self, state, event):
+        """Compose the four phases; the compiler merges after each phase.
+
+        Gate contexts are the prior of each phase rather than the original event
+        prior. This staged conditional model is fixed before formal training.
+        """
+        states = [(state, 1.0)]
+        for phase in range(4):
+            states = [(new, weight*probability)
+                      for previous, weight in states
+                      for new, probability in self.p1_phase(previous, event, phase)]
+        return states
+
     def transition(self, state, event):
+        if self.semantic_contract == "p1-ec-jmf/v1":
+            return self.p1_transition(state, event)
         goal_id = resolve_person_event_goal(event, self.graphs, self.target, self.semantic_contract)
         if goal_id not in self.graphs:
             return [(state, 1.0)]

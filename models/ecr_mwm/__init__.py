@@ -1,1 +1,1 @@
-"""Complete context-residual EC-JMF: structured P0 input, training and prediction."""
+"""P1-only EC-JMF: information-constrained joint filtering and prediction."""

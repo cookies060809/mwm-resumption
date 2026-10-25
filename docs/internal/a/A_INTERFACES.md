@@ -1,125 +1,64 @@
-# A 原模型与上下文对照接口
+# A：P1-only EC-JMF 内部接口
 
-当前内部接口为 `a-context-ec-jmf/v1`，不宣称公共M1已三方冻结。
-B维护数据/schema，C维护公共评测/MENTIS。本比较分支恢复原 `NeuralECJMF`，保留 `ContextECJMF` 对照。
+内部数据合同为 `p1-ec-jmf/v1`，保存格式为 `a-p1-ec-jmf/v1`。B 维护源数据/schema，C 维护公共评测/MENTIS；本文是 A 内部接口，不宣称公共 update 或 MENTIS 已三方冻结。当前主线不读取 P0、旧权重或旧 Git 对象。
 
-## 输入与状态
+## 数据与输入隔离
 
-`adapt_record` 保留 v0.1/v0.2 读取兼容；当前训练使用完整 P0 v0.3发布版，记录schema仍为v0.2。
-白名单排除notes、annotation、p0_design、state_*、p0_expected*、p0_scripted_policy和p1_*；
-ID、family、split、mechanism仅留监督/审计外层，不进模型特征。
-`interrupting_task`仅取身份、父目标和步骤，status_at_cutoff不进人物心智。
-理解字段完整保留 UNDERSTOOD / MISUNDERSTOOD / NOT_UNDERSTOOD / UNCERTAIN，
-理解不明不转成误解；接触不确定保留概率假设，采信另有门控。
+`p1_data.load_records(repository_root)` 读取实际 `processed/p1_combined.jsonl`，并且只用 READY `interruption_response` 记录建立 IH 对话分组；不会加载 READY 中 P0 记录作为训练样本。所有 IH actor 和窗口统一 conversation 分组，train/dev/test 为31/7/7组；REBOOT 保持 episode 分组，InterruptBench 为任务规格组。
 
-`Batch([{'input': adapt_record(raw)}])` 编译有限状态支持。世界/人物GRU隔离，
-状态分别保存世界事实、人物可得信息、理解、B、C、主客观进度、步骤记忆和有界中断结构。
-最多8目标、4层中断、8候选步骤；状态超预算明确报错。
-原目标记忆不因中断清空，不把观察者图当人物知识，不额外重复计动作似然。
+每条训练 example 外层含 `id/split/source/window_kind/group/label_origin/input/target`；只有 `input` 进模型。目标为 `resume/step/states/steps`：恢复只取 mask=1，步骤只取 mask=1 且 gold 恢复为真；状态只接纳有监督 V。撤回的 F/A/B/C/Q 不进入损失。ID、分组、标签来源、未来结果和标签证据不能变成输入特征。
 
-沿用 b-p0-v03/v3：完成与取消分开；终止后孤立动作保留再投入不确定性；
-自身物理中断不依赖消息理解；承诺不等于当前活动；未关联消息不猜目标。
-P04采信他人完成为BELIEVES_VALID、COMPLETED（有效不代表仍需执行）。
+`p1_adapter.adapt_native(inputs, window)` 输出：
 
-## 完整加载、训练与保存
+- `schema_version/adapter_version='p1-ec-jmf/v1'`，`goal_id='goal'`，原文目标与 `observer_graphs`；步骤不超过12，依赖未知保留 None，规格任务允许空图。
+- `events` 截止于 `cutoff_event_id`，每项分别有 `world/person/delivery/semantic`、`available_text`、原始位置和 `native_kind/native_actor`。
+- `world.description` 是实际事件文本；`person` 仅表示自身动作。`available_text` 可包含已交付外部话语，不把用户话语伪装成人物自身动作。
+- `window` 为 `single_response/planned=1`、`assistant_turn/planned=4`、`episode_tail/planned=None` 或 `unobserved/planned=None`。原始帧/轮次位置不伪装分钟；不输入未来 episode 终点计算的时长。
+
+IH 背景接触位属于用户，背景保守仅进世界；已交付用户话语可接触但理解不明。环境故障未见接收证据时保留不确定。`task_completed` 表示自身全目标完成，不能伪装他人完成。适配不读未来回复、rubric、withheld tail、state 答案或监督证据索引。
+
+## 模型与训练 API
 
 ```python
 from pathlib import Path
-from models.ecr_mwm.neural_training import reload_model, read_checkpoint, fit_one
+from models.ecr_mwm.p1_data import load_records
+from models.ecr_mwm.neural_data import build_vocabulary
 from models.ecr_mwm.neural_model import Batch
+from models.ecr_mwm.p1_training import reload_model
 
-payload = Path('results/p0/c_visible_context/model.pt').read_bytes()
-model = reload_model(payload)  # 全部权重；不查找旧checkpoint
-prediction = model.predict(Batch(input_only_examples), evidence=True)
-# fit_one(train_batch, dev_batch, seed, config, read_checkpoint(payload))
-# -> 自包含checkpoint bytes及开发集选模元数据
+examples = load_records('.')
+model, vocabulary = reload_model(Path('results/p1/ec_jmf/model.pt').read_bytes())
+batch = Batch(examples[:2], model.variant, semantic_contract='p1-ec-jmf/v1', vocabulary=vocabulary)
+predictions = model.predict(batch, evidence=True)
 ```
 
-保存格式携带 architecture、完整state_dict、seed、selected_epoch、config、provenance；
-C入口严格加载其格式；原模型由下文READY配对入口加载正式v3参数，未恢复旧中央差分/SMC。
-训练按C方法冻结骨干，重初始化上下文注意力/残差，真实自动微分40轮、dev选模、保存重载。
-不是全骨干从零训练；现有完整权重已包含重建初始冻结骨干所需参数。
-`seed`用于一次训练；`--all-seeds`才展开固定0–19。C原实验只有0–4。
-默认不做test推理，`--evaluate-test`在所有dev选择后显式计算，不能用于选择模型。
-复现命令见 `results/p0/c_visible_context/README.md`。
+上例要求正式模型已经生成；不是完成证明。推理实际前向只读取 example 的 `input`，训练目标在前向外构建监督索引。词表仅以 train 输入文本拟合，pad0/unk1，世界/人物词袋和 GRU 参数隔离。世界文本进入世界门，人物可得文本进入人物门，不能共享含后台事实的编码。
 
-## 输出和监督口径
+每事件四相依次处理世界、接触/理解、信念接受、人物动作。`JointState`/`StructuredModel`/`PackedTopology` 保留联合后验及各相位条件；最多12步，当前理解充分统计及人物可得信息与 B/C/Q 分开。有界中断栈结构保留，但 P1 没有子任务身份/父目标关系，本轮不编造嵌套图。
 
-- T1：H个机会内恢复概率，阈值0.5；报告F1/AUROC/AP/Brier/ECE10。
-- T2：恢复条件下未来未完成原目标步骤分布；它可能随新hazard的状态混合权重变化，
-  gold恢复且首步有效才评分，缺失计错。这不是C端到端发出步骤的准确率。
-- T3：V/F/A/B/C/Q边际；Q按图内位置。监督只取非UNKNOWN且有cutoff有效证据。
-- 证据：逐事件结构化状态轨迹，不解释新增注意力对行为预测的贡献。
+完整训练入口：
 
-indeterminate/null/undefined_reason保留为遮蔽，不转负例；other_completion和嵌套动作
-按原目标未来推进定义处理。不按gold证据ID补输入，不为结构零支持删除目标。
-当前A焦点映射仍是代理，六因子原始值不作为已对齐B全标签的总体成绩。
-
-## 仍待团队确认
-
-B：模型可读关键事件焦点、消息目标关联和下一步资源条件；自由文本相位及P02事件措辞仲裁。
-C：完整理解枚举与嵌套图的无损输入、公共update/MENTIS、T2条件与发出步骤口径、
-逐因子证据和A焦点字段、统一阈值/预算/失败处理。此次不改C模块。
-P1：按团队2026-10-23决定仅采用公开派生数据，不再规划真人采集。新P1与P0的窗口、
-任务语义及六因子掩码仍需对齐，不能将agent/机器人/规格数据写成真人效果。
-
-旧中央差分/SMC及重复历史结果仍未恢复；本比较分支仅恢复正式神经原模型与机制代码。
-B的 `scripts/check_p0_release_a.py` 是历史Git-ref参考模型检查器，保留原样，
-只应用于旧A历史引用；当前模型应使用本文件的新加载/预测入口。
-
-
-## 公开派生 P1 的冻结模型试运行
-
-`p1_adapter.adapt_input` 只接受交付input白名单，未提供的依赖保留None，未提供的理解/消息语义不猜。
-背景接触可能属于用户而非助手，保守隔离；>8步、无步骤及无法忠实表达的自身全目标完成明确拒绝。
-`python -m models.ecr_mwm.p1_evaluation --config configs/a_p1_public_probe.json` 复现准入和受控状态诊断。
-固定H=1仅保证状态探针运行，不与P1回答轮次/帧窗口硬换算，因此不评分T1/T2。
-只按真实state_loss_mask分源/actor/截断类型比较T3；回溯规则标签不当主观真值。
-可用范围、零支持失败和单类高分限制见 `results/p1/a_context_public_probe/README.md`。
-推荐ready-v1.0中的六变量记录仍是旧P0；下面的READY适配已为续答任务增加独立神经文本模块，不把它当新的P1六状态真值。
-
-
-## READY-v1.0 正式两任务适配（2026-10-24）
-
-遵循B `data/p1/public_derived/READY.md` 推荐的 `data/training_ready/v1`，读取其冻结分组与掩码。
-内部模型格式 `a-ready-ec-jmf/v1`，完整保存Context、文本模块、train-only词表、编码配置与选模元数据。
-
-```python
-from pathlib import Path
-from models.ecr_mwm.ready_model import reload_model
-model = reload_model(Path('results/p1/a_ready_response/model.pt').read_bytes())
-outputs = model.predict('interruption_response', [input_only_system_history])
-# outputs[0]['response']，state_distributions/T1/T2均为None
-states = model.predict('state_inference', [input_only_ready_state])
-# states[0]['state_distributions']，不虚构缺失窗口的T1/T2
+```text
+python -m models.ecr_mwm.p1_training --config configs/a_ec_jmf_p1.json
+python -m models.ecr_mwm.p1_training --predict results/p1/ec_jmf/model.pt --split test --source IHBench --limit 3
 ```
 
-推理不读取record的target、messages、id或group。`messages`含末尾训练答案，只是B提供的训练视图。
-续答来自公开GPT-4o Audio参考回答：仅其train用于优化、dev token NLL选模，最后test自由生成；
-对话六状态mask全0，不推导人物信念/理解或恢复标签。system/history均是B声明可见的助手输入。
-文本模块是独立辅助编码器/解码器，不将其混合表示写进结构化世界/人物状态；不宣称已完成文本信念更新。
+配置的正式协议为 A0–A6、40轮、seed0–19；`--seed` 是单种子运行，不能当20种子证据。所有参数从随机初始化，通过真实 PyTorch 自动微分与 AdamW 更新。开发集按来源/窗口等权的有效 V NLL、恢复 BCE 和条件步骤 NLL选模，包含初始化、最早并列优先；所有选模完成才评分 test。历史测试已暴露，不称新盲测。
 
-state输入缺schema/horizon/完整interrupting_task，`ready_data.state_input`从显式事件识别主goal、
-保留已见子目标图。缺失父子关系和未见步骤不猜，部分子图不会被宣布整体完成；原完整图默认行为不变。
-H=1仅用于内部T3计算，不是P1窗口换算。READY的254条P0未重复拼接或重新训练。
+最终模型保存架构、全权重、词表、配置与选模元数据；独立重载不依赖历史对象。正式输出只保留 `results/p1/ec_jmf/{model.pt,report.json,README.md}`，不以配置存在证明正式实验已完成。
 
-响应采用train词表、role标记、attention-GRU生成。很长system仅保留头尾各96tokens，旧history预算320，
-最新user打断完整保留；目标不截断。未知词与上下文截断量必须披露，NLL/PPL按UNK投影，
-exact/token F1对完整参考token计算。生成用BOS开始、EOS结束，不使用参考答案作为decoder前缀。
+## 输出、消融与结论范围
 
-复现入口：`python -m models.ecr_mwm.ready_training --config configs/a_ready_p1.json`。
-正式实际结果以 `results/p1/a_ready_response/README.md` 与report.json为准，不能用可运行性代替续答质量。
-C若接入此辅助任务应使用上述task路由/response字段；不把response转成p_resume、T1/T2或六状态分数。
+`predict` 返回 `t1/t2/t3/understanding/window/state_supervision_scope/latent_state_warning`；空步骤规格任务没有可定义的 T1/T2。T1 是源窗口内恢复代理概率；T2 是恢复条件下的步骤分布，零质量未定义。T3 是 V/F/A/B/C/Q 边际，understanding 单独给 U；只有 mask 开启的 V 有直接 P1 状态监督，其他因子是潜变量诊断。
 
-## 原A的P1配对比较
+`evidence=True` 增加逐事件状态传播轨迹；它说明模型如何传播条件状态，不等于自然语言推理正确或人类信念真值。相应指标按来源/窗口分报，不能混合 P0；IH 弱监督、REBOOT 只有正恢复标签，不能泛化为人类预测。
 
-`p1_comparison.py`读取固定 `dec55faa` 的 `a_neural_v03_v3/a0_seed0.pt`，
-保留 `b-p0-v03/v3` 语义和READY部分子图完成保护。
-READY模型格式不变，配置 `state_model=original` 选择原 `NeuralECJMF`；旧配置默认 `context`，
-因此上一C分支的完整READY模型仍可严格重载。原模型最终checkpoint同样自包含。
+A1 取消接触/理解门，A2 因子化 B/C/Q，A3 最近5个人物事件，A4 去掉时间因果事件一致性，A5 去掉步骤损失但保留头，A6 固定转移门。事件一致性用动作前状态预测下一已观测人物动作及已有步骤，不重复乘进后验，不伪造 B/C/Q 金标。执行报告应记录真实有效监督和梯度路径，未训练的变体不得写成已有结果。
 
-响应模块和训练RNG匹配 `80b2982` 的C分支seed0，种子、12轮预算和dev/test口径不变。
-优化器仍仅更新响应模块；原模型结构参数不使用不存在的P1状态/恢复监督。
-A1–A6完整机制恢复用于受控检查；响应不消费结构状态，其P1响应机制效果不可识别。
-不可把原P0状态数据或旧P0消融均值称为P1实验；实际边界和结果见
-`results/p1/a_original_comparison/README.md`。
+C 接入仍需明确：原生窗口类型、空图 V-only 路由、U 与潜变量监督范围、条件 T2 缺失处理、逐事件轨迹及公共 update/MENTIS 版本。A 内部 API 不擅改 C 的字段或协议。B 若要支持理解/信念或嵌套任务的直接评测，需要提供对应可追踪标注和主体/父目标关联；本轮不为此虚构字段。
+
+## 历史说明
+
+原 P0、C frozen-context、READY 独立续答与原/C配对报告属于先前实验。独立续答模块未消费结构状态，其相同分数不能检验结构消融；历史 checkpoint/训练入口不属于当前 P1-only 复现链，不应按旧文档调用当前已修改的主模型代码。
+
+明确恢复事件与普通进度分开：REBOOT 截止前已经观察到的 `resume` 支持重新进入 ACTIVE 并更新当前步骤，即使先前潜状态为放弃或完成；普通 progress 不自动解除终止承诺。该转移不强制改写信念为 BELIEVES_VALID，也不把被屏蔽的恢复窗口样例作为未来恢复监督。

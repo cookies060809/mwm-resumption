@@ -243,6 +243,4 @@ def run(config_path):
 
 
 if __name__ == '__main__':
-    parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--config',type=Path,default=ROOT/'configs/a_p1_public_probe.json')
-    run(parser.parse_args().config)
+    raise SystemExit('Retired mixed/frozen-model entry. Use python -m models.ecr_mwm.p1_training for native P1 EC-JMF training and --predict inference. Historical response-only results are not EC-JMF ablations.')

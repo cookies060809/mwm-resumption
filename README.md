@@ -1,6 +1,6 @@
 # ECR-MWM / EC-JMF
 
-> 当前 A 开发线已完整接入 C 可见上下文模型（训练、dev选模、保存重载、推理）；[使用与限制](results/p0/c_visible_context/README.md)。旧A部署模型/配置/结果已移出本分支，历史仍在原A分支。以下团队路线图含历史状态，不代表本次完成P1或MENTIS。
+> 当前 A 开发线已切换为 **P1-only EC-JMF 本体训练与消融**，从随机初始化开始，旧 P0/C 骨干及独立续答不属于活跃训练链。[当前模型与复现入口](models/ecr_mwm/README.md)。本轮实际完成状态和成绩以正式训练报告为准；下方团队路线图包含历史状态。
 
 > **P0 v0.3 完整数据入口（2026-10-21）：** [data/p0/v0.3/README.md](data/p0/v0.3/README.md)，254 条 / 127 家族，train/dev/test = **150/52/52**。旧 `p0_samples_v0.3.json` 是 14 条补充原稿；A/C 使用完整发布版 `data/p0/v0.3/p0_samples.json`。运行 `python scripts/build_p0_release.py --check` 可验证交付一致性。
 

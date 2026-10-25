@@ -1,33 +1,37 @@
-# 原A模型的P1配对训练与C模型对照
+# P1-only EC-JMF
 
-本分支以 `feat/a-p0-v03-neural@dec55faa` 的正式v3原模型为P1训练对象；
-保留 C `Bill_method@291e94a` 的 `visible_context` 作为固定对照。
-`context_residual.py` 提供C对照，`neural_model.py`恢复原NeuralECJMF及A0–A6批处理，
-`neural_training.py`提供40轮残差训练、开发集选模、自包含保存重载和T1/T2/T3推理。
-模型与训练配置为 `results/p0/c_visible_context/model.pt`、`configs/a_context_p0_v03.json`。
+当前主线仅使用公开派生 P1，从随机初始化训练 EC-JMF 本体。不是冻结 P0 骨干，也不使用旧 checkpoint 或历史 Git 对象。历史原/C模型及独立续答结果不代表本轮实验。
 
-[完整获取、使用、复现和证据边界](../../results/p0/c_visible_context/README.md)；
-[正式接口](../../docs/internal/a/A_INTERFACES.md)；
-[算法决策和长期认识约束](../../docs/internal/a/A_ALGORITHM_DECISIONS.md)。
+`p1_adapter.py`、`p1_data.py` 隔离截止前事件与监督，统一 IH 的 READY conversation 分组；`neural_data.py` 构建 train-only 词表及世界/人物分离特征；`neural_model.py` 配合结构状态与分相联合滤波，将可学习文本/事件门传播为后验，再预测原生窗口恢复概率与条件步骤。步骤上限12，未知依赖不假设已可行，缺失子任务关系不编造。当前 U、人物信息、信念、承诺、人物进度与世界事实分开表示。
 
-原模型恢复的是正式神经模型及机制消融，没有恢复中央差分、独立SMC或旧玩具材料。
-原A分支与main不变。骨干是新模型的必要组成，冻结残差训练不是从零训练整个网络。
-P0为脚本诊断，不代表真实人物预测效果。
+```text
+python -m pip install -r requirements-neural.txt
+python -m models.ecr_mwm.p1_training --config configs/a_ec_jmf_p1.json
+python -m models.ecr_mwm.p1_training --predict results/p1/ec_jmf/model.pt --split test --source IHBench --limit 3
+```
 
+从仓库根目录运行。配置规定 A0–A6、40轮和固定20个评估种子；实际执行数量及训练结果以完成后的报告为准。开发检查的单种子不能称20种子实验。入口负责读取、真实梯度训练、dev选模、完整模型保存与独立重载、T1/T2和受监督 V 评测。所有 dev 选择完成后才做 test；测试语料历史已暴露，属于重复诊断。
 
-## P1 READY 适配
+正式产物约定为 `results/p1/ec_jmf/{model.pt,report.json,README.md}`；未生成前不宣称结果已交付，不保留每轮日志或中间检查点。A1取消信息门、A2因子化、A3短记忆、A4去时间因果事件一致性、A5去步骤损失、A6规则门，均作用于当前 EC-JMF 训练路径；不是七次独立续答重复分数。
 
-`ready_data.py`、`ready_model.py`和`ready_training.py`接入B正式ready-v1.0的两任务格式。
-`ready_model.py`按配置选择冻结原NeuralECJMF或Context模型；attention-GRU文本辅助模块
-实际训练/生成IHBench公开续答，不把回答当人物状态真值。
-推理只读取task/input；对话答案不当心智或恢复真值。上下文截断、OOV及实际效果见
-[READY正式结果](../../results/p1/a_ready_response/README.md)与[接口](../../docs/internal/a/A_INTERFACES.md)。
+IH 恢复/步骤是启发式弱监督，单回复和助手轮次窗口分报；REBOOT episode-tail 恢复全为正，未来终点长度不作输入；InterruptBench 只训 V。没有 P1 B/C/Q/U 金标，潜变量输出不等于已验证的理解或信念。源模型/机器人数据不是人类效果证据，规则结构也不是已验证自由文本语义。
 
-## 本分支配对实验
+[正式内部接口](../../docs/internal/a/A_INTERFACES.md)与[算法决策及长期认识约束](../../docs/internal/a/A_ALGORITHM_DECISIONS.md)说明输入边界、模型责任和结论范围。历史 P0、READY 回答蒸馏及原/C对照保持历史身份，不能混入当前 P1-only 成绩。
 
-`python -m models.ecr_mwm.p1_comparison --config configs/a_original_p1_comparison.json`
-从原分支固定Git提交读取正式v3参数，使用与已完成C分支相同的响应初始化/批次随机序列，
-实际进行12轮seed0训练、dev选模、保存重载及最终生成评分。
-[正式比较、机制可识别性及复现](../../results/p1/a_original_comparison/README.md)。
-A1–A6已恢复，但P1响应路径不消费结构状态，不能据其响应指标判断这些机制优劣；
-历史20种子P0消融与本次P1结果分开标注。
+## 用户自行运行
+
+以下命令在仓库根目录执行，使用本机已核验的 CPU PyTorch 环境：
+
+```powershell
+Set-Location 'D:\Personal\projects\mwm-resumption'
+$py = 'D:\myProgram\Anaconda3\python.exe'
+& $py -B -m models.ecr_mwm.p1_training --config configs/a_ec_jmf_p1.json --validate
+& $py -u -B -m models.ecr_mwm.p1_training --config configs/a_ec_jmf_p1.json --output results/p1/ec_jmf
+& $py -B -m models.ecr_mwm.p1_training --predict results/p1/ec_jmf/model.pt --split test --source IHBench --limit 3
+```
+
+`--validate` 只做入口和小批量梯度检查，不能代表正式实验完成。正式命令不加 `--seed`，执行 A0–A6 × 20种子 × 40轮；`--seed 0` 仅执行七个变体各一个种子，仍各40轮，不是快速冒烟测试。已有输出目录会拒绝覆盖；重新从头跑可把 `--output` 换成尚不存在的新目录。
+
+固定参数：AdamW，学习率0.003，batch16，权重衰减0.0001，梯度裁剪5，一致性系数0.05，hidden24，文本 embedding32，词表上限6000（当前train实际4432），最多12步，CPU单线程，torch2.11.0；正式评估种子0–19。各变体配对初始化、批次和预算，按相同开发集损失选模，全部选模后再统一test。
+
+修正明确 resume 语义后的140次正式训练尚未完成，没有本轮正式测试成绩。先前修正前跑过的训练不纳入正式汇总。A0首个声明种子完成40轮、开发集选模和重载检查后保存唯一最终 model.pt；其他模型候选仅在内存。全部训练与测试完成后才生成 report.json 和结果 README.md，单独出现 model.pt 不代表消融已完成。当前不支持中断续训。

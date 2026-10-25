@@ -1,4 +1,4 @@
-"""Predeclared A-local P0 metrics, independent of C's public evaluator.
+"""Predeclared source-window metrics, independent of C's public evaluator.
 
 T1 uses threshold 0.5 and ten equal-width ECE bins. T3 macro metrics average
 only classes occurring in gold for that factor; UNKNOWN targets are omitted by

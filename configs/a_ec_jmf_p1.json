@@ -1,0 +1,88 @@
+{
+  "protocol": "a-p1-ec-jmf/v1",
+  "semantic_contract": "p1-ec-jmf/v1",
+  "seed": 0,
+  "evaluation_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "variants": [
+    "A0",
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "A5",
+    "A6"
+  ],
+  "epochs": 40,
+  "batch_size": 16,
+  "learning_rate": 0.003,
+  "weight_decay": 0.0001,
+  "gradient_clip": 5.0,
+  "consistency_weight": 0.05,
+  "threads": 1,
+  "hidden": 24,
+  "vocabulary_size": 6000,
+  "selection": "Equal source/window mean of eligible state V NLL + recovery BCE + conditional step NLL; earliest minimum including initialization",
+  "initialization": "random; no pretrained state model or P0 input",
+  "seed_policy": "seed is for development preflight; evaluation_seeds specifies paired formal runs",
+  "data_policy": "P1 only; IH shares READY group splits; REBOOT episode splits; InterruptBench V only; do not mix response references with state labels",
+  "test_policy": "Previously exposed tests; all requested dev selections precede test scoring; no test tuning",
+  "output": "results/p1/ec_jmf",
+  "batch_policy": "Fixed seed0 tie-shuffled event-length-sorted row grouping shared across all variants and seeds, batch16; precompile once per variant; seed-specific epoch minibatch order paired across variants and independent of initialization RNG; dev/test length-sorted only for padding efficiency",
+  "ablations": {
+    "A0": "full EC-JMF",
+    "A1": "remove person access and comprehension gating; deliberate information-boundary violation",
+    "A2": "conditional-independent BCQ posterior at each filter layer",
+    "A3": "retain only most recent five person events in filter and encoding",
+    "A4": "remove temporally causal next-person-action/step emission consistency loss",
+    "A5": "remove conditional-step training auxiliary loss; same step evaluation and dev selection",
+    "A6": "label-independent fixed transition gate probabilities; prediction heads remain trainable"
+  },
+  "metrics": {
+    "T1": [
+      "accuracy@0.5",
+      "F1@0.5",
+      "AUROC_when_both_classes",
+      "average_precision",
+      "Brier",
+      "ECE10",
+      "BCE"
+    ],
+    "T2": [
+      "conditional_top1",
+      "conditional_top3",
+      "NLL",
+      "zero_support"
+    ],
+    "V": [
+      "accuracy",
+      "macro_F1_over_present_gold_classes",
+      "balanced_accuracy",
+      "NLL",
+      "zero_support"
+    ],
+    "aggregation": "per source/native-window; paired seed0-19 mean and sample SD; no pooled source claim"
+  },
+  "checkpoint_policy": "Write only the predeclared final A0 seed0 representative immediately after its complete 40-epoch training and dev selection; hold all other final candidates in memory; full report and test scoring only after all 140 selections; no epoch checkpoints",
+  "output_policy": "Refuse existing output directory; --output NEW_EMPTY_DIRECTORY supports from-scratch reproduction without replacing formal results"
+}
