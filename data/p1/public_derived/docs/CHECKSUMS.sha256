@@ -1,0 +1,62 @@
+# SHA-256 of delivered artifacts (regenerate with `python scripts/checksums.py`)
+
+## delivery
+
+553807195acb61375d188e79b11e16faa2711ecce53b7abc2a407891cae93ca4  processed/ihbench.jsonl  17,825,546 B
+556e0289dd2735aeda7aa209549b7f1b5b78a3243b5766a918aa64d25bc8a79e  processed/interruptbench.jsonl  8,784,842 B
+cb4b5a84d463a39f1b1ad81a2c52ca533e39cb3e6d7c0b9de368d682110c9e0c  processed/p1_combined.jsonl  27,514,207 B
+58e342412458e34b362cff02e4a127b7c19ece148c6beb29aa4672de9cf85f73  processed/reboot.jsonl  903,819 B
+03809f8643db89c3a721efbe97cc3479d78e66338a71c141c37a7ae492918f30  docs/schema.json  14,053 B
+
+## eval view
+
+909327e7cf3dbf77a3892c77ffcccb52df730e6fdd2dcbc415fd43f56f9b6255  eval/inputs.jsonl  18,596,537 B
+aaa9e41ae50528a0baf0ce20ba0e721a627b56da2911e1ebc3d7ece6bc02655d  eval/labels.jsonl  332,313 B
+3abf2da14bd96495de77fbcc0a7d91da7feef140a0fa11890aabb0d0cde1b413  eval/MAPPING.md  3,403 B
+
+## audit docs
+
+3de6cfc62bc2e9429daf478a0d0b8fdd7268a955f4f99bbd581e4fe06d14e96b  docs/coverage_report.md  5,199 B
+0fc8a82ad6d7fe660255acac563b4f277205603c5bcd081c9c8ee4e3dba7c0a7  docs/dataset_card.md  9,163 B
+7f1ae1afbe1f4e70f03a1163854d1c8459e12af88360db34daccfe2dcbd0ea32  docs/llm_validation_log.md  7,162 B
+e7fddd1eebe5d3531756227582144033476cef79a93bda28c67b34ed004fd3be  docs/raw_inventory.md  2,567 B
+8922a8474783440e139539526e9f1ec7c8ff7d0325e017b9eeeb22f54d71d427  docs/schema.md  4,945 B
+c62c2165f53b7f3769e4d0af85606fa2c2c58e1d8029bc35dde82cc46b400c44  docs/source_manifest.md  12,793 B
+77217d5f8f782bd02e4ce24e803b51749a85f94d649fc65c5cff7962cefec4c8  docs/transformation_notes.md  14,953 B
+2beff2e0a18bf168ee6106c49921c1b8cac0ec5cf01ba684e3b6506bc47e41db  docs/validation_ihbench.txt  1,386 B
+ec046718bc9e02b05415f1edae6a8fd93198ca853b6cd4aa4cace046212131aa  docs/validation_interruptbench.txt  766 B
+3d757d4745cb9b239e59a0791e22aeaa4cda00b8bdc4f9f4a12003bcf68740a0  docs/validation_reboot.txt  951 B
+e68684961ad11eb4debb7ab416f998068bd289e3373135c9d07d7edff1f87ad8  docs/validation_report.txt  6,437 B
+e83686c7f23b3a79768f6978d682b547da01393b2b756396ff467207ac20db93  README.md  15,856 B
+
+## code
+
+da933aaca87936f471b517ee1c109aed02b24fb98c75afe04805918e4ef03ef8  scripts/check_aux_view.py  4,846 B
+7be0db02871fd2d01a7a45345ae76ced71afe3d376eb84dc6f929546b6dfcd57  scripts/checksums.py  1,432 B
+1ef0da88187bebfa24c74b6820d622770e035075bb39265e739eb7f54730408c  scripts/common.py  468 B
+286a69656f93824dc63bf79c04514c594eae376180f9511532034a688e606ea5  scripts/convert_ihbench.py  27,585 B
+55cbaf3772defc773f83513c85339dfab021294e0ecf279ed76a1bcc175ec578  scripts/convert_interruptbench.py  15,855 B
+e19682660e315507155a8e505cc64c62ef73866d8f06ce68a604f0f8d180e0dc  scripts/convert_reboot.py  27,532 B
+7290a72c501609ce8ace85fa51f77a2428b0ecb80884a79dd913cfeb7c9c3027  scripts/eda_ihbench.py  4,471 B
+4f9979ae5aed450bc01ce7faa11a56b7ec7cbdd660cd317981ee0d376de3e625  scripts/export_aux_view.py  6,839 B
+5e7bd6d3f950d6066d0713eb268ecd69056c098b875d86c150df702e2a9a50b0  scripts/export_eval_view.py  8,982 B
+9163c8d2b8fb18dbeebe9ae45e81fe67c8480af8cb4e7422c676b9d9e2c834a9  scripts/fetch_github_paths.py  4,262 B
+fd5335eb52c88f0bfc22621b4815a8499ba3ccd60488ca06b4dc2655938e1411  scripts/fetch_ihbench_text.py  4,311 B
+c011538a60a778b66e8379ff9c8a717e8be9746252d8551aa6c46d4f87c9f74d  scripts/fetch_reboot_meta_v2.py  4,404 B
+2242fd5757350ed8fc23a300a9580c5998f030463befff5bd872bd49bd21caea  scripts/inspect_remote_parquet.py  4,129 B
+668c6df1466a2e2bf6cda0c81ffb4fbb158b411017e22eef4256e07f161c3b4c  scripts/inventory_raw.py  5,856 B
+d54d4ce8d74ccc62b8f4283d171889c96f60d80ceda37819478a5a1fb1c0b80f  scripts/merge_and_validate.py  19,307 B
+341c34505560e75bbd8a1f0f482a06897e91306fbca2cf1bbe7d723e814f695d  scripts/p1_common.py  7,008 B
+96513266bdf1c4b78ae72457436474e1a26720b0bca235bd236014a93fb59747  scripts/record_upstream_blobs.py  3,651 B
+ef135b96f2079371f22e08218d7ef7be82f617583a01ada1da61e74b4a9dded2  scripts/report_coverage.py  10,750 B
+ce2b96edffa59c48cd1fc2b3ef9a795d3be4fac2a941010cdcd97d427f56aab6  scripts/scan_reboot_phase.py  2,636 B
+ec7417ba1c0ded26c59088b139e5b29a9fb07066dfaa5c2283e72cea1e75302b  run_pipeline.sh  2,417 B
+125fa2ec9fe62db090a3dead8501e1af478bc4c591adfb120983b2fc2e071bb4  scripts/fetch_interruptbench_spec.json  1,779 B
+
+## raw annotations
+
+b7e91c5de43631f1c002af1417e40959ae6d279cff5fa421b8396571f6d077ec  raw/IHBench/_manifest.json  6,795 B
+746038eb84738036cbb2508bba3bf0a83df87a15b2fdb46bd8fcf533be6e99ca  raw/InterruptBench/_manifest.json  16,822 B
+cd9dfd6d7081ea1400c8600d8bcadf577c6762d194e975c2edfafaf8c28b0556  raw/REBOOT/_manifest.json  1,706 B
+26daaf9506c4a690c243401179139fab70fb238f6e3463f19252d537d5b1ef58  raw/InterruptBench/_upstream_blobs.json  14,714 B
+1e1b776b4efe9e84205f3c5f844e85b328fe7495117a48778104682fb59fa86b  raw/InterruptBench/_upstream_tree_subset.json  4,826 B

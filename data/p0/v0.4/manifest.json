@@ -1,0 +1,218 @@
+{
+  "release_version": "p0-release/v0.4.0",
+  "record_schema_version": "p0-record/v0.2.0",
+  "dataset_layer": "P0",
+  "standalone": true,
+  "parent_release": {
+    "path": "data/p0/v0.3",
+    "release_version": "p0-release/v0.3.0",
+    "sha256": "93ca37e93442495039950c0f8c4c618fee4b8b178cfc52c3269b33cb9f0f7739"
+  },
+  "records": 254,
+  "families": 127,
+  "events": 1908,
+  "arbitration": {
+    "rule": "annotation handbook §2.5 rule 2 (explicit continue statement -> BELIEVES_VALID)",
+    "factor": "B",
+    "records": 14,
+    "changes": [
+      {
+        "sample_id": "P01-D1-B",
+        "factor": "B",
+        "from": "UNKNOWN",
+        "to": "BELIEVES_VALID",
+        "evidence": [
+          "e06"
+        ]
+      },
+      {
+        "sample_id": "P01-D2-B",
+        "factor": "B",
+        "from": "UNKNOWN",
+        "to": "BELIEVES_VALID",
+        "evidence": [
+          "e06"
+        ]
+      },
+      {
+        "sample_id": "P01-D3-B",
+        "factor": "B",
+        "from": "UNKNOWN",
+        "to": "BELIEVES_VALID",
+        "evidence": [
+          "e06"
+        ]
+      },
+      {
+        "sample_id": "P01-D4-B",
+        "factor": "B",
+        "from": "UNKNOWN",
+        "to": "BELIEVES_VALID",
+        "evidence": [
+          "e06"
+        ]
+      },
+      {
+        "sample_id": "P01-D5-B",
+        "factor": "B",
+        "from": "UNKNOWN",
+        "to": "BELIEVES_VALID",
+        "evidence": [
+          "e06"
+        ]
+      },
+      {
+        "sample_id": "P01-S1-B",
+        "factor": "B",
+        "from": "UNKNOWN",
+        "to": "BELIEVES_VALID",
+        "evidence": [
+          "e06"
+        ]
+      },
+      {
+        "sample_id": "P01-S2-B",
+        "factor": "B",
+        "from": "UNKNOWN",
+        "to": "BELIEVES_VALID",
+        "evidence": [
+          "e06"
+        ]
+      },
+      {
+        "sample_id": "P01-S3-B",
+        "factor": "B",
+        "from": "UNKNOWN",
+        "to": "BELIEVES_VALID",
+        "evidence": [
+          "e06"
+        ]
+      },
+      {
+        "sample_id": "P01-S4-B",
+        "factor": "B",
+        "from": "UNKNOWN",
+        "to": "BELIEVES_VALID",
+        "evidence": [
+          "e06"
+        ]
+      },
+      {
+        "sample_id": "P01-S5-B",
+        "factor": "B",
+        "from": "UNKNOWN",
+        "to": "BELIEVES_VALID",
+        "evidence": [
+          "e06"
+        ]
+      },
+      {
+        "sample_id": "P01-W2-B",
+        "factor": "B",
+        "from": "UNKNOWN",
+        "to": "BELIEVES_VALID",
+        "evidence": [
+          "e06"
+        ]
+      },
+      {
+        "sample_id": "P01-W3-B",
+        "factor": "B",
+        "from": "UNKNOWN",
+        "to": "BELIEVES_VALID",
+        "evidence": [
+          "e06"
+        ]
+      },
+      {
+        "sample_id": "P01-W4-B",
+        "factor": "B",
+        "from": "UNKNOWN",
+        "to": "BELIEVES_VALID",
+        "evidence": [
+          "e06"
+        ]
+      },
+      {
+        "sample_id": "P01-W5-B",
+        "factor": "B",
+        "from": "UNKNOWN",
+        "to": "BELIEVES_VALID",
+        "evidence": [
+          "e06"
+        ]
+      }
+    ],
+    "unchanged": {
+      "P01-B": "only return_to_task after the unseen cancellation; a return action alone is not belief evidence",
+      "P01-W6-A": "no event after the cancellation",
+      "P01-W6-B": "no event after the cancellation",
+      "P08-S7-B": "no event after the cancellation"
+    }
+  },
+  "splits": {
+    "train": {
+      "records": 150,
+      "families": 75
+    },
+    "dev": {
+      "records": 52,
+      "families": 26
+    },
+    "test": {
+      "records": 52,
+      "families": 26
+    },
+    "calibration": {
+      "records": 0,
+      "families": 0
+    }
+  },
+  "annotation_status": {
+    "reviewed": 254
+  },
+  "second_reviewer_records": 0,
+  "checks": {
+    "schema_and_cross_fields": "pass",
+    "paired_family_split": "pass",
+    "blueprint_split_isolation": "pass",
+    "only_arbitrated_labels_changed": "pass"
+  },
+  "limitations": [
+    "Scripted P0 expectations, not observed human behavior.",
+    "v0.4 is a B label-arbitration release on top of v0.3; A/C blind review and independent adjudication remain pending.",
+    "14 contact-cancellation B arms now carry B=BELIEVES_VALID; results computed on v0.3 are stale and must be rerun.",
+    "P0 datasets must not be appended to one another; read v0.4 only."
+  ],
+  "artifacts": {
+    "p0_samples.json": {
+      "sha256": "80bdc8edef1040e8c12df56e314a31ec99ad8accb4aaa0dee50c59d92972c3d8",
+      "bytes": 2022912
+    },
+    "splits/train.json": {
+      "records": 150,
+      "sha256": "8a2794ddd28a10e96e85b2f3d4cbd6c015f5e864f0ed144bb980a17f550f9a3b"
+    },
+    "splits/dev.json": {
+      "records": 52,
+      "sha256": "ae80a8c3f2d5c5fe0a36db623f084b06acba8fbd8750e4e51898f533acc459ef"
+    },
+    "splits/test.json": {
+      "records": 52,
+      "sha256": "f4d5e3b90a9003c442ee7dd4ab9c18f20ff52bed22bc0a4ce32a206e6a24a0ab"
+    },
+    "splits/calibration.json": {
+      "records": 0,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "eval/inputs.jsonl": {
+      "sha256": "ef76fb02f5ba680524a9a21f23c2a1522758383be1d47c233bb0d94f97c04005"
+    },
+    "eval/labels.jsonl": {
+      "sha256": "77391d440d845780a085a5db41cbc44d63bfecaa83382b3b3b6a15b2df7787f9"
+    },
+    "eval/MAPPING.md": {
+      "sha256": "dff8d7a4f77e5fcbdaeabaa03a26f1dc9c8cff190699b989efcc177379a9dcb0"
+    }
+  }
+}

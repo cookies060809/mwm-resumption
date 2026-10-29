@@ -6,6 +6,12 @@
 
 `python scripts/check_p0_release_a.py --a-ref origin/feat/a-p0-v02-ec-jmf` 从本机已有的 A Git 引用提取模型到工作区临时目录，不切分支，逐条执行 254 条训练样本转换与默认参数精确推理；返回实际 commit、数据哈希和失败列表。缺少该引用或新训练接口会显式报错。该命令不训练、评测或生成预测文件。说明见 [`data/p0/v0.3/README.md`](../data/p0/v0.3/README.md)。
 
+## 盲审（M1 收尾）
+
+`python scripts/build_blind_packet.py` 从 P0 v0.4 按机制各抽 1 条（8 条），生成去标签的 `docs/annotation/blind_review_v0.4_packet.md`、A/C 返回模板与 B 专用 key；不写任何结论。
+
+`python scripts/compare_blind_review.py` 读取 A/C 填好的 CSV，做合法值校验、逐列一致率与分歧清单，输出 `docs/annotation/blind_review_v0.4_report.md`。它不改 `annotation.status`；`adjudicated` 只在人工仲裁记录落盘后由 B 手动升级。
+
 ## `validate_data.py`
 
 校验 P0 两个批次（v0.1 16 条、v0.2 240 条），按记录的 `schema_version` 自动选择 schema：

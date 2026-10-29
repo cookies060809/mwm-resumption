@@ -1,0 +1,66 @@
+{
+  "warning": "B only. Do not open before returning the CSV; it maps blind ids to sample ids.",
+  "packet_version": "p0-v0.4-blind/1",
+  "source": "data/p0/v0.4/p0_samples.json",
+  "source_sha256": "80bdc8edef1040e8c12df56e314a31ec99ad8accb4aaa0dee50c59d92972c3d8",
+  "selection": "blind-v0.4:2026-10-24",
+  "packet_sha256": "fe447898d93b406c0213855aa93858e268721bdea195d31ce2112dd13acd476e",
+  "items": [
+    {
+      "blind_id": "B01",
+      "sample_id": "P08-D1-B",
+      "base_story_id": "P08-D1",
+      "mechanism": "comprehension",
+      "variant": "B"
+    },
+    {
+      "blind_id": "B02",
+      "sample_id": "P01-B",
+      "base_story_id": "P01",
+      "mechanism": "contact_cancellation",
+      "variant": "B"
+    },
+    {
+      "blind_id": "B03",
+      "sample_id": "P07-D1-B",
+      "base_story_id": "P07-D1",
+      "mechanism": "future_leak",
+      "variant": "B"
+    },
+    {
+      "blind_id": "B04",
+      "sample_id": "P02-D4-A",
+      "base_story_id": "P02-D4",
+      "mechanism": "long_term_commitment",
+      "variant": "A"
+    },
+    {
+      "blind_id": "B05",
+      "sample_id": "P06-S2-B",
+      "base_story_id": "P06-S2",
+      "mechanism": "nested_interruption",
+      "variant": "B"
+    },
+    {
+      "blind_id": "B06",
+      "sample_id": "P04-A",
+      "base_story_id": "P04",
+      "mechanism": "other_completion",
+      "variant": "A"
+    },
+    {
+      "blind_id": "B07",
+      "sample_id": "P05-D6-B",
+      "base_story_id": "P05-D6",
+      "mechanism": "resource_availability",
+      "variant": "B"
+    },
+    {
+      "blind_id": "B08",
+      "sample_id": "P03-A",
+      "base_story_id": "P03",
+      "mechanism": "resume_position",
+      "variant": "A"
+    }
+  ]
+}

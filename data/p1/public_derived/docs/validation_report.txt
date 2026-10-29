@@ -1,0 +1,82 @@
+samples: 2863
+files: ['p1_combined.jsonl']
+
+  p1_combined.jsonl: 2863 unique sample_ids
+
+source_dataset:
+  InterruptBench: 1815
+  IHBench: 856
+  REBOOT: 192
+
+state_at_cutoff.V: VALID=2236, CANCELLED=612, FULFILLED=15  [distinct=3]
+state_at_cutoff.F: UNKNOWN=2806, READY=57  [distinct=2]
+state_at_cutoff.A: UNKNOWN=2791, ACCESSED=72  [distinct=2]
+state_at_cutoff.B: UNKNOWN=2791, BELIEVES_VALID=72  [distinct=2]
+state_at_cutoff.C: UNKNOWN=1875, SUSPENDED=856, ACTIVE=117, COMPLETED=15  [distinct=4]
+state_at_cutoff.Q: UNKNOWN=2848, NOT_APPLICABLE=15  [distinct=2]
+
+p1_censoring_status: censored=1951, observed_resume=786, observed_not_resume=126
+censoring x p1_observed_resume: censored/None=1951, observed_resume/True=786, observed_not_resume/False=126
+event source: original_annotation=38166, rule_mapping=8481
+event_type: background_fact=27702, progress=12204, interruption=3793, start_goal=2863, resume=70, completion=15
+event person_access: ACCESSED=33904, NOT_ACCESSED=12743
+
+p1-0.2 contracts:
+  subject_type: software_agent_spec=1815, synthetic_dialogue=856, robot=192
+  cutoff_kind: goal_spec_update=1815, interruption=916, pre_interruption=60, recovery=57, completion=15
+  split: {'train': 1996, 'test': 368, 'val': 499}  (split_group_id units=270)
+  supervised state factors per source:
+    V: IHBench=856, InterruptBench=1815, REBOOT=192  total=2863/2863
+    F: IHBench=0, InterruptBench=0, REBOOT=57  total=57/2863
+    A: IHBench=0, InterruptBench=0, REBOOT=72  total=72/2863
+    B: IHBench=0, InterruptBench=0, REBOOT=72  total=72/2863
+    C: IHBench=856, InterruptBench=0, REBOOT=132  total=988/2863
+    Q: IHBench=0, InterruptBench=0, REBOOT=15  total=15/2863
+  resume supervision per source:
+    IHBench: supervised=785 masked=71
+    InterruptBench: supervised=0 masked=1815
+    REBOOT: supervised=57 masked=135
+  withdrawn claims (rule, reason -> rows):
+    T5 | a scoring oracle or a rubric proves a ch… -> 1815
+    T6 | the release ships a task specification w… -> 1815
+    T7 | no annotation reports the actor's belief… -> 1815
+    T8 | no annotation reports the actor's commit… -> 1815
+    T9 | the source annotates no step decompositi… -> 1815
+    R5 | a scoring oracle or a rubric proves a ch… -> 856
+    R3 | a truncated utterance shows the harness … -> 856
+    R6 | no annotation reports the actor's belief… -> 856
+    R2/R8 | the source annotates an objective phase/… -> 856
+    B8 | the value was derived from an event late… -> 120
+    B9 | no annotation reports the actor's belief… -> 120
+    B11 | the source annotates an objective phase/… -> 117
+    B7 | a scoring oracle or a rubric proves a ch… -> 60
+    B11 | the value was derived from an event late… -> 60
+    B7 | the value was derived from an event late… -> 60
+    B10 | no annotation reports the actor's commit… -> 60
+    B7 | the goal is already complete, so readine… -> 15
+    B12 | the label was hardcoded without a resume… -> 2
+  NOTE: a factor absent above has state_loss_mask=0 on every row: the sources
+        do not evidence it, so it is not supervised and must not be scored.
+
+violations: 0
+warnings: 65
+  W ihb_069472c8-907b-476a-b58e-16921028e7df_u08: eligible with an incomplete window (2/4 assistant_turn) - only a positive seen inside a short window may be scored
+  W ihb_0c0dacd4-c49f-4a62-aad5-0188314d5c36_u17: eligible with an incomplete window (3/4 assistant_turn) - only a positive seen inside a short window may be scored
+  W ihb_0c0dacd4-c49f-4a62-aad5-0188314d5c36_u19: eligible with an incomplete window (1/4 assistant_turn) - only a positive seen inside a short window may be scored
+  W ihb_0d8b1829-af32-451b-a78c-61e970c3f0c0_u05: eligible with an incomplete window (3/4 assistant_turn) - only a positive seen inside a short window may be scored
+  W ihb_124df8bf-a9cb-4d71-907d-a6b6ab7e8731_u06: eligible with an incomplete window (3/4 assistant_turn) - only a positive seen inside a short window may be scored
+  W ihb_124df8bf-a9cb-4d71-907d-a6b6ab7e8731_u07: eligible with an incomplete window (2/4 assistant_turn) - only a positive seen inside a short window may be scored
+  W ihb_12b8e9ba-3d43-42ee-95dd-018cefa38d2b_u12: eligible with an incomplete window (3/4 assistant_turn) - only a positive seen inside a short window may be scored
+  W ihb_12b8e9ba-3d43-42ee-95dd-018cefa38d2b_u13: eligible with an incomplete window (2/4 assistant_turn) - only a positive seen inside a short window may be scored
+  W ihb_18b0c81b-057e-41a7-99dd-fb62c8372acc_u17: eligible with an incomplete window (2/4 assistant_turn) - only a positive seen inside a short window may be scored
+  W ihb_18b0c81b-057e-41a7-99dd-fb62c8372acc_u18: eligible with an incomplete window (1/4 assistant_turn) - only a positive seen inside a short window may be scored
+  W ihb_18c72b34-fc15-48be-a4e7-40d0e311fae4_u12: eligible with an incomplete window (2/4 assistant_turn) - only a positive seen inside a short window may be scored
+  W ihb_1b658842-66fe-4183-9677-54711a7b2e98_u17: eligible with an incomplete window (3/4 assistant_turn) - only a positive seen inside a short window may be scored
+  W ihb_1b658842-66fe-4183-9677-54711a7b2e98_u18: eligible with an incomplete window (2/4 assistant_turn) - only a positive seen inside a short window may be scored
+  W ihb_2ae4f8a4-e6d8-4fdb-b69f-a7e0aad390e3_u16: eligible with an incomplete window (3/4 assistant_turn) - only a positive seen inside a short window may be scored
+  W ihb_2ae4f8a4-e6d8-4fdb-b69f-a7e0aad390e3_u18: eligible with an incomplete window (1/4 assistant_turn) - only a positive seen inside a short window may be scored
+  W ihb_2f10b48e-e301-4fbc-aa2e-c8df599c815b_u07: eligible with an incomplete window (2/4 assistant_turn) - only a positive seen inside a short window may be scored
+  W ihb_2f10b48e-e301-4fbc-aa2e-c8df599c815b_u08: eligible with an incomplete window (1/4 assistant_turn) - only a positive seen inside a short window may be scored
+  W ihb_352333dc-129f-40d9-8571-da33fca73bfa_u05: eligible with an incomplete window (3/4 assistant_turn) - only a positive seen inside a short window may be scored
+  W ihb_352333dc-129f-40d9-8571-da33fca73bfa_u07: eligible with an incomplete window (1/4 assistant_turn) - only a positive seen inside a short window may be scored
+  W ihb_3547604b-07aa-48eb-a76b-65d4f5173236_u12: eligible with an incomplete window (2/4 assistant_turn) - only a positive seen inside a short window may be scored

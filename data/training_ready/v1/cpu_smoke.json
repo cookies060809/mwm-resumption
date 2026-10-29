@@ -1,0 +1,58 @@
+{
+  "model": "train-only multinomial NB smoke baseline",
+  "train_rows": 150,
+  "evaluation": {
+    "dev": {
+      "V": {
+        "correct": 40,
+        "n": 52
+      },
+      "F": {
+        "correct": 25,
+        "n": 52
+      },
+      "A": {
+        "correct": 19,
+        "n": 52
+      },
+      "B": {
+        "correct": 14,
+        "n": 51
+      },
+      "C": {
+        "correct": 18,
+        "n": 52
+      },
+      "Q": {
+        "correct": 14,
+        "n": 52
+      }
+    },
+    "test": {
+      "V": {
+        "correct": 31,
+        "n": 51
+      },
+      "F": {
+        "correct": 25,
+        "n": 52
+      },
+      "A": {
+        "correct": 12,
+        "n": 52
+      },
+      "B": {
+        "correct": 14,
+        "n": 52
+      },
+      "C": {
+        "correct": 16,
+        "n": 51
+      },
+      "Q": {
+        "correct": 12,
+        "n": 52
+      }
+    }
+  }
+}

@@ -59,6 +59,43 @@
 | ③ 继续表述 vs `B=UNKNOWN` | **成立，但不在 B 单方面权限内**：19 条 `B=UNKNOWN` 里 16 条在关键事件之后仍有人物陈述/返回行动未计入 B 证据，与手册 §2.5 第 1–2 条冲突；另 3 条（v0.3 的 P01-W6-A/B、P08-S7-B）实测关键事件后人物无任何事件，`UNKNOWN` 合法。改标动的是 A 的信念维监督信号、且含 v0.1 冻结基线 1 条，已挂手册 §11.1 第 14 条等 A 表态。不能改成"删掉继续表述"：§2.6 第 3 步要求 `C=SUSPENDED` 必须有继续意图的证据，删了会连带废掉 C |
 | B 自审为什么没抓到 ① | 缺陷就落在已勾"通过"的 `P01-S2` 与 `P01-D1` 两对内。抽查包的四个复选项只问单变量性、§1.4 可指名性、Gate 5 可推出性、结论，**没有一格问"文案里的数字能否由任务图算出"**。做法是把这项交给机器校验，而不是再往人工格子里加一条 |
 
+### 1.4 状态更新（2026-10-24，B 侧仲裁与底稿完成）
+
+| 事项 | 状态 |
+|---|---|
+| 14 条 `contact_cancellation` B 臂的 `B=UNKNOWN` | **已仲裁**：人物明确说"回来接着弄"，按手册 §2.5 第 2 条升 `BELIEVES_VALID`，证据 `e06`；发布为 **P0 v0.4**（v0.3 冻结）。`P01-B`（仅返回动作）与 3 条取消后无事件的记录维持 `UNKNOWN` |
+| 14 条 P02 "放弃后开始步骤" 措辞 | **已仲裁**：显式放弃优先于其后一般 `step_started`，维持 `C=ABANDONED`、`not_resume`；只有新的承诺表达才重开目标。规则写入手册 §2.6 |
+| 训练包 | 按 v0.4 重建为 **ready-v1.1**（438/123/121 不变，14 条 B target 变化），`check.py` 通过 |
+| 三份文献底稿 | **已建立** `competitors.md` / `core_papers.md` / `mwm_audit.md`；阅读等级如实标注（仅 #18/#19 已读，#1/#16 仅摘要，#8 仅元数据，其余未读）。全文精读仍只能由 B 本人完成 |
+| T3 汇总映射 | **B 侧已定稿** `docs/data/t3_evidence_mapping.md`：以 `state_evidence_by_factor` 为逐因子金标准，A 的显著事件只作诊断比较；待 C 确认指标实现 |
+| A/C 盲审 8 条 → `adjudicated` | **仍未做**（只能由 A/C 执行） |
+| `split.calibration` | **仍为 0**，等 C 定校准协议 |
+| A 的适配器接入 v0.4 | 记录 schema 未变（`p0-record/v0.2.0`），适配器可读；但 v0.3 上跑出的结果**全部作废**，需在 v0.4 / ready-v1.1 上重跑 |
+| P1 真人采集 | 2026-10-23 已 descope；P1 以公开派生包交付，六变量只剩 V 全量有效 |
+
+
+### 1.5 状态更新（2026-10-24，文献通读与 Related Work 草稿）
+
+| 事项 | 状态 |
+|---|---|
+| 文献全文文本通读 | 13 篇：MWM/MENTIS、BDI 2008、2017 滑窗、SIPS、GODR、EchoChain、DuplexLedger、MMEA、SymbolicToM、Memory for Goals、NAQD、ProAgentBench、BeliefTrack；方法/实验/局限节已核对并写入 `docs/literature/reading_notes.md`。**机器辅助，B 未逐段复核**；Ratwani 2008 与 Brumby 2013 为付费墙，仅摘要级 |
+| Related Work | `docs/literature/related_work_draft.md` 已按 5 条脉络写成，含差异化表；待 A 并入技术方案 |
+| 引用元数据 | `docs/literature/references.bib`：正文 9 篇 + 背景 3 篇，均已核实 DOI/arXiv；背景 3 篇未读全文，只能题名/摘要级引用 |
+| 新增候选 | EchoChain、DuplexLedger、MMEA、SymbolicToM、NAQD、ProAgentBench、BeliefTrack；前四篇已读，后三篇仅摘要。矩阵 #20–#26 |
+| “首次”声明 | 已确认不能在“心智世界模型 / 中断后状态更新 / 目标生命周期 / 恢复契约 / 恢复位置”任一单项上使用；可主张的只剩“外部观察者 + 六因子 + 认知可达性门控 + 恢复步骤”的组合 |
+| 仍待 B 本人 | 抽查 13 篇关键数字；若要在技术方案写激活公式，按 Memory for Goals Appendix A 核对；Ratwani 2008 与 Brumby 2013 需机构订阅才能升级为全文 |
+
+
+### 1.6 状态更新（2026-10-24，进入 M1 收尾）
+
+| 事项 | 状态 |
+|---|---|
+| v0.4 盲审包 | **已生成**：8 条（每机制 1 条，去标签），A/C 各 8 行 CSV 模板；B 专用 key 单独存放 |
+| 对比工具 | `scripts/compare_blind_review.py`：合法值校验、逐列一致率、分歧清单；合成回条测试通过（A 全一致，C 故意错 1 项被正确列出） |
+| 旧回条 | v0.3 时代的 4 条只用于发现 ①/②/③；①已修、②已补条款、③已由 v0.4 仲裁关闭；**不用于 `adjudicated`** |
+| 待 A/C | 各填 8 条 CSV；返回后 B 跑对比，三方仲裁，仲裁记录落盘后才升 `adjudicated` |
+| 下一里程碑 | M2：A/C 的 P0 最小闭环与 B0–B4；B 提供数据/评测契约与 v0.4 数据支持 |
+
 ## 2. 我可以直接补的（已做 / 待做）
 
 **已在本分支完成：**

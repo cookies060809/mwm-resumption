@@ -1,0 +1,273 @@
+{
+  "manifest_version": "data-release/v1",
+  "generated_by": "scripts/release_manifest.py",
+  "artifacts": {
+    "p0_v04": {
+      "path": "data/p0/v0.4",
+      "release_version": "p0-release/v0.4.0",
+      "record_schema": "p0-record/v0.2.0",
+      "dataset_layer": "P0",
+      "records": 254,
+      "families": 127,
+      "events": 1908,
+      "splits": {
+        "train": 150,
+        "test": 52,
+        "dev": 52
+      },
+      "calibration_records": 0,
+      "annotation": {
+        "status": "reviewed",
+        "adjudicated": false
+      },
+      "supervised_factors": {
+        "V": 253,
+        "F": 253,
+        "A": 254,
+        "B": 250,
+        "C": 253,
+        "Q": 254
+      },
+      "eval_view": {
+        "path": "data/p0/v0.4/eval",
+        "records": 254,
+        "protocol": "c-evaluation-draft-1"
+      },
+      "files": {
+        "p0_samples.json": {
+          "sha256": "80bdc8edef1040e8c12df56e314a31ec99ad8accb4aaa0dee50c59d92972c3d8"
+        },
+        "manifest.json": {
+          "sha256": "de8fbaa13b9286e651311d11406925dc884efc43c7efa13cb3ff980f9a8ea36c"
+        },
+        "splits/train.json": {
+          "sha256": "8a2794ddd28a10e96e85b2f3d4cbd6c015f5e864f0ed144bb980a17f550f9a3b"
+        },
+        "splits/dev.json": {
+          "sha256": "ae80a8c3f2d5c5fe0a36db623f084b06acba8fbd8750e4e51898f533acc459ef"
+        },
+        "splits/test.json": {
+          "sha256": "f4d5e3b90a9003c442ee7dd4ab9c18f20ff52bed22bc0a4ce32a206e6a24a0ab"
+        },
+        "splits/calibration.json": {
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        },
+        "eval/inputs.jsonl": {
+          "sha256": "ef76fb02f5ba680524a9a21f23c2a1522758383be1d47c233bb0d94f97c04005"
+        },
+        "eval/labels.jsonl": {
+          "sha256": "77391d440d845780a085a5db41cbc44d63bfecaa83382b3b3b6a15b2df7787f9"
+        }
+      }
+    },
+    "p0_v03_frozen": {
+      "path": "data/p0/v0.3",
+      "release_version": "p0-release/v0.3.0",
+      "record_schema": "p0-record/v0.2.0",
+      "dataset_layer": "P0",
+      "records": 254,
+      "families": 127,
+      "events": 1908,
+      "splits": {
+        "train": 150,
+        "test": 52,
+        "dev": 52
+      },
+      "calibration_records": 0,
+      "annotation": {
+        "status": "reviewed",
+        "adjudicated": false
+      },
+      "supervised_factors": {
+        "V": 253,
+        "F": 253,
+        "A": 254,
+        "B": 236,
+        "C": 253,
+        "Q": 254
+      },
+      "eval_view": {
+        "path": "data/p0/v0.3/eval",
+        "records": 254,
+        "protocol": "c-evaluation-draft-1"
+      },
+      "files": {
+        "p0_samples.json": {
+          "sha256": "93ca37e93442495039950c0f8c4c618fee4b8b178cfc52c3269b33cb9f0f7739"
+        },
+        "manifest.json": {
+          "sha256": "f44af0210a85b1fd7a65c3c4b12b00a12c1abce34ee893c7a81be7d1c5847ed6"
+        },
+        "splits/train.json": {
+          "sha256": "82e40601644d578b0c9c1e0fb1808477fbffcde8548115f8162d910e0f73ad7a"
+        },
+        "splits/dev.json": {
+          "sha256": "a410a7d60c5029257e97c9296baf49e38d350b54e783ac7022eec15ca0701ca2"
+        },
+        "splits/test.json": {
+          "sha256": "99b6c2f8712fa273060a34f25c5231eec742c7173be704eeaf5909e5247945ae"
+        },
+        "splits/calibration.json": {
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        },
+        "eval/inputs.jsonl": {
+          "sha256": "ef76fb02f5ba680524a9a21f23c2a1522758383be1d47c233bb0d94f97c04005"
+        },
+        "eval/labels.jsonl": {
+          "sha256": "f7bb512a85d9c7b9f88768936215d1b7a825fd0f195c0f1e2b4abd0cc4eb6d7b"
+        }
+      }
+    },
+    "ready_v1": {
+      "path": "data/training_ready/v1",
+      "release_version": "ready-v1.1",
+      "dataset_layer": "P0 + auxiliary dialogue",
+      "human_P1_records": 0,
+      "tasks": {
+        "state_inference": 254,
+        "interruption_response": 428
+      },
+      "files": {
+        "train.jsonl": {
+          "rows": 438,
+          "sha256": "666dce02290e413e30be18702e69bc6bd8ab219d2c80d7b95d6841c2a2b90ae4"
+        },
+        "train_sft.jsonl": {
+          "rows": 438,
+          "sha256": "25bd57b4c39e6195d2bc60201d969974647a269b027bad4d4cc8e7d77d0c540b"
+        },
+        "dev.jsonl": {
+          "rows": 123,
+          "sha256": "fae2ecacad6765fbcfd98d646f4c74b4fb6581976539318d55e6cd98eecf77e5"
+        },
+        "dev_sft.jsonl": {
+          "rows": 123,
+          "sha256": "62dce6dab511c78effc5692c525248455969f228a696f85eafb3384d31cb2582"
+        },
+        "test.jsonl": {
+          "rows": 121,
+          "sha256": "4f29d82ac62e074fc59461c520dada8f84ad4bc97da9c9d25aee6a76ad4b6a2a"
+        },
+        "test_sft.jsonl": {
+          "rows": 121,
+          "sha256": "9ea9c5b996587534b3bafe6752d902e89e90f2230e9d98e88900957f6764dd6d"
+        }
+      },
+      "sources_p0_sha256": "80bdc8edef1040e8c12df56e314a31ec99ad8accb4aaa0dee50c59d92972c3d8"
+    },
+    "p1_public_derived": {
+      "path": "data/p1/public_derived",
+      "release_version": "p1-public-derived/v1.5.1",
+      "dataset_layer": "P1 (public-data derived; no human records)",
+      "records": 2863,
+      "sources": {
+        "IHBench": 856,
+        "InterruptBench": 1815,
+        "REBOOT": 192
+      },
+      "splits": {
+        "train": 1996,
+        "test": 368,
+        "val": 499
+      },
+      "split_groups": 270,
+      "censoring": {
+        "censored": 1951,
+        "observed_not_resume": 126,
+        "observed_resume": 786
+      },
+      "resume_eval_view": {
+        "path": "data/p1/public_derived/eval",
+        "records": 842,
+        "splits": {
+          "train": 603,
+          "dev": 177,
+          "test": 62
+        },
+        "resume_labels": {
+          "not_resume": 126,
+          "resume": 716
+        },
+        "protocol": "c-evaluation-draft-1 (validated with origin/Bill mwm_eval/schema.py)"
+      },
+      "withdrawn_claims": {
+        "Q": 2848,
+        "F": 2806,
+        "A": 2791,
+        "B": 2791,
+        "C": 1875,
+        "p1_observed_resume": 2
+      },
+      "supervised_factors": {
+        "V": 2863,
+        "F": 57,
+        "A": 72,
+        "B": 72,
+        "C": 988,
+        "Q": 15
+      },
+      "concrete_q_labels": 0,
+      "files": {
+        "processed/p1_combined.jsonl": {
+          "sha256": "cb4b5a84d463a39f1b1ad81a2c52ca533e39cb3e6d7c0b9de368d682110c9e0c"
+        },
+        "eval/inputs.jsonl": {
+          "sha256": "909327e7cf3dbf77a3892c77ffcccb52df730e6fdd2dcbc415fd43f56f9b6255"
+        },
+        "eval/labels.jsonl": {
+          "sha256": "aaa9e41ae50528a0baf0ce20ba0e721a627b56da2911e1ebc3d7ece6bc02655d"
+        },
+        "docs/CHECKSUMS.sha256": {
+          "sha256": "9c3ce9acf58d7db1bc36557353c05ce83fc8d295711064b475cf7c397bf8b502"
+        },
+        "docs/schema.json": {
+          "sha256": "03809f8643db89c3a721efbe97cc3479d78e66338a71c141c37a7ae492918f30"
+        }
+      }
+    }
+  },
+  "routing": {
+    "six_factor_supervision": "p0_v04 (SFT bundle: ready_v1)",
+    "resume_evaluation": "p1_public_derived/eval (842 observed rows; report per source)",
+    "interruption_response_sft": "ready_v1",
+    "state_prediction_cutoffs": "p1_public_derived native rows with resume_loss_mask=0"
+  },
+  "policies": {
+    "never_mix": [
+      "P0 and P1 in one metric",
+      "P1 censored rows as negatives",
+      "withdrawn P1 claims as gold"
+    ],
+    "splits": {
+      "P0": {
+        "train": "fit only",
+        "dev": "A model selection; C calibration only if it declares the overlap",
+        "test": "held out",
+        "calibration": "empty by decision"
+      },
+      "P1": {
+        "train": "fit only",
+        "val": "calibration / early stopping",
+        "test": "held out"
+      }
+    },
+    "claims": {
+      "human_p1_records": 0,
+      "double_blind_adjudication": false,
+      "six_factor_supervision_source": "P0 v0.4 scripted data only",
+      "not_resume_ceiling": "126 rows, all IHBench text-agent"
+    },
+    "p0_history": {
+      "current": "p0-release/v0.4.0",
+      "frozen": "p0-release/v0.3.0",
+      "arbitration": "14 contact-cancellation B arms: UNKNOWN -> BELIEVES_VALID with e06 evidence",
+      "stale_results": "any result trained or evaluated on v0.3 or ready-v1.0 must be rerun"
+    },
+    "licenses": {
+      "P0": "project-generated; repository private",
+      "IHBench": "CC-BY-4.0 (attribution required)",
+      "REBOOT": "Apache-2.0 per source manifest",
+      "InterruptBench": "unresolved; internal evaluation only; remove before any redistribution"
+    }
+  }
+}

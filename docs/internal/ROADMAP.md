@@ -2,7 +2,7 @@
 
 > **本文件是内部项目管理文档，不作为竞赛提交材料。**
 > 来源：研究方案 V1.1 第 10.2 节。状态按仓库实际情况维护；未完成项不得提前勾选。
-> 当前阶段：**W1 / M1 收尾**（B 侧已交付 P0 v0.2 与手册 v1.0；A 已按 v0.1 schema 适配，v0.2 版本分支与 C 字段映射待确认）。
+> 当前阶段：**W1 / M1 收尾**（B 侧已交付 P0 v0.4、ready-v1.1、P1 公开派生包与文献底稿；A/C 盲审与独立仲裁待做）。
 > 竞赛交付入口：[../../competition/README.md](../../competition/README.md)。
 
 ## 里程碑
@@ -64,8 +64,11 @@
 - [x] 完成 P01–P08 最小对照对，并扩到 120 家族 / 240 条（v0.2）
 - [x] 确认事件类型受控词表与时间格式（16 类 + `HH:MM`）
 - [x] 建立双人标注与仲裁流程（`label_quality_plan_v0.1.md`；尚未实际运行盲审）
-- [ ] 补齐 `competitors.md`、`core_papers.md`、`mwm_audit.md` 三份核查底稿
-- [ ] A/C 盲审 8 条并仲裁，`annotation.status` 升至 `adjudicated`
+- [x] 建立 `competitors.md`、`core_papers.md`、`mwm_audit.md` 三份核查底稿（阅读等级如实标注；全文精读仍待 B 本人）
+- [x] 仲裁 14 条 `contact_cancellation` B 臂（`UNKNOWN`→`BELIEVES_VALID`，P0 v0.4）并写明 P02 时序优先规则
+- [x] T3 逐因子证据映射（`docs/data/t3_evidence_mapping.md`，待 C 确认指标实现）
+- [x] 文献全文文本通读 13 篇 + Related Work 草稿（`docs/literature/reading_notes.md`、`related_work_draft.md`；待 A 并入技术方案、B 抽查数字）
+- [ ] v0.4 盲审 8 条并仲裁，`annotation.status` 升至 `adjudicated`（包与对比工具已就绪，等 A/C 返回）
 
 ### C
 

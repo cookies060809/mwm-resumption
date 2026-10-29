@@ -1,0 +1,23 @@
+samples: 192
+files: ['reboot.jsonl']
+
+  reboot.jsonl: 192 unique sample_ids
+
+source_dataset:
+  REBOOT: 192
+
+state_at_cutoff.V: VALID=177, FULFILLED=15  [distinct=2]
+state_at_cutoff.F: READY=134, BLOCKED=57, UNKNOWN=1  [distinct=3]
+state_at_cutoff.A: ACCESSED=132, NOT_ACCESSED=60  [distinct=2]
+state_at_cutoff.B: BELIEVES_VALID=191, BELIEVES_INVALID=1  [distinct=2]
+state_at_cutoff.C: ACTIVE=117, SUSPENDED=60, COMPLETED=15  [distinct=3]
+state_at_cutoff.Q: phase_1_engage-pick=72, phase_3_align-place=55, phase_2_transport=36, NOT_APPLICABLE=15, phase_4_engage-place=7, phase_0_align-pick=5, UNKNOWN=2  [distinct=7]
+
+p1_censoring_status: observed_resume=129, censored=63
+censoring x p1_observed_resume: observed_resume/True=129, censored/None=63
+event source: original_annotation=805
+event_type: progress=264, start_goal=192, background_fact=132, interruption=132, resume=70, completion=15
+event person_access: ACCESSED=805
+
+violations: 0
+warnings: 0

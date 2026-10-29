@@ -1,0 +1,25 @@
+samples: 856
+files: ['ihbench.jsonl']
+
+  ihbench.jsonl: 856 unique sample_ids
+
+source_dataset:
+  IHBench: 856
+
+state_at_cutoff.V: VALID=856  [distinct=1]
+state_at_cutoff.F: READY=856  [distinct=1]
+state_at_cutoff.A: ACCESSED=856  [distinct=1]
+state_at_cutoff.B: BELIEVES_VALID=450, UNRESOLVED=406  [distinct=2]
+state_at_cutoff.C: SUSPENDED=856  [distinct=1]
+state_at_cutoff.Q: stage_00_initiate-and-set-context=24, stage_00_open-and-set-context=24, stage_04_collect-profile-preferences=22, stage_03_quote-pricing-and-terms=22, stage_01_identity-verification=18, stage_07_confirm-roster-import-plan=18, stage_00_open-and-consent=16, stage_00_open-and-verify-identity=16, stage_00_initiate-reminder-and-consent=14, stage_01_confirm-company-and-billing-contacts=14  [distinct=132]
+
+p1_censoring_status: observed_resume=659, observed_not_resume=138, censored=59
+censoring x p1_observed_resume: observed_resume/True=659, observed_not_resume/False=138, censored/None=59
+event source: original_annotation=31432, rule_mapping=6666
+event_type: background_fact=24446, progress=11940, start_goal=856, interruption=856
+event person_access: ACCESSED=26664, NOT_ACCESSED=11434
+
+violations: 0
+warnings: 2
+  W ihb_679692fc-f42f-410b-bc3b-d209973fe2f1@baseline_u01: observed_resume without p1_resume_step
+  W ihb_679692fc-f42f-410b-bc3b-d209973fe2f1@baseline_u05: observed_resume without p1_resume_step
